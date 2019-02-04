@@ -3,7 +3,7 @@
 ## Team 21 Members
 
 William Lussier   40033412  
-Anthony Le		    40001837  
+Laura Wheatley		40001837  
 Krishna Patel		  40031019  
 Anthony Andreoli	26605621  
 Laurent Kadian	  40001820  
