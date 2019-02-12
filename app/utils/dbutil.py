@@ -3,15 +3,25 @@ import sqlite3
 
 class DBUtil:
 
+    instance = None
+    app = None
+
     def __init__(self, app, test):
-        self.app = app
-        self.test = test
-        # if test:
-        #     self.init_test_database()
-        #     self.connect_db = self.connect_test_database
-        # else:
-        self.init_database()
-        self.connect_db = self.connect_database
+        if DBUtil.instance is None:
+            DBUtil.instance = self
+            self.app = app
+            # self.test = test
+            # if test:
+            #     self.init_test_database()
+            #     self.connect_db = self.connect_test_database
+            # else:
+            self.init_database()
+            self.connect_db = self.connect_database
+    
+    def get_instance(self, test):
+        if self.instance is None:
+            self.instance = DBUtil(self.app, test)
+        return self.instance
 
     def init_database(self):
         print(self.app.config['DATABASE'])
@@ -20,7 +30,7 @@ class DBUtil:
 
         rv = sqlite3.connect(self.app.config['DATABASE'])
         rv.row_factory = create_dictionary
-        with self.app.open_resource('app/db/database.sql', mode='r') as f:
+        with self.app.open_resource('db/database.sql', mode='r') as f:
             rv.cursor().executescript(f.read())
         rv.commit()
         return rv
@@ -31,12 +41,12 @@ class DBUtil:
         return rv
 
     def init_test_database(self):
-        if os.path.isfile('app/db/database_test.db'):
+        if os.path.isfile('db/database_test.db'):
             os.remove('database_test.db')
 
         rv = sqlite3.connect('database_test.db')
         rv.row_factory = create_dictionary
-        with self.app.open_resource('app/db/database.sql', mode='r') as f:
+        with self.app.open_resource('db/database.sql', mode='r') as f:
             rv.cursor().executescript(f.read())
         rv.commit()
         return rv

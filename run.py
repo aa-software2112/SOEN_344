@@ -1,30 +1,24 @@
 import os
 import sqlite3
 from app import app
+from config import Config
+from app.controllers import controllers
 from app.utils.dbutil import DBUtil
-
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
     
 app = Flask('app')
 app.config.from_object(__name__)
 
-app.config.update(dict(
-    DATABASE=os.path.join(app.root_path + '/app/db/', 'database.db'),
-    SECRET_KEY='jeinx2903jnfkknd29102jsn',
-    USERNAME='admin',
-    PASSWORD='bigboat123'
-))
+Config.DATABASE = os.path.join(app.root_path + '/db/', 'database.db')
+app.config.from_object(Config)
 
-app.config.from_envvar('UBERSANTE_SETTINGS', silent=True)
-db = DBUtil(app, True)
-
+db = DBUtil(app, True).get_instance(False)
 
 @app.route('/')
 def welcome_message(): 
     return 'Hello world'
 
-# CRUD operations on product
 @app.route('/hi', methods=["GET"])
 def test():
     if request.method == 'GET':
@@ -32,8 +26,10 @@ def test():
         results = []
         for row in db.return_all(query, ()):
             results.append(row)
-            
+
         return jsonify(results), 200
+
+app.register_blueprint(controllers) # always register blueprints after 'app' routes
 
 if __name__ == "__main__":
     app.run(debug=True)
