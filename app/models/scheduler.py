@@ -60,9 +60,6 @@ class Scheduler:
         # TODO should be replaced with singleton: AvailabilityService.get_instance()
         self.availability_service = None
 
-        # TODO should be replaced with singleton: BookingService.get_instance()
-        self.booking_service = None
-
     def get_schedule(self, schedule_request, av=None):
         """
         This method takes a schedule request, given by a ScheduleRequest object, and creates a
