@@ -61,6 +61,7 @@ class DailySchedule(Schedule):
 
         for avail in self.availabilities:
             print(avail)
+            print("\t{}".format(self.get_schedule_date_string()))
 
 class MonthlySchedule(Schedule):
 
@@ -112,6 +113,16 @@ class MonthlySchedule(Schedule):
             self.daily_schedules[day] = DailySchedule(avail_dict[day], Date(self.date_of_monthly_schedule.get_year(),
                                                                         self.date_of_monthly_schedule.get_month(),day))
 
+    def get_list_of_daily_schedules(self):
+
+        return_list = []
+
+        for day in range(self.min_date_key, self.max_date_key + 1):
+
+            return_list.append(self.daily_schedules[day])
+
+        return return_list
+
     def get_schedule_date_string(self):
 
         return self.date_of_monthly_schedule.get_date_string()
@@ -140,6 +151,7 @@ if __name__ == "__main__":
 
     m = MonthlySchedule(avails, Date(2018, 7))
 
-    m.display_monthly_schedule()
+    for sched in m.get_list_of_daily_schedules():
 
-    print(m.get_schedule_date_string())
+        print("{}, avail?{}".format(sched.get_schedule_date_string(), sched.availability_exists_today()))
+
