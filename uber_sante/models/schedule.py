@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from calendar import monthrange
-from app.models.availability import Availability
-from app.helpers.date import Date
+
+from uber_sante.models.availability import Availability
+from uber_sante.utils.date import Date
 
 
 class Schedule(ABC):

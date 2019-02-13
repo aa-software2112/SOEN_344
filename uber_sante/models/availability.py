@@ -1,5 +1,4 @@
-import uuid
-from app.helpers.date import Date
+from uber_sante.utils.date import Date
 
 class Availability:
 
