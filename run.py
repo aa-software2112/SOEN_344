@@ -1,19 +1,6 @@
-import os
-import sqlite3
-from app import app
-from config import Config
-from app.controllers import controllers
-from app.utils.dbutil import DBUtil
-from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash, jsonify
-    
-app = Flask('app')
-app.config.from_object(__name__)
-
-Config.DATABASE = os.path.join(app.root_path + '/db/', 'database.db')
-app.config.from_object(Config)
-
-db = DBUtil(app, True).get_instance(False)
+from uber_sante import app, db
+from uber_sante.controllers import controllers
+from flask import Flask, request, jsonify
 
 @app.route('/')
 def welcome_message(): 

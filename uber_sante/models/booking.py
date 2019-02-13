@@ -1,6 +1,6 @@
 import uuid
 
-class booking:
+class Booking(object):
 
     def __init__(self, avail_id, doc_id, pat_id):
         self.id = uuid.uuid4()
