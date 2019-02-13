@@ -59,9 +59,13 @@ class DailySchedule(Schedule):
 
     def display_daily_schedule(self):
 
+        print("\t{}".format(self.get_schedule_date_string()))
+
+        print("\tAvail today?:{}".format(self.availability_exists_today()))
+
         for avail in self.availabilities:
-            print(avail)
-            print("\t{}".format(self.get_schedule_date_string()))
+
+            print("\t\t{}".format(avail))
 
 class MonthlySchedule(Schedule):
 
@@ -72,7 +76,9 @@ class MonthlySchedule(Schedule):
         help render a monthly schedule to the front end
 
         :param list_of_availabilities: A list of availabilities for an entire month
-        :param date: The date that represents the month - the day attribute need not be set
+        :param date: The date that represents the month - the day attribute need not be set: Note
+        that the month described by this date object should be the same as the month covered by the
+        list_of_availabilities
         """
         Schedule.__init__(self)
 
@@ -145,8 +151,7 @@ if __name__ == "__main__":
 
             for num_avails in range(1, 15 + 1):
 
-                avails.append(Availability(-1, -1, num_avails*3600+(num_avails + repetitions)*20,
-                                           num_avails * 3600 + (num_avails +repetitions )* 20 + 20*60, "RM", True, 2018, 7, day))
+                avails.append(Availability(-1, -1, num_avails*3600+(num_avails + repetitions)*20, "RM", True, 2018, 7, day))
 
 
     m = MonthlySchedule(avails, Date(2018, 7))
