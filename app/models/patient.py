@@ -33,5 +33,8 @@ class Patient:
         :returns a list of WalkinAppointment object"""
         self.cart.get_walkin_appts(availability_ids)
 
+    def get_id(self):
+        return self.id
+
 
         
