@@ -6,11 +6,10 @@ class DBUtil:
     instance = None
     app = None
 
-    def __init__(self, app, test=False):
+    def __init__(self, app):
         if DBUtil.instance is None:
             DBUtil.instance = self
             self.app = app
-            self.test = test
             self.init_database()
             self.connect_db = self.connect_database
     
@@ -33,22 +32,6 @@ class DBUtil:
 
     def connect_database(self):
         rv = sqlite3.connect(self.app.config['DATABASE']) 
-        rv.row_factory = create_dictionary
-        return rv
-
-    def init_test_database(self):
-        if os.path.isfile('db/database_test.db'):
-            os.remove('database_test.db')
-
-        rv = sqlite3.connect('database_test.db')
-        rv.row_factory = create_dictionary
-        with self.app.open_resource('db/database.sql', mode='r') as f:
-            rv.cursor().executescript(f.read())
-        rv.commit()
-        return rv
-    
-    def connect_test_database(self):
-        rv = sqlite3.connect('app/db/test_database.db')
         rv.row_factory = create_dictionary
         return rv
 
