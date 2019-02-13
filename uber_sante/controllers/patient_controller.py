@@ -34,6 +34,7 @@ def patient():
             return jsonify('No patient provided'), 400
 
         patient = Patient(
+            req.id,
             req.f_name,
             req.l_name,
             req.health_card_nb,
