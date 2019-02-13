@@ -1,9 +1,7 @@
-import uuid
-
 class Patient(object):
 
-    def __init__(self, f_name, l_name, health_card_nb, date_of_birth, gender, phone_nb, address, email):
-        self.id = uuid.uuid4()
+    def __init__(self, patient_id, f_name, l_name, health_card_nb, date_of_birth, gender, phone_nb, address, email):
+        self.id = patient_id
         self.first_name = f_name
         self.last_name = l_name
         self.health_card_nb = health_card_nb
