@@ -95,11 +95,14 @@ class Scheduler:
 
     def reserve_appointment(self, appointment):
         """
+        This method converts an appointment into a booking using the availability service
 
-        :param appointment:
-        :return:
+        :param appointment: The appointment object to convert into a booking
+        :return: True if successfully booked, False otherwise
         """
 
+        # Method call returns a boolean that describe whether the availability was successfully reserved
+        return self.availability_service.validateAvailabilityAndReserve(appointment)
 
 
 
