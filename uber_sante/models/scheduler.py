@@ -101,6 +101,15 @@ class Scheduler:
         # Method call returns a boolean that describe whether the availability was successfully reserved
         return self.availability_service.validateAvailabilityAndReserve(appointment)
 
+    def free_availabilities(self, availability_keys):
+        """
+        Uses the availability service to free the availabilities based on its primary keys (a list of 1 or 3 values)
+
+        :param availability_keys: The availability primary-keys that need to be "freed" - made available again
+        :return: N/A
+        """
+
+        self.availability_service.free_availabilities(availability_keys)
 
 
 if __name__ == "__main__":
