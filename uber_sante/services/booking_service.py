@@ -1,5 +1,6 @@
 from uber_sante.models.booking import Booking
 from uber_sante.utils.dbutil import import DBUtil
+from uber_sante.models.appointment import WalkinAppointment, AnnualAppointment
 
 
 class BookingService:
@@ -8,12 +9,18 @@ class BookingService:
         self.db = DBUtil.get_instance(False)
 
     def write_booking(self, appointment):
-        appointment = appointment.__dict__
 
-        for availability_id in appointment['availability_ids']:
-            insert_stmt = 'INSERT INTO Booking(availability_id, doctor_id, patient_id) ' \
-                          'VALUES (?, ?, ?)'
-            params = (availability_id, appointment['doctor_id'], appointment['patient_id'])
+        appt_dict = appointment.__dict__
+        insert_stmt = 'INSERT INTO Booking(availability_id, doctor_id, patient_id) ' \
+                      'VALUES (?, ?, ?)'
+
+        if isinstance(AnnualAppointment, appointment):
+            for availability_id in appt_dict['availability_ids']:
+                params = (availability_id, appt_dict['doctor_id'], appt_dict['patient_id'])
+                self.db.return_none(insert_stmt, params)
+
+        elif isinstance(WalkinAppointment, appointment):
+            params = (appt_dict['availability_id'], appt_dict['doctor_id'], appt_dict['patient_id'])
             self.db.return_none(insert_stmt, params)
 
     def get_booking(self, booking_id):
