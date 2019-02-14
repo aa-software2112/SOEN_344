@@ -22,7 +22,23 @@ class PatientService:
 
         return patient
 
-    """
+    def validate_login_info(self, health_card_nb, password):
+
+        select_stmt = 'SELECT password FROM Patient WHERE health_card_nb = ?'
+        params = (health_card_nb,)
+
+        result = self.db.read_one(select_stmt, params)
+
+        if result is None:
+            "Wrong health card number!"
+            return False
+
+        if password != result['password']:
+            "Wrong password!"
+            return False
+
+        return True
+
     def insert_patient(self, patient):
         patient = patient.__dict__
 
@@ -30,8 +46,7 @@ class PatientService:
                       'phone_nb, home_address, email, first_name, last_name)' \
                       'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
         params = (patient['id'], patient['health_card_nb'], patient['date_of_birth'], patient['gender'],
-                      patient['phone_nb'], patient['home_address'], patient['email'], patient['email'], patient['last_name'])
+                  patient['phone_nb'], patient['home_address'], patient['email'], patient['email'],
+                  patient['last_name'])
 
         self.db.write_one(insert_stmt, params)
-    """
-

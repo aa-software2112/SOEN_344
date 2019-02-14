@@ -8,9 +8,22 @@ class AvailabilityService:
         self.db = DBUtil.get_instance()
 
     def get_availabilities(self, schedule_request):
-        pass
+
+        select_stmt = 'SELECT * FROM Availability WHERE year = ? AND month = ? AND day = ?'
+
+        date = schedule_request.get_request_date()
+        year = date.get_year()
+        month = date.get_month()
+        day = date.get_day()
+
+        params = (year, month, day)
+
+        results = self.db.read_all(select_stmt, params)  # Returns a list of the matching rows
+
+        return results
 
     def free_availabilities(self, availability_ids):
+
         for availability_id in availability_ids:
             update_stmt = 'UPDATE Availability SET free = 1 WHERE id = ?'
             params = (availability_id,)
@@ -28,6 +41,7 @@ class AvailabilityService:
                 params = (availability_id,)
                 if self.db.read_one(select_stmt, params) is not None:
                     return False
+
             # Reserve the availabilities
             for availability_id in appt_dict['availability_ids']:
                 params = (availability_id,)
@@ -35,10 +49,12 @@ class AvailabilityService:
             return True
 
         elif isinstance(WalkinAppointment, appointment):
+
             availability_id = appt_dict['availability_id']
             params = (availability_id,)
             if self.db.read_one(select_stmt, params) is not None:
                 return False
+
             else:
                 self.db.write_one(update_stmt, params)
                 return True
