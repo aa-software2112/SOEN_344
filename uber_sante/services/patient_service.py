@@ -1,10 +1,11 @@
-from app.models.patient import Patient
+from uber_sante.models.patient import Patient
+from uber_sante.utils.dbutil import DBUtil
 
 
 class PatientService:
 
-    def __init__(self, db):
-        self.db = db.get_instance(False)
+    def __init__(self):
+        self.db = DBUtil.get_instance(False)
 
     def get_patient(self, patient_id):
         """Query the db for a patient by id and return the created patient object"""

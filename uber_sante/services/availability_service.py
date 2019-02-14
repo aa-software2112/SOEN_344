@@ -1,7 +1,9 @@
+from uber_sante.utils.dbutil import DBUtil
+
 class AvailabilityService:
 
-    def __init__(self, db):
-        self.db = db.get_instance(False)
+    def __init__(self):
+        self.db = DBUtil.get_instance(False)
 
     def get_availabilities(self, schedule_request):
         pass

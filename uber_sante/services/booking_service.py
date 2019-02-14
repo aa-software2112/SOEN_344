@@ -1,10 +1,11 @@
-from app.models.booking import Booking
+from uber_sante.models.booking import Booking
+from uber_sante.utils.dbutil import import DBUtil
 
 
 class BookingService:
 
-    def __init__(self, db):
-        self.db = db.get_instance(False)
+    def __init__(self):
+        self.db = DBUtil.get_instance(False)
 
     def write_booking(self, appointment):
         appointment = appointment.__dict__
