@@ -16,7 +16,7 @@ def test():
 
         query = 'SELECT * FROM Patient'
         results = []
-        for row in db.read_db_fetchall(query, ()):
+        for row in db.read_all(query, ()):
             results.append(row)
 
         return jsonify(results), 200
