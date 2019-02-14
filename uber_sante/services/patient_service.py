@@ -39,14 +39,11 @@ class PatientService:
 
         return result['id']
 
-    def insert_patient(self, patient):
-        patient = patient.__dict__
+    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password):
 
-        insert_stmt = 'INSERT INTO Patient(id, health_card_nb, date_of_birth, gender, ' \
-                      'phone_nb, home_address, email, first_name, last_name)' \
+        insert_stmt = 'INSERT INTO Patient(health_card_nb, date_of_birth, gender, ' \
+                      'phone_nb, home_address, email, first_name, last_name, password)' \
                       'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        params = (patient['id'], patient['health_card_nb'], patient['date_of_birth'], patient['gender'],
-                  patient['phone_nb'], patient['home_address'], patient['email'], patient['email'],
-                  patient['last_name'])
+        params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
 
         self.db.write_one(insert_stmt, params)
