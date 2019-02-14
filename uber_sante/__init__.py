@@ -1,12 +1,22 @@
-import os
-from flask import Flask
-from config import Config
+from flask import Flask, request, jsonify
 from uber_sante.utils.dbutil import DBUtil
+from uber_sante.controllers import controllers
 
-app = Flask('uber_sante')
-app.config.from_object(__name__)
+app = Flask(__name__)
 
-app.config.from_object(Config)
+db = DBUtil.get_instance()
 
-db_util = DBUtil(app)
-db = DBUtil.get_instance(db_util)
+app.register_blueprint(controllers)  # always register blueprints after 'app' routes
+
+
+# Can use this for print testing/debugging
+@app.route('/test', methods=["GET"])
+def test():
+    if request.method == 'GET':
+
+        query = 'SELECT * FROM Patient'
+        results = []
+        for row in db.read_db_fetchall(query, ()):
+            results.append(row)
+
+        return jsonify(results), 200

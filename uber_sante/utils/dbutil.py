@@ -1,58 +1,70 @@
 import os
 import sqlite3
+from uber_sante.utils.config import DB_CONFIG
+
 
 class DBUtil:
+    __instance = None
 
-    instance = None
-    app = None
+    @staticmethod
+    def get_instance():
+        """ Static access method. """
+        if DBUtil.__instance is None:
+            DBUtil.__instance = DBUtil()
+        return DBUtil.__instance
 
-    def __init__(self, app):
-        if DBUtil.instance is None:
-            DBUtil.instance = self
-            self.app = app
-            self.init_database()
-            self.connect_db = self.connect_database
-    
-    def get_instance(self):
-        if self.instance is None:
-            self.instance = DBUtil(self.app)
-        return self.instance
+    def __init__(self):
 
-    def init_database(self):
-        print(self.app.config['DATABASE'])
-        if os.path.isfile(self.app.config['DATABASE']):
-            os.remove(self.app.config['DATABASE'])
+        if DBUtil.__instance is not None:
+            raise Exception("This class is a singleton!")
+        else:
+            self.__instance = self
+            self.__init_database()
 
-        rv = sqlite3.connect(self.app.config['DATABASE'])
+    def __init_database(self):
+        """ Creates and populates the database if it does not already exit """
+        if not os.path.isfile(DB_CONFIG['path_to_db']):
+            print(' * No database found; creating and populating one... ')
+            rv = sqlite3.connect(DB_CONFIG['path_to_db'])
+
+            with open(DB_CONFIG['path_to_script']) as file:
+                rv.cursor().executescript(file.read())
+
+    def __connect(self):
+
+        rv = sqlite3.connect(DB_CONFIG['path_to_db'])
         rv.row_factory = create_dictionary
-        with self.app.open_resource('db/database.sql', mode='r') as f:
-            rv.cursor().executescript(f.read())
-        rv.commit()
         return rv
 
-    def connect_database(self):
-        rv = sqlite3.connect(self.app.config['DATABASE']) 
-        rv.row_factory = create_dictionary
-        return rv
-
-    def return_single(self, query, params):
-        rv = self.connect_db()
+    def read_one(self, query, params):
+        """ Performs a read (select) query and returns the first result """
+        rv = self.__connect()
         cursor = rv.cursor()
         cursor.execute(query, params)
         value = cursor.fetchone()
         rv.close()
         return value
-        
-    def return_all(self, query, params):
-        rv = self.connect_db()
+
+    def read_all(self, query, params):
+        """ Performs a read (select) query and returns all the results """
+        rv = self.__connect()
         cursor = rv.cursor()
         cursor.execute(query, params)
         values = cursor.fetchall()
         rv.close()
         return values
 
-    def return_none(self, queries, params):
-        rv = self.connect_db()
+    def write_one(self, query, params):
+        """ Performs one write (insert, delete, update) query """
+        rv = self.__connect()
+        cursor = rv.cursor()
+        cursor.execute(query, params)
+        rv.commit()
+        rv.close()
+
+    def write_many(self, queries, params):
+        """ Performs multiple write (insert, delete, update) queries in the same session (Unit of Work) """
+        rv = self.__connect()
         cursor = rv.cursor()
         for i in range(0, len(queries)):
             cursor.execute(queries[i], params[i])
@@ -61,6 +73,7 @@ class DBUtil:
 
 
 def create_dictionary(cursor, row):
+
     result = {}
     for idx, col in enumerate(cursor.description):
         result[col[0]] = row[idx]
