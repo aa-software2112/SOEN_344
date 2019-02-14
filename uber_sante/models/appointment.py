@@ -41,7 +41,11 @@ class AnnualAppointment(Appointment):
 	def get_availability_ids(self):
 		return self.availability_ids
 
+if __name__ == "__main__":
 
+	appointmentObject = AnnualAppointment([1,2,3], 1, 1, 1, 1, 1, 1, 1)
+
+	print(isinstance(appointmentObject,AnnualAppointment))
 
 
 
