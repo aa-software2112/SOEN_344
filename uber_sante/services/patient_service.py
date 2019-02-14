@@ -5,13 +5,13 @@ from uber_sante.utils.dbutil import DBUtil
 class PatientService:
 
     def __init__(self):
-        self.db = DBUtil.get_instance(False)
+        self.db = DBUtil.get_instance()
 
     def get_patient(self, patient_id):
         """Query the db for a patient by id and return the created patient object"""
         select_stmt = 'SELECT * FROM Patient WHERE id = ?'
         params = (patient_id,)
-        result = self.db.return_single(select_stmt, params)
+        result = self.db.read_one(select_stmt, params)
 
         if result is None:
             return
@@ -32,6 +32,6 @@ class PatientService:
         params = (patient['id'], patient['health_card_nb'], patient['date_of_birth'], patient['gender'],
                       patient['phone_nb'], patient['home_address'], patient['email'], patient['email'], patient['last_name'])
 
-        self.db.return_none(insert_stmt, params)
+        self.db.write_one(insert_stmt, params)
     """
 

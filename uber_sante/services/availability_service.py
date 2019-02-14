@@ -14,7 +14,7 @@ class AvailabilityService:
         for availability_id in availability_ids:
             update_stmt = 'UPDATE Availability SET free = 1 WHERE id = ?'
             params = (availability_id,)
-            self.db.return_none(update_stmt, params)
+            self.db.write_one(update_stmt, params)
 
     def validate_availability_and_reserve(self, appointment):
 
@@ -26,19 +26,19 @@ class AvailabilityService:
             # Check that these availabilities are free
             for availability_id in appt_dict['availability_ids']:
                 params = (availability_id,)
-                if self.db.return_single(select_stmt, params) is not None:
+                if self.db.read_one(select_stmt, params) is not None:
                     return False
             # Reserve the availabilities
             for availability_id in appt_dict['availability_ids']:
                 params = (availability_id,)
-                self.db.return_none(update_stmt, params)
+                self.db.write_one(update_stmt, params)
             return True
 
         elif isinstance(WalkinAppointment, appointment):
             availability_id = appt_dict['availability_id']
             params = (availability_id,)
-            if self.db.return_single(select_stmt, params) is not None:
+            if self.db.read_one(select_stmt, params) is not None:
                 return False
             else:
-                self.db.return_none(update_stmt, params)
+                self.db.write_one(update_stmt, params)
                 return True
