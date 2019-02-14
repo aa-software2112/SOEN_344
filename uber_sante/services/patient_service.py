@@ -1,5 +1,6 @@
 from uber_sante.models.patient import Patient
 from uber_sante.utils.dbutil import DBUtil
+from uber_sante.utils.cache import get_from_cache, set_to_cache
 
 
 class PatientService:
@@ -39,7 +40,28 @@ class PatientService:
 
         return result['id']
 
-    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password):
+    def test_and_set_patient_into(self, patient_id):
+        """
+        If the patient object is stored in cache already, don't do anything.
+        Otherwise create a new patient object and store it in cache.
+        """
+
+        if get_from_cache(patient_id) is not None:
+            return
+
+        else:
+            select_stmt = "SELECT * FROM Patient WHERE id = ?"
+            params = (patient_id,)
+            result = self.db.read_one(select_stmt, params)
+
+            patient = Patient(result['id'], result['first_name'], result['last_name'], result['health_card_nb'],
+                              result['date_of_birth'], result['gender'], result['phone_nb'], result['home_address'],
+                              result['email'])
+
+            set_to_cache(patient_id, patient)
+
+    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,
+                       last_name, password):
 
         insert_stmt = 'INSERT INTO Patient(health_card_nb, date_of_birth, gender, ' \
                       'phone_nb, home_address, email, first_name, last_name, password)' \
