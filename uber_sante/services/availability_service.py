@@ -9,14 +9,18 @@ class AvailabilityService:
 
     def get_availabilities(self, schedule_request):
 
-        select_stmt = 'SELECT * FROM Availability WHERE year = ? AND month = ? AND day = ?'
-
         date = schedule_request.get_request_date()
         year = date.get_year()
         month = date.get_month()
-        day = date.get_day()
 
-        params = (year, month, day)
+        if schedule_request.is_daily_request():
+            day = date.get_day()
+            select_stmt = 'SELECT * FROM Availability WHERE year = ? AND month = ? AND day = ?'
+            params = (year, month, day)
+
+        elif schedule_request.is_monthly_request():
+            select_stmt = 'SELECT * FROM Availability WHERE year = ? AND month = ?'
+            params = (year, month)
 
         results = self.db.read_all(select_stmt, params)  # Returns a list of the matching rows
 
@@ -35,7 +39,7 @@ class AvailabilityService:
         select_stmt = "SELECT id FROM Availability WHERE availability_id = ? AND free = 0"
         update_stmt = 'UPDATE Availability SET free = 0 WHERE id = ?'
 
-        if isinstance(AnnualAppointment, appointment):
+        if isinstance(appointment, AnnualAppointment):
             # Check that these availabilities are free
             for availability_id in appt_dict['availability_ids']:
                 params = (availability_id,)
@@ -48,7 +52,7 @@ class AvailabilityService:
                 self.db.write_one(update_stmt, params)
             return True
 
-        elif isinstance(WalkinAppointment, appointment):
+        elif isinstance(appointment, AnnualAppointment):
 
             availability_id = appt_dict['availability_id']
             params = (availability_id,)
