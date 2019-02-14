@@ -1,8 +1,30 @@
 import os
 from . import controllers
 from uber_sante.models.patient import Patient
+from uber_sante.services import *
 from cache import get_from_cache, set_to_cache
 from flask import Flask, request, jsonify
+
+@controllers.route('/login', methods=['POST'])
+def login():
+
+    # Grab the data from the post request
+    health_card_nb = request.args.get('health_card_nb')
+
+    password = request.args.get('password')
+
+    # TODO uncomment line below once service is ready
+    # Validate the login information
+    patient_id = -1 #PatientService.get_instance().validate_login_info(health_card_nb, password)
+
+    # There was no patient linked with the health card number and password
+    if patient_id == -1:
+        return jsonify(login_message="Invalid login information"), 400
+
+    # TODO uncomment line below once service is ready
+    #PatientService.get_instance().test_and_set_patient_into_cache(patient_id)
+
+    jsonify(login_message="Logged in successfully"), 200
 
 @controllers.route('/patient', methods=['GET', 'PUT'])
 def patient():
