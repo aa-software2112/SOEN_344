@@ -24,20 +24,20 @@ class PatientService:
 
     def validate_login_info(self, health_card_nb, password):
 
-        select_stmt = 'SELECT password FROM Patient WHERE health_card_nb = ?'
+        select_stmt = 'SELECT id, password FROM Patient WHERE health_card_nb = ?'
         params = (health_card_nb,)
 
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
             "Wrong health card number!"
-            return False
+            return -1
 
         if password != result['password']:
             "Wrong password!"
-            return False
+            return -1
 
-        return True
+        return result['id']
 
     def insert_patient(self, patient):
         patient = patient.__dict__
