@@ -14,12 +14,12 @@ class BookingService:
         insert_stmt = 'INSERT INTO Booking(availability_id, doctor_id, patient_id) ' \
                       'VALUES (?, ?, ?)'
 
-        if isinstance(AnnualAppointment, appointment):
+        if isinstance(appointment, AnnualAppointment):
             for availability_id in appt_dict['availability_ids']:
                 params = (availability_id, appt_dict['doctor_id'], appt_dict['patient_id'])
                 self.db.write_one(insert_stmt, params)
 
-        elif isinstance(WalkinAppointment, appointment):
+        elif isinstance(appointment, WalkinAppointment):
             params = (appt_dict['availability_id'], appt_dict['doctor_id'], appt_dict['patient_id'])
             self.db.write_one(insert_stmt, params)
 

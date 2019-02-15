@@ -1,6 +1,6 @@
 from uber_sante.utils.dbutil import DBUtil
 from uber_sante.models.appointment import WalkinAppointment, AnnualAppointment
-
+from uber_sante.models.availability import Availability
 
 class AvailabilityService:
 
@@ -24,7 +24,12 @@ class AvailabilityService:
 
         results = self.db.read_all(select_stmt, params)  # Returns a list of the matching rows
 
-        return results
+        list_of_availabilities = []
+        for result in results:
+            list_of_availabilities.append(Availability(result['id'], result['doctor_id'], result['start'],
+                                                       result['room'], result['free'], result['year'], result['month'], result['day']))
+
+        return list_of_availabilities
 
     def free_availabilities(self, availability_ids):
 
@@ -52,7 +57,7 @@ class AvailabilityService:
                 self.db.write_one(update_stmt, params)
             return True
 
-        elif isinstance(appointment, AnnualAppointment):
+        elif isinstance(appointment, WalkinAppointment):
 
             availability_id = appt_dict['availability_id']
             params = (availability_id,)
