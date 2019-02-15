@@ -3,6 +3,12 @@ from uber_sante.utils.dbutil import DBUtil
 from uber_sante.utils.cache import get_from_cache, set_to_cache
 
 
+class GetStatus(Enum):
+    SUCCESS = 1
+    HEALTH_CARD_ALREADY_EXISTS = -1
+    EMAIL_ALREADY_EXISTS = -2
+
+
 class PatientService:
 
     def __init__(self):
@@ -63,9 +69,25 @@ class PatientService:
     def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,
                        last_name, password):
 
-        insert_stmt = 'INSERT INTO Patient(health_card_nb, date_of_birth, gender, ' \
-                      'phone_nb, home_address, email, first_name, last_name, password)' \
-                      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
+        # Check if health card already exists in db
+        select_stmt = 'SELECT id FROM Patient WHERE health_card_nb = ?'
+        params = (health_card_nb,)
+        if self.db.read_one(select_stmt, params) is not None:
+            return GetStatus.HEALTH_CARD_ALREADY_EXISTS
 
-        self.db.write_one(insert_stmt, params)
+        # Check if email already exists in db
+        select_stmt = 'SELECT id FROM Patient WHERE email = ?'
+        params = (email,)
+        if self.db.read_one(select_stmt, params) is not None:
+            return GetStatus.EMAIL_ALREADY_EXISTS
+
+        else:
+            insert_stmt = 'INSERT INTO Patient(health_card_nb, date_of_birth, gender, ' \
+                          'phone_nb, home_address, email, first_name, last_name, password)' \
+                          'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name,
+                      password)
+
+            self.db.write_one(insert_stmt, params)
+
+            return GetStatus.SUCCESS
