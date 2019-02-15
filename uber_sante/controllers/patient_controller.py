@@ -1,8 +1,6 @@
-import os
 from . import controllers
 from uber_sante.models.patient import Patient
-from cache import get_from_cache, set_to_cache
-from flask import Flask, request, jsonify
+from flask import request, jsonify
 
 @controllers.route('/patient', methods=['GET', 'PUT'])
 def patient():
