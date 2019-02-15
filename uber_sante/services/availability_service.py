@@ -2,6 +2,7 @@ from uber_sante.utils.dbutil import DBUtil
 from uber_sante.models.appointment import WalkinAppointment, AnnualAppointment
 from uber_sante.models.availability import Availability
 
+
 class AvailabilityService:
 
     def __init__(self):
@@ -27,7 +28,8 @@ class AvailabilityService:
         list_of_availabilities = []
         for result in results:
             list_of_availabilities.append(Availability(result['id'], result['doctor_id'], result['start'],
-                                                       result['room'], result['free'], result['year'], result['month'], result['day']))
+                                                       result['room'], result['free'], result['year'], result['month'],
+                                                       result['day']))
 
         return list_of_availabilities
 

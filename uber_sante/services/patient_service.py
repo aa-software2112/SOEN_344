@@ -1,9 +1,10 @@
 from uber_sante.models.patient import Patient
 from uber_sante.utils.dbutil import DBUtil
 from uber_sante.utils.cache import get_from_cache, set_to_cache
+from enum import Enum
 
 
-class GetStatus(Enum):
+class CreatePatientStatus(Enum):
     SUCCESS = 1
     HEALTH_CARD_ALREADY_EXISTS = -1
     EMAIL_ALREADY_EXISTS = -2
@@ -73,13 +74,13 @@ class PatientService:
         select_stmt = 'SELECT id FROM Patient WHERE health_card_nb = ?'
         params = (health_card_nb,)
         if self.db.read_one(select_stmt, params) is not None:
-            return GetStatus.HEALTH_CARD_ALREADY_EXISTS
+            return CreatePatientStatus.HEALTH_CARD_ALREADY_EXISTS
 
         # Check if email already exists in db
         select_stmt = 'SELECT id FROM Patient WHERE email = ?'
         params = (email,)
         if self.db.read_one(select_stmt, params) is not None:
-            return GetStatus.EMAIL_ALREADY_EXISTS
+            return CreatePatientStatus.EMAIL_ALREADY_EXISTS
 
         else:
             insert_stmt = 'INSERT INTO Patient(health_card_nb, date_of_birth, gender, ' \
@@ -90,4 +91,4 @@ class PatientService:
 
             self.db.write_one(insert_stmt, params)
 
-            return GetStatus.SUCCESS
+            return CreatePatientStatus.SUCCESS
