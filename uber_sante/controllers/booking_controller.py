@@ -1,4 +1,6 @@
 from . import controllers
+from uber_sante.models.appointment import Appointment
+from uber_sante.models.scheduler import Scheduler
 from uber_sante.utils.cache import get_from_cache
 from flask import request, jsonify
 
@@ -38,9 +40,12 @@ def book():
             return jsonify('No patient specified'), 400
 
         patient = get_from_cache(patient_id) # get the patient from cache
-        appointment = patient.cart[appointment_id] # somewhat of a placeholder for now, waiting for cart to be implemented
 
-        result = True #scheduler.try_booking(appointment)   # make a call to the scheduler here
+        # Dummy appointment to test the endpoint
+        # will use patient.cart[appointment_id] later.
+        appointment = Appointment("today","20","William","20","Michael", "3pm", "4pm")
+
+        result = Scheduler.get_instance().reserve_appointment(appointment)   # make a call to the scheduler here
                                                             # returns availability object
         if result:
             True # booking_service.book(result, patient)

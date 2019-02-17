@@ -1,6 +1,7 @@
 from uber_sante.models.schedule import *
 from uber_sante.models.availability import Availability
 from uber_sante.utils.date import *
+from uber_sante.services.availability_service import AvailabilityService
 
 
 class RequestEnum(Enum):
@@ -81,7 +82,7 @@ class Scheduler:
             Scheduler._instance = self
 
         # TODO should be replaced with singleton: AvailabilityService.get_instance()
-        self.availability_service = None
+        self.availability_service = AvailabilityService()
 
     def get_schedule(self, schedule_request, av=None):
         """
@@ -122,7 +123,7 @@ class Scheduler:
         """
 
         # Method call returns a boolean that describe whether the availability was successfully reserved
-        return self.availability_service.validateAvailabilityAndReserve(appointment)
+        return self.availability_service.validate_availability_and_reserve(appointment)
 
     def free_availabilities(self, availability_keys):
         """
