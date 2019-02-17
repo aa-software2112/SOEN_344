@@ -1,5 +1,5 @@
 from . import controllers
-from uber_sante.models.appointment import WalkinAppointment
+from uber_sante.models.appointment import Appointment
 from uber_sante.models.scheduler import Scheduler
 from uber_sante.utils.cache import get_from_cache
 from uber_sante.services.booking_service import BookingService
@@ -40,15 +40,14 @@ def book():
         if patient_id is None:
             return jsonify('No patient specified'), 400
 
-        # TODO: Remove Dummy appoint and use the implementation below
-        # patient = get_from_cache(patient_id)  # get the patient from cache
-        # appointment = patient.cart[appointment_id]
+        patient = get_from_cache(patient_id) # get the patient from cache
 
         # Dummy appointment to test the endpoint
-        appointment = WalkinAppointment("20","today","20","William","16","Michael", "3pm", "4pm")
+        # will use patient.cart[appointment_id] later.
+        appointment = Appointment("today","20","William","20","Michael", "3pm", "4pm")
 
-        result = Scheduler.get_instance().reserve_appointment(appointment)
-
+        result = Scheduler.get_instance().reserve_appointment(appointment)   # make a call to the scheduler here
+                                                            # returns availability object
         if result:
             BookingService().write_booking(appointment)
             return jsonify('Appointment successfully booked'), 200
