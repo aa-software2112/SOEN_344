@@ -1,7 +1,8 @@
 from . import controllers
-from uber_sante.models.appointment import Appointment
+from uber_sante.models.appointment import WalkinAppointment
 from uber_sante.models.scheduler import Scheduler
 from uber_sante.utils.cache import get_from_cache
+from uber_sante.services.booking_service import BookingService
 from flask import request, jsonify
 
 @controllers.route('/booking', methods=['GET', 'PUT', 'DELETE'])
@@ -39,20 +40,22 @@ def book():
         if patient_id is None:
             return jsonify('No patient specified'), 400
 
-        patient = get_from_cache(patient_id) # get the patient from cache
+        # TODO: Remove Dummy appoint and use the implementation below
+        # patient = get_from_cache(patient_id)  # get the patient from cache
+        # appointment = patient.cart[appointment_id]
 
         # Dummy appointment to test the endpoint
-        # will use patient.cart[appointment_id] later.
-        appointment = Appointment("today","20","William","20","Michael", "3pm", "4pm")
+        appointment = WalkinAppointment("20","today","20","William","16","Michael", "3pm", "4pm")
 
-        result = Scheduler.get_instance().reserve_appointment(appointment)   # make a call to the scheduler here
-                                                            # returns availability object
+        result = Scheduler.get_instance().reserve_appointment(appointment)
+
         if result:
-            True # booking_service.book(result, patient)
+            BookingService().write_booking(appointment)
+            return jsonify('Appointment successfully booked'), 200
         else:
             return jsonify('Appointment slot already booked'), 403
 
-        return jsonify('Appointment successfully booked'), 200
+
 
     if request.method == 'DELETE':
     # example use case: cancel_booking
