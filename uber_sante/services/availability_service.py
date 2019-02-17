@@ -43,7 +43,7 @@ class AvailabilityService:
     def validate_availability_and_reserve(self, appointment):
 
         appt_dict = appointment.__dict__
-        select_stmt = "SELECT id FROM Availability WHERE availability_id = ? AND free = 0"
+        select_stmt = "SELECT id FROM Availability WHERE id = ? AND free = 0"
         update_stmt = 'UPDATE Availability SET free = 0 WHERE id = ?'
 
         if isinstance(appointment, AnnualAppointment):
