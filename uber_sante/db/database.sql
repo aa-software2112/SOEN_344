@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS Availability
   start     INTEGER NOT NULL,
   room      TEXT    NOT NULL,
   free      INTEGER NOT NULL,
-  year      TEXT    NOT NULL,
-  month     TEXT    NOT NULL,
-  day       TEXT    NOT NULL,
+  year      INTEGER    NOT NULL,
+  month     INTEGER    NOT NULL,
+  day       INTEGER    NOT NULL,
   FOREIGN KEY (doctor_id) REFERENCES Doctor (id)
 );
 
@@ -245,45 +245,45 @@ values (50, 'JSWA 8200 1562', '1971-04-20', 'F', '514-957-0686', '67 Moland Hill
 
 /* Availability */
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (1, 1, 32400, '088', 0, '2019', '02', '26');
+values (1, 1, 32400, '088', 0, 2019, 2, 26);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (2, 2, 32400, '053', 0, '2019', '03', '31');
+values (2, 2, 32400, '053', 0, 2019, 3, 31);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (3, 3, 32400, '672', 0, '2019','02','16');
+values (3, 3, 32400, '672', 0, 2019,2,16);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (4, 4, 32400, '718', 0, '2019','02','18');
+values (4, 4, 32400, '718', 0, 2019,2,18);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (5, 5, 32400, '164', 0, '2019','03','31');
+values (5, 5, 32400, '164', 0, 2019,3,31);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (6, 6, 32400, '103', 0, '2019','04','03');
+values (6, 6, 32400, '103', 0, 2019,4,3);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (7, 7, 32400, '828', 0, '2019', '02', '23');
+values (7, 7, 32400, '828', 0, 2019, 2, 23);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (8, 8, 32400, '371', 0, '2019', '03', '08');
+values (8, 8, 32400, '371', 0, 2019, 3, 8);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (9, 9, 32400, '372', 0, '2019', '03', '22');
+values (9, 9, 32400, '372', 0, 2019, 3, 22);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (10, 10, 32400, '642', 0, '2019', '04', '01');
+values (10, 10, 32400, '642', 0, 2019, 4, 1);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (11, 11, 32400, '387', 0, '2019', '03', '01');
+values (11, 11, 32400, '387', 0, 2019, 3, 1);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (12, 12, 32400, '537', 0, '2019', '03', '27');
+values (12, 12, 32400, '537', 0, 2019, 3, 27);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (13, 13, 32400, '470', 0, '2019', '03', '26');
+values (13, 13, 32400, '470', 0, 2019, 3, 26);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (14, 14, 32400, '433', 0, '2019', '02', '23');
+values (14, 14, 32400, '433', 0, 2019, 2, 23);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (15, 15, 32400, '345', 0, '2019', '04', '04');
+values (15, 15, 32400, '345', 0, 2019, 4, 04);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (16, 16, 32400, '253', 0, '2019', '02', '26');
+values (16, 16, 32400, '253', 0, 2019, 2, 26);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (17, 17, 32400, '429', 0, '2019', '02', '14');
+values (17, 17, 32400, '429', 0, 2019, 2, 14);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (18, 18, 32400, '119', 1, '2019', '04', '08');
+values (18, 18, 32400, '119', 1, 2019, 4, 8);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (19, 19, 32400, '136', 1, '2019', '04', '02');
+values (19, 19, 32400, '136', 1, 2019, 4, 2);
 insert into Availability (id, doctor_id, start, room, free, year, month, day)
-values (20, 20, 32400, '881', 1, '2019', '04', '08');
+values (20, 20, 32400, '881', 1, 2019, 4, 8);
 
 /* Booking */
 insert into Booking (id, availability_id, doctor_id, patient_id) values (1, 1, 1, 19);
