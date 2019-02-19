@@ -1,11 +1,5 @@
-import unittest
-import requests
-import os
-
 from uber_sante.services.patient_service import PatientService
-from uber_sante.tests.test_base import BaseTestClass
-from uber_sante import app
-from uber_sante.services.availability_service import AvailabilityService
+from tests.test_base import BaseTestClass
 from uber_sante.utils import cache
 
 

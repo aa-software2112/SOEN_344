@@ -1,8 +1,5 @@
-import os
 import unittest
 
-os.chdir("../../")
-print(os.getcwd())
 
 from uber_sante import app
 
