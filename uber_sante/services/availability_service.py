@@ -33,12 +33,20 @@ class AvailabilityService:
 
         return list_of_availabilities
 
+    """
     def free_availabilities(self, availability_ids):
 
         for availability_id in availability_ids:
             update_stmt = 'UPDATE Availability SET free = 1 WHERE id = ?'
             params = (availability_id,)
             self.db.write_one(update_stmt, params)
+    """
+    
+    def free_availability(self, availability_id):
+
+        update_stmt = 'UPDATE Availability SET free = 1 WHERE id = ?'
+        params = (availability_id, )
+        self.db.write_one(update_stmt, params)
 
     def validate_availability_and_reserve(self, appointment):
 
