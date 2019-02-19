@@ -1,19 +1,20 @@
 import os
 
-from flask import make_response
-
 from . import controllers
+from uber_sante.utils import cookie_helper
 from uber_sante.models.patient import Patient
 from uber_sante.services.patient_service import PatientService
-from uber_sante.utils import cookie_helper
-from flask import Flask, request, jsonify
+
+from flask import Flask, request, jsonify, make_response
 
 patient_service = PatientService()
+
 
 @controllers.route('/viewmycookie', methods=['GET'])
 def view_cookie():
 
     return jsonify(request.cookies), 200
+
 
 @controllers.route('/logout', methods=['GET'])
 def logout():
@@ -39,7 +40,8 @@ def login():
         password = request.args.get('password')
 
         # Validate the login information
-        patient_id = patient_service.validate_login_info(health_card_nb, password)
+        patient_id = patient_service.validate_login_info(
+            health_card_nb, password)
 
         # There was no patient linked with the health card number and password
         if patient_id == -1:
@@ -50,51 +52,64 @@ def login():
 
         # set the cookie in the response object
         resp = jsonify(login_message="Logged in successfully")
-        resp = cookie_helper.set_user_logged(resp, patient_id, cookie_helper.UserTypes.PATIENT.value)
+        resp = cookie_helper.set_user_logged(
+            resp, patient_id, cookie_helper.UserTypes.PATIENT.value)
 
         return resp, 200
+
 
 @controllers.route('/patient', methods=['GET', 'PUT'])
 def patient():
 
     if request.method == 'GET':
-    # example use case: make appointment
-    # params: patient_id (int, required)
-    # return: patient object
-    # TODO: connect the call to the patient_service (line 21)
+        # params: patient_id (int, required)
+        # return: patient object
 
         patient_id = request.args.get('patient_id')
 
         if patient_id is None:
-            return jsonify('No patient id specified'), 400
+            return jsonify(status='error', data=None, error={'code': 400, 'message': 'Patient Id is not specified'}), 400
 
-        result = True # patient_service.get_patient(patient_id)
+        result = patient_service.get_patient(patient_id)
 
-        return jsonify(result), 200
+        if result is None:
+            return jsonify(status='error', data=None, error={'code': 500, 'message': 'Could not retrieve patient'}), 500
+
+        return jsonify(status="success", data=result.asdict(), message=None), 200
 
     if request.method == 'PUT':
-    # example use case: register patient
-    # params: patient(Patient object, required)
-    # return: sucess/failure
-    # TODO: connect the call to the patient_service to insert the patient to the Patient table (line 47)
+        # params: [various, look below] (int or string, required)
+        # return: sucess/failure
 
-        req = request.args.get('patient')
+        if request.args is None:
+            return jsonify(status='error', data=None, error={'code': 400, 'message': 'No patient information provided'}), 400
 
-        if req is None:
-            return jsonify('No patient provided'), 400
+        health_card_nb = request.args.get('health_card_nb')
+        date_of_birth = request.args.get('date_of_birth')
+        gender = request.args.get('gender')
+        phone_nb = request.args.get('phone_nb')
+        home_address = request.args.get('home_address')
+        email = request.args.get('email')
+        first_name = request.args.get('first_name')
+        last_name = request.args.get('last_name')
+        password = request.args.get('password')
 
-        patient = Patient(
-            req.id,
-            req.f_name,
-            req.l_name,
-            req.health_card_nb,
-            req.date_of_birth,
-            req.gender,
-            req.phone_nb,
-            req.address, 
-            req.email
+        result = patient_service.create_patient(
+            health_card_nb,
+            date_of_birth,
+            gender,
+            phone_nb,
+            home_address,
+            email,
+            first_name,
+            last_name,
+            password
         )
 
-        result = True # patient_service.put_patient(patient)
+        if result == -1:
+            return jsonify(status='error', data=None, error={'code': 500, 'message': 'Health card number already registered'})
 
-        return jsonify(result), 200
+        if result == -2:
+            return jsonify(status='error', data=None, error={'code': 500, 'message': 'Email address already registered'})
+
+        return jsonify(status="success", data=None, message='Patient record created'), 201
