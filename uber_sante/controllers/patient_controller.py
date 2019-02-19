@@ -11,7 +11,7 @@ from flask import Flask, request, jsonify
 patient_service = PatientService()
 
 @controllers.route('/viewmycookie', methods=['GET'])
-def viewCookie():
+def view_cookie():
 
     return jsonify(request.cookies), 200
 
