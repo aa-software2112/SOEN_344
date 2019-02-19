@@ -1,5 +1,4 @@
 from uber_sante.utils.dbutil import DBUtil
-from uber_sante.models.appointment import WalkinAppointment, AnnualAppointment
 from uber_sante.models.availability import Availability
 
 
@@ -63,31 +62,29 @@ class AvailabilityService:
     def free_availability(self, availability_id):
 
         update_stmt = 'UPDATE Availability SET free = 1 WHERE id = ?'
+
         params = (availability_id, )
+
         self.db.write_one(update_stmt, params)
 
-    def validate_availability_and_reserve(self, appointment):
-        """
-        Given either a Walkin (20min, 1 row) or Annual appointment (60min, 3 rows),
-        checks the DB to see whether the availability is free,
-        and if so, it reserves it.
-        """
+    def validate_availability_and_reserve(self, availability_id):
 
-        availability_id = appointment.__dict__['availability_ids'][0] if isinstance(appointment, AnnualAppointment) \
-            else appointment.__dict__['availability_id']
-
-        select_stmt = "SELECT id FROM Availability WHERE availability_id = ? AND free = 0"
+        select_stmt = "SELECT * FROM Availability WHERE availability_id = ? AND free = 1"
 
         update_stmt = 'UPDATE Availability SET free = 0 WHERE id = ?'
 
         params = (availability_id, )
 
-        i = 3 if isinstance(appointment, AnnualAppointment) else 1
+        result = self.db.read_one(select_stmt, params)
 
-        for x in range(0, i):
-            if self.db.read_one(select_stmt, params) is not None:
-                return False
+        if result is None:
+            return None
 
-        for x in range(0, i):
+        else:
             self.db.write_one(update_stmt, params)
-        return True
+
+            return Availability(result['id'], result['doctor_id'], result['start'],
+                                result['room'], result['free'], result['year'],
+                                result['month'],result['day'])
+
+
