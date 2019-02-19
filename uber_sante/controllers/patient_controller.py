@@ -25,7 +25,7 @@ def logout():
         return resp, 200
 
 
-@controllers.route('/login', methods=['POST', 'GET'])
+@controllers.route('/login', methods=['POST'])
 def login():
 
     # Grab the data from the post request
@@ -36,7 +36,6 @@ def login():
             return jsonify(login_message="Already logged in!"), 400
 
         health_card_nb = request.args.get('health_card_nb')
-
         password = request.args.get('password')
 
         # Validate the login information
@@ -49,10 +48,8 @@ def login():
         # Set patient in cache
         patient_service.test_and_set_patient_into_cache(patient_id)
 
-        # Sets the cookie, and status of "logged in" for front-end functionality switches
-        resp = jsonify(login_message="Logged in successfully")
-
         # set the cookie in the response object
+        resp = jsonify(login_message="Logged in successfully")
         resp = cookie_helper.set_user_logged(resp, patient_id, cookie_helper.UserTypes.PATIENT.value)
 
         return resp, 200

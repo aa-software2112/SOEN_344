@@ -46,3 +46,5 @@ def logout_user_cookie(response):
 
     response.set_cookie(CookieKeys.LOGGED.value, str(False))
     return response
+
+
