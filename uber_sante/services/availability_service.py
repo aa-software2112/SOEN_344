@@ -18,7 +18,7 @@ class AvailabilityService:
         date = schedule_request.get_request_date()
         year = date.get_year()
         month = date.get_month()
-        booking_type = schedule_request.get_appointment_request_type_value()
+        appointment_request_type = schedule_request.get_appointment_request_type_value()
 
         if schedule_request.is_daily_request():
 
@@ -29,7 +29,7 @@ class AvailabilityService:
                           'WHERE year = ? AND month = ? AND day = ?' \
                           'AND (? = "ALL" OR booking_type = ?)'
 
-            params = (year, month, day, booking_type, booking_type)
+            params = (year, month, day, appointment_request_type, appointment_request_type)
 
         elif schedule_request.is_monthly_request():
 
@@ -38,7 +38,7 @@ class AvailabilityService:
                           'WHERE year = ? AND month = ?' \
                           'AND (? = "ALL" OR booking_type = ?)'
 
-            params = (year, month, booking_type, booking_type)
+            params = (year, month, appointment_request_type, appointment_request_type)
 
         results = self.db.read_all(select_stmt, params)
 

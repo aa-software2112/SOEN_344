@@ -8,7 +8,7 @@ class RequestEnum(Enum):
     MONTHLY_REQUEST = 2
 
 
-class BookingType(Enum):
+class AppointmentRequestType(Enum):
     ANNUAL = "ANNUAL"
     WALKIN = "WALKIN"
     ALL = "ALL"
@@ -43,13 +43,13 @@ class ScheduleRequest:
         return self.date_request
 
     def is_annual_request(self):
-        return self.appointment_request_type == BookingType.ANNUAL
+        return self.appointment_request_type == AppointmentRequestType.ANNUAL
 
     def is_walkin_request(self):
-        return self.appointment_request_type == BookingType.WALKIN
+        return self.appointment_request_type == AppointmentRequestType.WALKIN
 
     def is_walkin_and_annual_request(self):
-        return self.appointment_request_type == BookingType.ALL
+        return self.appointment_request_type == AppointmentRequestType.ALL
 
     def get_appointment_request_type_value(self):
         return self.appointment_request_type.value
