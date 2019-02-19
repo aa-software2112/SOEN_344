@@ -25,6 +25,7 @@ class DBUtil:
         """ Creates and populates the database if it does not already exit """
         if not os.path.isfile(DB_CONFIG['path_to_db']):
             print(' * No database found; creating and populating one... ')
+            print(DB_CONFIG['path_to_db'])
             rv = sqlite3.connect(DB_CONFIG['path_to_db'])
 
             with open(DB_CONFIG['path_to_script']) as file:

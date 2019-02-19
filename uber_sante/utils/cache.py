@@ -1,6 +1,9 @@
 from werkzeug.contrib.cache import SimpleCache
 cache = SimpleCache()
 
+def reset_cache():
+    cache.clear()
+
 def get_from_cache(key):
     rv = cache.get(key)
     return rv
