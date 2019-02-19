@@ -67,31 +67,27 @@ class AvailabilityService:
         self.db.write_one(update_stmt, params)
 
     def validate_availability_and_reserve(self, appointment):
+        """
+        Given either a Walkin (20min, 1 row) or Annual appointment (60min, 3 rows),
+        checks the DB to see whether the availability is free,
+        and if so, it reserves it.
+        """
 
-        appt_dict = appointment.__dict__
+        availability_id = appointment.__dict__['availability_ids'][0] if isinstance(appointment, AnnualAppointment) \
+            else appointment.__dict__['availability_id']
+
         select_stmt = "SELECT id FROM Availability WHERE availability_id = ? AND free = 0"
+
         update_stmt = 'UPDATE Availability SET free = 0 WHERE id = ?'
 
-        if isinstance(appointment, AnnualAppointment):
-            # Check that these availabilities are free
-            for availability_id in appt_dict['availability_ids']:
-                params = (availability_id,)
-                if self.db.read_one(select_stmt, params) is not None:
-                    return False
+        params = (availability_id, )
 
-            # Reserve the availabilities
-            for availability_id in appt_dict['availability_ids']:
-                params = (availability_id,)
-                self.db.write_one(update_stmt, params)
-            return True
+        i = 3 if isinstance(appointment, AnnualAppointment) else 1
 
-        elif isinstance(appointment, WalkinAppointment):
-
-            availability_id = appt_dict['availability_id']
-            params = (availability_id,)
+        for x in range(0, i):
             if self.db.read_one(select_stmt, params) is not None:
                 return False
 
-            else:
-                self.db.write_one(update_stmt, params)
-                return True
+        for x in range(0, i):
+            self.db.write_one(update_stmt, params)
+        return True
