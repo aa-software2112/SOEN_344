@@ -11,7 +11,7 @@ class RequestEnum(Enum):
 class BookingType(Enum):
     ANNUAL = "ANNUAL"
     WALKIN = "WALKIN"
-    ALL = ""
+    ALL = "ALL"
 
 
 class ScheduleRequest:

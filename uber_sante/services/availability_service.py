@@ -27,7 +27,7 @@ class AvailabilityService:
             # If the booking_type is BookingType.ALL (which has value ""), it will select all rows
             select_stmt = 'SELECT * FROM Availability ' \
                           'WHERE year = ? AND month = ? AND day = ?' \
-                          'AND (? = "" OR booking_type = ?)'
+                          'AND (? = "ALL" OR booking_type = ?)'
 
             params = (year, month, day, booking_type, booking_type)
 
@@ -36,7 +36,7 @@ class AvailabilityService:
             # If the booking_type is BookingType.ALL (which has value ""), it will select all rows
             select_stmt = 'SELECT * FROM Availability ' \
                           'WHERE year = ? AND month = ?' \
-                          'AND (? = "" OR booking_type = ?)'
+                          'AND (? = "ALL" OR booking_type = ?)'
 
             params = (year, month, booking_type, booking_type)
 
