@@ -1,6 +1,6 @@
 from . import controllers
-from cache import get_from_cache, set_to_cache
-from flask import Flask, request, jsonify
+from uber_sante.utils.cache import get_from_cache
+from flask import request, jsonify
 
 @controllers.route('/booking', methods=['GET', 'PUT', 'DELETE'])
 def book():
