@@ -8,10 +8,10 @@ class RequestEnum(Enum):
     MONTHLY_REQUEST = 2
 
 
-class AppointmentRequest(Enum):
-    ANNUAL = 1
-    WALKIN = 2
-    ALL = 3
+class BookingType(Enum):
+    ANNUAL = "ANNUAL"
+    WALKIN = "WALKIN"
+    ALL = ""
 
 
 class ScheduleRequest:
@@ -21,6 +21,8 @@ class ScheduleRequest:
 
         :param request_type: This request should take a request type that
         comes from the Request enum
+        :param appointment_request_type: This request should take a booking type
+        that comes from the BookingType enum
         :param date: The date of the schedule request (Date object)
         :return: N/A
         """
@@ -41,13 +43,16 @@ class ScheduleRequest:
         return self.date_request
 
     def is_annual_request(self):
-        return self.appointment_request_type == AppointmentRequest.ANNUAL
+        return self.appointment_request_type == BookingType.ANNUAL
 
     def is_walkin_request(self):
-        return self.appointment_request_type == AppointmentRequest.WALKIN
+        return self.appointment_request_type == BookingType.WALKIN
 
-    def is_walking_and_annual_request(self):
-        return self.appointment_request_type == AppointmentRequest.ALL
+    def is_walkin_and_annual_request(self):
+        return self.appointment_request_type == BookingType.ALL
+
+    def get_appointment_request_type_value(self):
+        return self.appointment_request_type.value
 
 
 class Scheduler:
