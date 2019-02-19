@@ -4,14 +4,19 @@ from uber_sante.utils.date import *
 
 
 class RequestEnum(Enum):
-
     DAILY_REQUEST = 1
     MONTHLY_REQUEST = 2
 
 
+class AppointmentRequest(Enum):
+    ANNUAL = 1
+    WALKIN = 2
+    ALL = 3
+
+
 class ScheduleRequest:
 
-    def __init__(self, request_type, date):
+    def __init__(self, request_type, appointment_request_type, date):
         """
 
         :param request_type: This request should take a request type that
@@ -22,22 +27,30 @@ class ScheduleRequest:
 
         self.request_type = request_type
 
+        self.appointment_request_type = appointment_request_type
+
         self.date_request = date
 
     def is_monthly_request(self):
-
         return self.request_type == RequestEnum.MONTHLY_REQUEST
 
     def is_daily_request(self):
-
         return self.request_type == RequestEnum.DAILY_REQUEST
 
     def get_request_date(self):
-
         return self.date_request
 
-class Scheduler:
+    def is_annual_request(self):
+        return self.appointment_request_type == AppointmentRequest.ANNUAL
 
+    def is_walkin_request(self):
+        return self.appointment_request_type == AppointmentRequest.WALKIN
+
+    def is_walking_and_annual_request(self):
+        return self.appointment_request_type == AppointmentRequest.ALL
+
+
+class Scheduler:
     _instance = None
 
     @staticmethod
@@ -45,7 +58,6 @@ class Scheduler:
         """ Static access method. """
 
         if Scheduler._instance is None:
-
             Scheduler._instance = Scheduler()
 
         return Scheduler._instance
@@ -132,7 +144,8 @@ if __name__ == "__main__":
     daily_avails = []
     for num_avails in range(1, 15 + 1):
         daily_avails.append(
-            Availability(-1, -1, num_avails * 3600 + (num_avails + repetitions) * 20, "RM", True, 2019, DateEnum.APRIL.value, 16))
+            Availability(-1, -1, num_avails * 3600 + (num_avails + repetitions) * 20, "RM", True, 2019,
+                         DateEnum.APRIL.value, 16))
 
     # create a monthly schedule
     monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly, monthly_avails)
@@ -140,5 +153,5 @@ if __name__ == "__main__":
     print(monthly_schedule.get_schedule_date_string())
 
     # create a daily schedule
-    daily_schedule = Scheduler.get_instance().get_schedule(sr_daily,daily_avails)
+    daily_schedule = Scheduler.get_instance().get_schedule(sr_daily, daily_avails)
     daily_schedule.display_daily_schedule()
