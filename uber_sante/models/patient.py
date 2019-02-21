@@ -1,6 +1,5 @@
 from uber_sante.models.cart import Cart
 
-
 class Patient:
 
     def __init__(self, patient_id, f_name, l_name, health_card_nb, date_of_birth, gender, phone_nb, address, email):
@@ -35,7 +34,7 @@ class Patient:
     def get_id(self):
         return self.id
 
-    def asdict(self):
+    def __dict__(self):
         return {
             'id': self.id,
             'first_name': self.first_name,
@@ -48,3 +47,8 @@ class Patient:
             'email': self.email,
             'cart': self.cart.__dict__
         }
+
+if __name__ == "__main__":
+
+    p = Patient(1, "frank", "smith", "1234 5678 9012", "24121992", "F", "5144435211", "7331", "frank.smith@gmail.ca")
+    print(p.__dict__())

@@ -4,7 +4,8 @@ from . import controllers
 from uber_sante.utils import cookie_helper
 from uber_sante.models.patient import Patient
 from uber_sante.services.patient_service import PatientService
-
+from uber_sante.services.patient_service import CreatePatientStatus
+from uber_sante.utils import json_helper as js
 from flask import Flask, request, jsonify, make_response
 
 patient_service = PatientService()
@@ -13,7 +14,8 @@ patient_service = PatientService()
 @controllers.route('/viewmycookie', methods=['GET'])
 def view_cookie():
 
-    return jsonify(request.cookies), 200
+    return js.create_json(data=request.cookies, message="Here is your cookie",
+                              return_code=js.ResponseReturnCode.CODE_200)
 
 
 @controllers.route('/logout', methods=['GET'])
@@ -21,9 +23,10 @@ def logout():
 
     if request.method == 'GET':
 
-        resp = jsonify(logout_message="Successfully logged out!")
+        resp = js.create_json(data=None, message="Successfully logged out!",
+                              return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
         resp = cookie_helper.logout_user_cookie(resp)
-        return resp, 200
+        return resp, js.ResponseReturnCode.CODE_200.value
 
 
 @controllers.route('/login', methods=['POST'])
@@ -34,7 +37,7 @@ def login():
 
         # Check that the user is not already logged (users can login accross multiple PCs, however)
         if cookie_helper.user_is_logged(request):
-            return jsonify(login_message="Already logged in!"), 400
+            return js.create_json(data=None, message="Already logged in!", return_code=js.ResponseReturnCode.CODE_400)
 
         health_card_nb = request.args.get('health_card_nb')
         password = request.args.get('password')
@@ -45,17 +48,17 @@ def login():
 
         # There was no patient linked with the health card number and password
         if patient_id == -1:
-            return jsonify(login_message="Invalid login information"), 400
+            return js.create_json(data=None, message="Invalid login information", return_code=js.ResponseReturnCode.CODE_400)
 
         # Set patient in cache
         patient_service.test_and_set_patient_into_cache(patient_id)
 
         # set the cookie in the response object
-        resp = jsonify(login_message="Logged in successfully")
+        resp = js.create_json(data=None, message="Logged in successfully", return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
         resp = cookie_helper.set_user_logged(
             resp, patient_id, cookie_helper.UserTypes.PATIENT.value)
 
-        return resp, 200
+        return resp, js.ResponseReturnCode.CODE_200.value
 
 
 @controllers.route('/patient', methods=['GET', 'PUT'])
@@ -68,21 +71,21 @@ def patient():
         patient_id = request.args.get('patient_id')
 
         if patient_id is None:
-            return jsonify(status='error', data=None, error={'code': 400, 'message': 'Patient Id is not specified'}), 400
+            return js.create_json(data=None, message="Patient Id is not specified", return_code=js.ResponseReturnCode.CODE_400)
 
         result = patient_service.get_patient(patient_id)
 
         if result is None:
-            return jsonify(status='error', data=None, error={'code': 500, 'message': 'Could not retrieve patient'}), 500
+            return js.create_json(data=None, message="Could not retrieve patient", return_code=js.ResponseReturnCode.CODE_500)
 
-        return jsonify(status="success", data=result.asdict(), message=None), 200
+        return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
     if request.method == 'PUT':
         # params: [various, look below] (int or string, required)
         # return: sucess/failure
 
         if request.args is None:
-            return jsonify(status='error', data=None, error={'code': 400, 'message': 'No patient information provided'}), 400
+            return js.create_json(None, "No patient information provided", js.ResponseReturnCode.CODE_400)
 
         health_card_nb = request.args.get('health_card_nb')
         date_of_birth = request.args.get('date_of_birth')
@@ -106,10 +109,10 @@ def patient():
             password
         )
 
-        if result == -1:
-            return jsonify(status='error', data=None, error={'code': 500, 'message': 'Health card number already registered'})
+        if result == CreatePatientStatus.HEALTH_CARD_ALREADY_EXISTS:
+            return js.create_json(None, "Health card number already registered", js.ResponseReturnCode.CODE_500)
 
-        if result == -2:
-            return jsonify(status='error', data=None, error={'code': 500, 'message': 'Email address already registered'})
+        if result == CreatePatientStatus.EMAIL_ALREADY_EXISTS:
+            return js.create_json(None, "Email address already registered", js.ResponseReturnCode.CODE_500)
 
-        return jsonify(status="success", data=None, message='Patient record created'), 201
+        return js.create_json(None, "Patient record created", js.ResponseReturnCode.CODE_201)
