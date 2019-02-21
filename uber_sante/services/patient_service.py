@@ -47,7 +47,7 @@ class PatientService:
 
         return result['id']
 
-    def test_and_set_patient_into(self, patient_id):
+    def test_and_set_patient_into_cache(self, patient_id):
         """
         If the patient object is stored in cache already, don't do anything.
         Otherwise create a new patient object and store it in cache.
