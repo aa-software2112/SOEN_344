@@ -34,19 +34,6 @@ class Patient:
     def get_id(self):
         return self.id
 
-    def __dict__(self):
-        return {
-            'id': self.id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'health_card_nb': self.health_card_nb,
-            'date_of_birth': self.date_of_birth,
-            'gender': self.gender,
-            'phone_nb': self.phone_nb,
-            'home_address': self.home_address,
-            'email': self.email,
-            'cart': self.cart.__dict__
-        }
 
 if __name__ == "__main__":
 

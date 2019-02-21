@@ -33,8 +33,8 @@ class LoginTest(BaseTestClass):
 
         response = self.send_post(self.login_url, valid_health_card_and_pw)
 
-        assert(response.status_code == 200)
-        assert(response.json["login_message"] == "Logged in successfully")
+        self.assert_status_code(response, 200)
+        self.assert_json_message(response, "Logged in successfully")
 
     def test_login_endpoint_fail(self):
         """
@@ -49,13 +49,13 @@ class LoginTest(BaseTestClass):
 
         response = self.send_post(self.login_url,valid_health_card_invalid_pw)
 
-        assert (response.status_code == 400)
-        assert (response.json["login_message"] == "Invalid login information")
+        self.assert_status_code(response, 400)
+        self.assert_json_message (response, "Invalid login information", error=True)
 
         response = self.send_post(self.login_url, invalid_health_card)
 
-        assert (response.status_code == 400)
-        assert (response.json["login_message"] == "Invalid login information")
+        self.assert_status_code(response, 400)
+        self.assert_json_message(response, "Invalid login information", error=True)
 
     def test_validate_login_info(self):
         """
@@ -83,5 +83,5 @@ class LoginTest(BaseTestClass):
 
         patient_obj = cache.get_from_cache(patient_id)
 
-        assert(not (patient_obj == None))
-        assert(patient_id == patient_obj.get_id())
+        assert (not (patient_obj == None))
+        assert (patient_id == patient_obj.get_id())
