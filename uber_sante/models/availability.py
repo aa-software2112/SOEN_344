@@ -5,7 +5,7 @@ class Availability:
     SECONDS_IN_HOUR = 60*60
     SECONDS_IN_MINUTE = 60
 
-    def __init__(self, availability_id, doctor_id, start, room, free, year, month, day):
+    def __init__(self, availability_id, doctor_id, start, room, free, year, month, day, availability_type):
 
         # Note, the id comes from the Availability Table
         self.id = availability_id
@@ -16,6 +16,8 @@ class Availability:
         self.month = month
         self.day = day
         self.year = year
+        # either AppointmentRequestType.WALKIN or AppointmentRequestType.ANNUAL
+        self.availability_type = availability_type
 
     def get_start_time_string(self):
         return "{}:{} {}".format(int(self.start/(Availability.SECONDS_IN_HOUR)),
@@ -32,6 +34,9 @@ class Availability:
     def is_free(self):
 
         return self.free
+
+    def get_type(self):
+        return self.availability_type
 
     def __str__(self):
 

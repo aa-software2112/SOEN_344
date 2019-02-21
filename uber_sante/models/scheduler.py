@@ -8,6 +8,12 @@ class RequestEnum(Enum):
     DAILY_REQUEST = 1
     MONTHLY_REQUEST = 2
 
+# took this from @lkadian PR to finish my fix
+class AppointmentRequestType(Enum):
+    ANNUAL = "ANNUAL"
+    WALKIN = "WALKIN"
+    ALL = "ALL"
+
 
 class ScheduleRequest:
 
