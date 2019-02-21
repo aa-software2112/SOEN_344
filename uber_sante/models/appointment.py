@@ -18,11 +18,11 @@ class Appointment:
 		return self.availability.id
 
 	def is_walkin_appointment(self):
-		if self.availability.get_type() == AppointmentRequestType.WALKIN:
+		if self.availability.get_booking_type() == AppointmentRequestType.WALKIN:
 			return True
 		return False
 
 	def is_annual_appointment(self):
-		if self.availability.get_type() == AppointmentRequestType.ANNUAL:
+		if self.availability.get_booking_type() == AppointmentRequestType.ANNUAL:
 			return True
 		return False
