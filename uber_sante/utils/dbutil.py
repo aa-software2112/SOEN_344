@@ -31,6 +31,10 @@ class DBUtil:
             with open(DB_CONFIG['path_to_script']) as file:
                 rv.cursor().executescript(file.read())
 
+    def reset_database(self):
+        os.remove(DB_CONFIG['path_to_db'])
+        self.__init_database()
+
     def __connect(self):
 
         rv = sqlite3.connect(DB_CONFIG['path_to_db'])

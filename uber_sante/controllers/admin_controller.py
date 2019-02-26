@@ -1,11 +1,14 @@
 
 from . import controllers
 from uber_sante.services.admin_service import AdminService
+from uber_sante.services.doctor_service import DoctorService
+from uber_sante.services.doctor_service import CreateDoctorStatus
 from uber_sante.utils import cookie_helper
 from uber_sante.utils import json_helper as js
 from flask import request
 
 admin_service = AdminService()
+doctor_service = DoctorService()
 
 @controllers.route('/loginAdmin', methods=['POST'])
 def login_admin():
@@ -38,4 +41,40 @@ def login_admin():
 
         return resp, js.ResponseReturnCode.CODE_200.value
 
+@controllers.route('/registerDoctor', methods=['POST'])
+def register_doctor():
+    """
+    Since the admin is responsible for registering a doctor, this method
+    is put in the admin controller
+    """
 
+    if request.method == 'POST':
+
+        # Check if logged in as admin
+        if cookie_helper.user_is_logged(request,
+                                       as_user_type=cookie_helper.UserTypes.ADMIN):
+
+            physician_permit_nb = request.args.get("physician_permit_nb")
+            first_name = request.args.get("first_name")
+            last_name = request.args.get("last_name")
+            specialty = request.args.get("specialty")
+            city = request.args.get("city")
+            password = request.args.get("password")
+
+            ret_val = doctor_service.create_doctor(physician_permit_nb,
+                                         first_name,
+                                         last_name,
+                                         specialty,
+                                         city,
+                                         password)
+
+            if ret_val == CreateDoctorStatus.PHYSICIAN_NUMBER_ALREADY_EXISTS:
+                return js.create_json(data=None, message="Physician Number Already Exists",
+                                      return_code=js.ResponseReturnCode.CODE_400)
+
+            return js.create_json(data=None, message="Successfully created doctor",
+                                  return_code=js.ResponseReturnCode.CODE_200)
+
+        else:
+            return js.create_json(data=None, message="Not logged in as admin, cannot register a doctor",
+                                  return_code=js.ResponseReturnCode.CODE_400)
