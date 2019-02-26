@@ -1,5 +1,4 @@
-from werkzeug.contrib.cache import SimpleCache
-cache = SimpleCache()
+cache = {}
 
 def reset_cache():
     cache.clear()
@@ -12,4 +11,4 @@ def set_to_cache(key, value):
     if key is None:
         return None
     else:
-        cache.set(key, value)
+        cache[key] = value

@@ -1,7 +1,8 @@
-from uber_sante.models.patient import Patient
-from uber_sante.utils.dbutil import DBUtil
-from uber_sante.utils.cache import get_from_cache, set_to_cache
 from enum import Enum
+
+from uber_sante.utils.dbutil import DBUtil
+from uber_sante.models.patient import Patient
+from uber_sante.utils.cache import get_from_cache, set_to_cache
 
 
 class CreatePatientStatus(Enum):
