@@ -26,7 +26,6 @@ class BookingTest(BaseTestClass):
 
         """ Log in user """
         self.login_url = "http://localhost:5000/login"
-        self.logout_url = "http://localhost:5000/logout"
         self.valid_health_card_nb = "DRSJ 9971 0157"
         self.password = "password"
         valid_health_card_and_pw = {"health_card_nb": self.valid_health_card_nb,
