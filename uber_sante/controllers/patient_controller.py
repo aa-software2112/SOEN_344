@@ -135,8 +135,6 @@ def patient():
             return js.create_json(data=None, message="No patient specified", return_code=js.ResponseReturnCode.CODE_400)
 
         patient = get_from_cache(patient_id)
-
-        # TODO: this method will be changed with respect to the updated appointment object.
         result = patient.remove_from_cart(availability_id)
 
         if result is None:
