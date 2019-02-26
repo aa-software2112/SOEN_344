@@ -33,7 +33,6 @@ class DBUtil:
 
     def reset_database(self):
         if os.path.isfile(DB_CONFIG['path_to_db']):
-            self.__connect().close()
             os.remove(DB_CONFIG['path_to_db'])
             self.__init_database()
 
