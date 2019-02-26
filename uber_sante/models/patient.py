@@ -15,21 +15,18 @@ class Patient:
         self.cart = Cart()
 
     def add_walkin_to_cart(self, walkin):
-        self.cart.add_walk_in(walkin)
+        self.cart.add_appointment(walkin)
 
     def add_annual_to_cart(self, annual):
-        self.cart.add_annual(annual)
+        self.cart.add_appointment(annual)
 
-    def remove_walkin_from_cart(self, availability_id):
-        self.cart.remove_walkin_appointment(availability_id)
+    def remove_from_cart(self, availability_id):
+        return self.cart.remove_appointment(availability_id)
 
-    def remove_annual_from_cart(self):
-        self.cart.remove_annual_appt()
-
-    def get_walkins_from_ids(self, availability_ids):
+    def get_from_id(self, availability_ids):
         """Availability_ids is a list of integers
         :returns a list of WalkinAppointment object"""
-        self.cart.get_walkin_appts(availability_ids)
+        self.cart.get_appointment(availability_ids)
 
     def get_id(self):
         return self.id
