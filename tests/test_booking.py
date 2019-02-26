@@ -17,7 +17,6 @@ class BookingTest(BaseTestClass):
 
         :return: N/A
         """
-
         super(BookingTest, self).setUp()
         self.booking_url = "http://localhost:5000/booking"
         self.patient_id = "16"
@@ -60,7 +59,11 @@ class BookingTest(BaseTestClass):
         self.assert_json_message(response, "Appointment slot already booked", error=True)
 
     def test_missing_checkout_parameter(self):
+        """
+        Testing missing arguments for checkout endpoint
 
+        :return: N/A
+        """
         patient_id_only = {"patient_id": self.patient_id}
         availability_id_only = {"availability_id": self.availability_id}
 
