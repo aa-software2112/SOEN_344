@@ -31,6 +31,12 @@ class DBUtil:
             with open(DB_CONFIG['path_to_script']) as file:
                 rv.cursor().executescript(file.read())
 
+    def reset_database(self):
+        if os.path.isfile(DB_CONFIG['path_to_db']):
+            self.__connect().close()
+            os.remove(DB_CONFIG['path_to_db'])
+            self.__init_database()
+
     def __connect(self):
 
         rv = sqlite3.connect(DB_CONFIG['path_to_db'])
@@ -71,12 +77,6 @@ class DBUtil:
             cursor.execute(queries[i], params[i])
         rv.commit()
         rv.close()
-
-    def reinstantiate_db(self):
-        if os.path.isfile(DB_CONFIG['path_to_db']):
-            self.__connect().close()
-            os.remove(DB_CONFIG['path_to_db'])
-            self.__init_database()
 
 
 def create_dictionary(cursor, row):

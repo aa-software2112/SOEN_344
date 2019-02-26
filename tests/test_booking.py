@@ -23,7 +23,7 @@ class BookingTest(BaseTestClass):
         self.patient_id = "16"
         self.availability_id = "20"
         cache.reset_cache()
-        DBUtil.get_instance().reinstantiate_db()
+        DBUtil.get_instance().reset_database()
 
     def test_checkout_endpoint_success(self):
         """
