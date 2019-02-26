@@ -2,6 +2,7 @@ from . import controllers
 from uber_sante.models.scheduler import Scheduler
 from uber_sante.utils.cache import get_from_cache
 from uber_sante.services.booking_service import BookingService
+from uber_sante.utils import cookie_helper
 from flask import request, jsonify
 from uber_sante.utils import json_helper as js
 
@@ -31,6 +32,9 @@ def book():
     # TODO: implement patient cache to retrieve the appointment from the patient cache (line 48, 49)
     # TODO: connect the call to the scheduler class to try reserving the availability (line 51)
     # TODO: connect the call to the booking_service to create the booking in the Booking table (line 54)
+
+        if not cookie_helper.user_is_logged(request):
+            return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
         availability_id = request.args.get('availability_id')
         patient_id = request.args.get('patient_id')
