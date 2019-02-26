@@ -5,7 +5,6 @@ class CreateDoctorStatus(Enum):
     PHYSICIAN_NUMBER_ALREADY_EXISTS = 1
     SUCCESS = 2
 
-
 class DoctorService:
 
     def __init__(self):
