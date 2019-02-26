@@ -17,6 +17,10 @@ class BaseTestClass(unittest.TestCase):
 
         return self.app.put(url, query_string=dict_of_data, headers=self.json_header)
 
+    def send_delete(self, url, dict_of_data=None):
+
+        return self.app.delete(url, query_string=dict_of_data, headers=self.json_header)
+
     def assert_json_data(self, response, expected):
 
         assert(response.json["data"] == expected)
