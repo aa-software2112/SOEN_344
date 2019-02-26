@@ -32,7 +32,7 @@ def login_admin():
                                   return_code=js.ResponseReturnCode.CODE_400)
 
         resp = js.create_json(data=None, message="Logged in successfully",
-                              return_code=js.ResponseReturnCode.CODE_200)
+                              return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
         resp = cookie_helper.set_user_logged(resp, admin_id,
                                              cookie_helper.UserTypes.ADMIN.value)
 

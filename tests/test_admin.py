@@ -1,4 +1,4 @@
-from uber_sante.services.patient_service import PatientService
+from uber_sante.services.admin_service import AdminService
 from tests.test_base import BaseTestClass
 from uber_sante.utils import cache
 
@@ -22,7 +22,7 @@ class AdminTest(BaseTestClass):
         self.send_post(self.logout_url)
         cache.reset_cache()
 
-    def test_login_endpoint_success(self):
+    def test_admin_login_endpoint_success(self):
         """
         Testing login endpoint, and logged in successfully
 
@@ -34,11 +34,11 @@ class AdminTest(BaseTestClass):
                              }
 
         response = self.send_post(self.login_url, valid_admin_login)
-        print(response.json)
+
         self.assert_status_code(response, 200)
         self.assert_json_message(response, "Logged in successfully")
 
-    def test_login_endpoint_fail(self):
+    def test_admin_login_endpoint_fail(self):
         """
         Attempt login and expect login failure
         :return: N/A
@@ -63,13 +63,13 @@ class AdminTest(BaseTestClass):
         self.assert_status_code(response, 400)
         self.assert_json_message(response, "Incorrect Admin Login information", error=True)
 
-    def test_validate_login_info(self):
+    def test_admin_service_validate_login_info(self):
         """
         Make sure -1 is returned when login information is invalid, otherwise
         passes an actual ID
 
         :return: N/A
         """
-        assert(PatientService().validate_login_info(self.valid_admin_email, self.password) > 0)
-        assert(-1 == PatientService().validate_login_info(self.valid_admin_email, self.password + "INVALID"))
+        assert(AdminService().validate_login_info(self.valid_admin_email, self.password) > 0)
+        assert(-1 == AdminService().validate_login_info(self.valid_admin_email, self.password + "INVALID"))
 
