@@ -9,6 +9,7 @@ class UserTypes(Enum):
     DOCTOR = "doctor"
     NURSE = "nurse"
     PATIENT = "patient"
+    ADMIN = "admin"
 
 
 def set_user_logged(response, id, user_type):
