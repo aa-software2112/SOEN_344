@@ -36,9 +36,10 @@ def book():
         patient_id = request.args.get('patient_id')
 
         if availability_id is None:
-            return jsonify('No appointment specified'), 400
+            return js.create_json(data=None, message="No appointment specified", return_code=js.ResponseReturnCode.CODE_400)
         if patient_id is None:
-            return jsonify('No patient specified'), 400
+            return js.create_json(data=None, message="No patient specified", return_code=js.ResponseReturnCode.CODE_400)
+
 
         # TODO: Remove Dummy appointment below and use the implementation below
         patient = get_from_cache(patient_id)  # get the patient from cache

@@ -59,6 +59,20 @@ class BookingTest(BaseTestClass):
         self.assert_status_code(response, 400)
         self.assert_json_message(response, "Appointment slot already booked", error=True)
 
+    def test_missing_checkout_parameter(self):
+
+        patient_id_only = {"patient_id": self.patient_id}
+        availability_id_only = {"availability_id": self.availability_id}
+
+        response_patient = self.send_put(self.booking_url, patient_id_only)
+        response_availability = self.send_put(self.booking_url, availability_id_only)
+
+        self.assert_status_code(response_patient, 400)
+        self.assert_json_message(response_patient, "No appointment specified", error=True)
+
+        self.assert_status_code(response_availability, 400)
+        self.assert_json_message(response_availability, "No patient specified", error=True)
+
 
 
 
