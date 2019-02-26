@@ -25,19 +25,18 @@ class BookingTest(BaseTestClass):
         cache.reset_cache()
         DBUtil.get_instance().reset_database()
 
+        PatientService().test_and_set_patient_into_cache(self.patient_id)
+        patient = cache.get_from_cache(self.patient_id)
+        availability = Availability(self.availability_id, "20", "32400", "881", "1", "2019", "4", "8", AppointmentRequestType.WALKIN)
+        appointment = Appointment(self.patient_id, availability)
+        patient.add_walkin_to_cart(appointment)
+
     def test_checkout_endpoint_success(self):
         """
-        Testing login endpoint, and logged in successfully
+        Testing checkout endpoint
 
         :return: N/A
         """
-        PatientService().test_and_set_patient_into_cache(self.patient_id)
-        patient = cache.get_from_cache(self.patient_id)
-
-        availability = Availability(self.availability_id, "20", "32400", "881", "1", "2019", "4", "8", AppointmentRequestType.WALKIN)
-        appointment = Appointment(self.patient_id, availability)
-
-        patient.add_walkin_to_cart(appointment)
 
         valid_info = {"patient_id": self.patient_id, "availability_id":self.availability_id}
 
@@ -45,6 +44,20 @@ class BookingTest(BaseTestClass):
 
         self.assert_status_code(response, 200)
         self.assert_json_message(response, "Appointment successfully booked")
+
+    def test_checkout_endpoint_fail(self):
+        """
+        Testing checkout endpoint
+
+        :return: N/A
+        """
+        valid_info = {"patient_id": self.patient_id, "availability_id": self.availability_id}
+        self.send_put(self.booking_url, valid_info)
+
+        response = self.send_put(self.booking_url, valid_info)
+
+        self.assert_status_code(response, 400)
+        self.assert_json_message(response, "Appointment slot already booked", error=True)
 
 
 
