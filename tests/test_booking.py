@@ -23,6 +23,18 @@ class BookingTest(BaseTestClass):
         self.availability_id = "20"
         cache.reset_cache()
 
+
+        """ Log in user """
+        self.login_url = "http://localhost:5000/login"
+        self.logout_url = "http://localhost:5000/logout"
+        self.valid_health_card_nb = "DRSJ 9971 0157"
+        self.password = "password"
+        valid_health_card_and_pw = {"health_card_nb": self.valid_health_card_nb,
+                                    "password": self.password}
+
+        response = self.send_post(self.login_url, valid_health_card_and_pw)
+        self.assert_status_code(response, 200)
+
         """ Create and store patient in cache"""
         PatientService().test_and_set_patient_into_cache(self.patient_id)
         patient = cache.get_from_cache(self.patient_id)

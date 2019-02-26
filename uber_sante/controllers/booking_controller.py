@@ -53,6 +53,11 @@ def book():
 
         if result:
             BookingService().write_booking(appointment)
+            removed = patient.cart.remove_appointment(availability_id)
+
+            if removed is None:
+                return js.create_json(data=None, message="Appointment not found/removed",return_code=js.ResponseReturnCode.CODE_400)
+
             return js.create_json(data=None, message="Appointment successfully booked", return_code=js.ResponseReturnCode.CODE_200)
         else:
             return js.create_json(data=None, message="Appointment slot already booked", return_code=js.ResponseReturnCode.CODE_400)
