@@ -123,6 +123,9 @@ def patient():
     # params: patient_id (int, required), availability_id (int, required)
     # return: success/failure
 
+        if not cookie_helper.user_is_logged(request):
+            return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
+
         patient_id = request.args.get('patient_id')
         availability_id = request.args.get('availability_id')
 
