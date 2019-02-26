@@ -8,13 +8,6 @@ class RequestEnum(Enum):
     DAILY_REQUEST = 1
     MONTHLY_REQUEST = 2
 
-# took this from @lkadian PR to finish my fix
-class AppointmentRequestType(Enum):
-    ANNUAL = "ANNUAL"
-    WALKIN = "WALKIN"
-    ALL = "ALL"
-
-
 class AppointmentRequestType(Enum):
     ANNUAL = "ANNUAL"
     WALKIN = "WALKIN"
@@ -121,9 +114,8 @@ class Scheduler:
         :param appointment: The appointment object to convert into a booking
         :return: True if successfully booked, False otherwise
         """
-
         # Method call returns a boolean that describe whether the availability was successfully reserved
-        return self.availability_service.validate_availability_and_reserve(appointment)
+        return self.availability_service.validate_availability_and_reserve(appointment.availability.id)
 
     def free_availabilities(self, availability_keys):
         """

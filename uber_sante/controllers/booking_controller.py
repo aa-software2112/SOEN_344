@@ -1,6 +1,8 @@
 from . import controllers
-from uber_sante.models.appointment import WalkinAppointment
+from uber_sante.models.appointment import Appointment
+from uber_sante.models.availability import Availability
 from uber_sante.models.scheduler import Scheduler
+from uber_sante.models.scheduler import AppointmentRequestType
 from uber_sante.utils.cache import get_from_cache
 from uber_sante.services.booking_service import BookingService
 from flask import request, jsonify
@@ -32,20 +34,21 @@ def book():
     # TODO: connect the call to the scheduler class to try reserving the availability (line 51)
     # TODO: connect the call to the booking_service to create the booking in the Booking table (line 54)
 
-        appointment_id = request.args.get('appointment_id')
+        availability_id = request.args.get('availability_id')
         patient_id = request.args.get('patient_id')
 
-        if appointment_id is None:
+        if availability_id is None:
             return jsonify('No appointment specified'), 400
         if patient_id is None:
             return jsonify('No patient specified'), 400
 
-        # TODO: Remove Dummy appoint and use the implementation below
-        # patient = get_from_cache(patient_id)  # get the patient from cache
-        # appointment = patient.cart[appointment_id]
+        # TODO: Remove Dummy appointment below and use the implementation below
+        #patient = get_from_cache(patient_id)  # get the patient from cache
+        #appointment = patient.cart.get_appointment(availability_id)
 
-        # Dummy appointment to test the endpoint
-        appointment = WalkinAppointment("20","today","20","William","16","Michael", "3pm", "4pm")
+        #Used to test Endpoint
+        availability = Availability("20", "20", "32400", "881", "1", "2019", "4", "8", AppointmentRequestType.WALKIN)
+        appointment = Appointment(patient_id, availability)
 
         result = Scheduler.get_instance().reserve_appointment(appointment)
 
