@@ -72,6 +72,12 @@ class DBUtil:
         rv.commit()
         rv.close()
 
+    def reinstantiate_db(self):
+        if os.path.isfile(DB_CONFIG['path_to_db']):
+            self.__connect().close()
+            os.remove(DB_CONFIG['path_to_db'])
+            self.__init_database()
+
 
 def create_dictionary(cursor, row):
 
@@ -79,3 +85,4 @@ def create_dictionary(cursor, row):
     for idx, col in enumerate(cursor.description):
         result[col[0]] = row[idx]
     return result
+

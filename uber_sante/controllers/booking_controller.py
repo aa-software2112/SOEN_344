@@ -1,11 +1,9 @@
 from . import controllers
-from uber_sante.models.appointment import Appointment
-from uber_sante.models.availability import Availability
 from uber_sante.models.scheduler import Scheduler
-from uber_sante.models.scheduler import AppointmentRequestType
 from uber_sante.utils.cache import get_from_cache
 from uber_sante.services.booking_service import BookingService
 from flask import request, jsonify
+from uber_sante.utils import json_helper as js
 
 @controllers.route('/booking', methods=['GET', 'PUT', 'DELETE'])
 def book():
@@ -43,20 +41,16 @@ def book():
             return jsonify('No patient specified'), 400
 
         # TODO: Remove Dummy appointment below and use the implementation below
-        #patient = get_from_cache(patient_id)  # get the patient from cache
-        #appointment = patient.cart.get_appointment(availability_id)
-
-        #Used to test Endpoint
-        availability = Availability("20", "20", "32400", "881", "1", "2019", "4", "8", AppointmentRequestType.WALKIN)
-        appointment = Appointment(patient_id, availability)
+        patient = get_from_cache(patient_id)  # get the patient from cache
+        appointment = patient.cart.get_appointment(availability_id)
 
         result = Scheduler.get_instance().reserve_appointment(appointment)
 
         if result:
             BookingService().write_booking(appointment)
-            return jsonify('Appointment successfully booked'), 200
+            return js.create_json(data=None, message="Appointment successfully booked", return_code=js.ResponseReturnCode.CODE_200)
         else:
-            return jsonify('Appointment slot already booked'), 403
+            return js.create_json(data=None, message="Appointment slot already booked", return_code=js.ResponseReturnCode.CODE_400)
 
 
 
