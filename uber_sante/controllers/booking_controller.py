@@ -58,7 +58,7 @@ def book():
             if removed is None:
                 return js.create_json(data=None, message="Appointment not found/removed",return_code=js.ResponseReturnCode.CODE_400)
 
-            return js.create_json(data=None, message="Appointment successfully booked", return_code=js.ResponseReturnCode.CODE_200)
+            return js.create_json(data={appointment}, message="Appointment successfully booked", return_code=js.ResponseReturnCode.CODE_200)
         else:
             return js.create_json(data=None, message="Appointment slot already booked", return_code=js.ResponseReturnCode.CODE_400)
 
