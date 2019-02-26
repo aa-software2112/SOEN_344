@@ -1,18 +1,12 @@
 from uber_sante.models.schedule import *
 from uber_sante.models.availability import Availability
 from uber_sante.utils.date import *
+from uber_sante.services.availability_service import AvailabilityService
 
 
 class RequestEnum(Enum):
     DAILY_REQUEST = 1
     MONTHLY_REQUEST = 2
-
-# took this from @lkadian PR to finish my fix
-class AppointmentRequestType(Enum):
-    ANNUAL = "ANNUAL"
-    WALKIN = "WALKIN"
-    ALL = "ALL"
-
 
 class AppointmentRequestType(Enum):
     ANNUAL = "ANNUAL"
@@ -81,7 +75,7 @@ class Scheduler:
             Scheduler._instance = self
 
         # TODO should be replaced with singleton: AvailabilityService.get_instance()
-        self.availability_service = None
+        self.availability_service = AvailabilityService()
 
     def get_schedule(self, schedule_request, av=None):
         """
@@ -120,9 +114,8 @@ class Scheduler:
         :param appointment: The appointment object to convert into a booking
         :return: True if successfully booked, False otherwise
         """
-
         # Method call returns a boolean that describe whether the availability was successfully reserved
-        return self.availability_service.validateAvailabilityAndReserve(appointment)
+        return self.availability_service.validate_availability_and_reserve(appointment.availability.id)
 
     def free_availabilities(self, availability_keys):
         """
