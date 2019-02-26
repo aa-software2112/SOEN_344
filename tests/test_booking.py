@@ -23,8 +23,8 @@ class BookingTest(BaseTestClass):
         self.patient_id = "16"
         self.availability_id = "20"
         cache.reset_cache()
-        DBUtil.get_instance().reset_database()
 
+        """ Create and store patient in cache"""
         PatientService().test_and_set_patient_into_cache(self.patient_id)
         patient = cache.get_from_cache(self.patient_id)
         availability = Availability(self.availability_id, "20", "32400", "881", "1", "2019", "4", "8", AppointmentRequestType.WALKIN)
@@ -37,6 +37,7 @@ class BookingTest(BaseTestClass):
 
         :return: N/A
         """
+        DBUtil.get_instance().reset_database()
 
         valid_info = {"patient_id": self.patient_id, "availability_id":self.availability_id}
 
@@ -52,7 +53,6 @@ class BookingTest(BaseTestClass):
         :return: N/A
         """
         valid_info = {"patient_id": self.patient_id, "availability_id": self.availability_id}
-        self.send_put(self.booking_url, valid_info)
 
         response = self.send_put(self.booking_url, valid_info)
 
