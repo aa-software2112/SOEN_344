@@ -17,7 +17,7 @@ class PatientTest(BaseTestClass):
         :return: N/A
         """
         super(PatientTest, self).setUp()
-        self.patient_url = "http://localhost:5000/patient"
+        self.patient_url = "http://localhost:5000/appointment"
         self.patient_id = "16"
         self.availability_id = "20"
         cache.reset_cache()
@@ -58,7 +58,14 @@ class PatientTest(BaseTestClass):
         Testing remove_appointment endpoint
         :return: N/A
         """
+        self.patient_1.add_walkin_to_cart(self.appointment_1)
+
         valid_info = {"patient_id": self.patient_id, "availability_id": self.availability_id}
+
+
+        #Make sure the appointment is properly removed before testing the error.
+        removed = self.send_delete(self.patient_url, valid_info)
+        self.assert_status_code(removed, 200)
 
         response = self.send_delete(self.patient_url, valid_info)
 
