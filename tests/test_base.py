@@ -1,5 +1,6 @@
 import unittest
-
+from unittest.mock import MagicMock
+from uber_sante.utils.dbutil import DBUtil
 from uber_sante import app
 
 class BaseTestClass(unittest.TestCase):
@@ -10,6 +11,18 @@ class BaseTestClass(unittest.TestCase):
         self.json_header = {'content-type': 'application/json'}
         self.valid_admin_email = "admin@ubersante.com"
         self.password = "admin"
+        self.write_fn = DBUtil.get_instance().write_one
+        self.read_fn = DBUtil.get_instance().read_one
+
+    def tearDown(self):
+        DBUtil.get_instance().write_one = self.write_fn
+        DBUtil.get_instance().read_one = self.read_fn
+
+    def mock_db_read(self, return_value=None):
+        DBUtil.get_instance().read_one = MagicMock(return_value=return_value)
+
+    def mock_db_write(self, return_value=None):
+        DBUtil.get_instance().write_one = MagicMock(return_value=return_value)
 
     def send_post(self, url, dict_of_data=None):
 
@@ -54,8 +67,7 @@ class BaseTestClass(unittest.TestCase):
             "password": self.password
         }
 
-        response = self.send_post(self.login_url, valid_admin_login)
-
+        response = self.send_post("http://localhost:5000/loginAdmin", valid_admin_login)
         self.assert_status_code(response, 200)
 
     def dict_to_cookie_string(self, dict):

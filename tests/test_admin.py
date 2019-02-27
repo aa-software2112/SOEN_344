@@ -2,6 +2,7 @@ from uber_sante.services.admin_service import AdminService
 from uber_sante.utils.dbutil import DBUtil
 from tests.test_base import BaseTestClass
 from uber_sante.utils import cache
+from unittest.mock import MagicMock
 
 
 class AdminTest(BaseTestClass):
@@ -89,12 +90,13 @@ class AdminTest(BaseTestClass):
 
         :return: N/A
         """
-        # Refresh the database
-        DBUtil.get_instance().reset_database()
-
         self.login_as_admin()
+
+        self.mock_db_read()
+        self.mock_db_write()
 
         resp = self.send_post(self.register_doctor_url, self.doctor_information)
         self.assert_status_code(resp, 200)
+
 
 

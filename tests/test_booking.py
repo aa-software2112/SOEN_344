@@ -48,7 +48,15 @@ class BookingTest(BaseTestClass):
 
         :return: N/A
         """
-        DBUtil.get_instance().reset_database()
+        self.mock_db_read({"id":self.availability_id,
+                           "doctor_id":"20",
+                           "start":"32400",
+                           "room":"881",
+                           "free":"1",
+                           "year":"2019",
+                           "month":"4",
+                           "day":"8",
+                           "booking_type":AppointmentRequestType.WALKIN.value})
 
         valid_info = {"patient_id": self.patient_id, "availability_id":self.availability_id}
 
@@ -67,9 +75,7 @@ class BookingTest(BaseTestClass):
         # success/fail test will run, it is not guaranteed that an appointment would have been
         # booked first at this point; so we mock the DBUtil to return None, which would signify
         # that the availability is no longer valid
-        fn_ptr = DBUtil.get_instance().read_one
-
-        DBUtil.get_instance().read_one = MagicMock(return_value=None)
+        self.mock_db_read()
 
         valid_info = {"patient_id": self.patient_id, "availability_id": self.availability_id}
 
@@ -78,7 +84,6 @@ class BookingTest(BaseTestClass):
         self.assert_status_code(response, 400)
         self.assert_json_message(response, "Appointment slot already booked", error=True)
 
-        DBUtil.get_instance().read_one = fn_ptr
 
     def test_missing_checkout_parameter(self):
         """
