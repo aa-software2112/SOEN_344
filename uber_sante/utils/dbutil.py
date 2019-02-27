@@ -32,8 +32,9 @@ class DBUtil:
                 rv.cursor().executescript(file.read())
 
     def reset_database(self):
-        os.remove(DB_CONFIG['path_to_db'])
-        self.__init_database()
+        if os.path.isfile(DB_CONFIG['path_to_db']):
+            os.remove(DB_CONFIG['path_to_db'])
+            self.__init_database()
 
     def __connect(self):
 
@@ -83,3 +84,4 @@ def create_dictionary(cursor, row):
     for idx, col in enumerate(cursor.description):
         result[col[0]] = row[idx]
     return result
+

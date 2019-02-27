@@ -1,6 +1,4 @@
 import unittest
-from http.cookies import SimpleCookie
-from uber_sante.utils import cookie_helper
 
 from uber_sante import app
 
@@ -16,6 +14,10 @@ class BaseTestClass(unittest.TestCase):
     def send_post(self, url, dict_of_data=None):
 
         return self.custom_post(url, dict_of_data)
+
+    def send_put(self, url, dict_of_data=None):
+
+        return self.app.put(url, query_string=dict_of_data, headers=self.json_header)
 
     def assert_json_data(self, response, expected):
 
