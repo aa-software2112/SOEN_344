@@ -10,10 +10,8 @@ class BaseTestClass(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client(use_cookies=True)
         self.json_header = {'content-type': 'application/json'}
-        self.admin_cookie = {cookie_helper.CookieKeys.LOGGED.value: "True",
-                             cookie_helper.CookieKeys.ID.value: "1",
-                             cookie_helper.CookieKeys.USER_TYPE.value: cookie_helper.UserTypes.ADMIN.value
-        }
+        self.valid_admin_email = "admin@ubersante.com"
+        self.password = "admin"
 
     def send_post(self, url, dict_of_data=None):
 
@@ -47,10 +45,16 @@ class BaseTestClass(unittest.TestCase):
         return self.app.post(url, query_string=dict_of_data,
                              headers={'content-type': 'application/json',
                                       'COOKIE':c})
+    def login_as_admin(self):
 
-    def send_post_as_admin(self, url, dict_of_data=None):
+        valid_admin_login = {
+            "email": self.valid_admin_email,
+            "password": self.password
+        }
 
-        return self.custom_post(url, dict_of_data, self.admin_cookie)
+        response = self.send_post(self.login_url, valid_admin_login)
+
+        self.assert_status_code(response, 200)
 
     def dict_to_cookie_string(self, dict):
 

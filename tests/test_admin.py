@@ -18,8 +18,6 @@ class AdminTest(BaseTestClass):
         super(AdminTest, self).setUp()
         self.login_url = "http://localhost:5000/loginAdmin"
         self.logout_url = "http://localhost:5000/logout"
-        self.valid_admin_email = "admin@ubersante.com"
-        self.password = "admin"
         self.send_post(self.logout_url)
         cache.reset_cache()
 
@@ -94,8 +92,9 @@ class AdminTest(BaseTestClass):
         # Refresh the database
         DBUtil.get_instance().reset_database()
 
-        resp = self.send_post_as_admin(self.register_doctor_url, self.doctor_information)
+        self.login_as_admin()
 
+        resp = self.send_post(self.register_doctor_url, self.doctor_information)
         self.assert_status_code(resp, 200)
 
 
