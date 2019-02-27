@@ -1,6 +1,6 @@
 from uber_sante.models.booking import Booking
 from uber_sante.utils.dbutil import DBUtil
-from uber_sante.models.appointment import WalkinAppointment, AnnualAppointment
+from uber_sante.models.appointment import Appointment
 
 
 class BookingService:
@@ -13,15 +13,8 @@ class BookingService:
         appt_dict = appointment.__dict__
         insert_stmt = 'INSERT INTO Booking(availability_id, doctor_id, patient_id) ' \
                       'VALUES (?, ?, ?)'
-
-        if isinstance(appointment, AnnualAppointment):
-            for availability_id in appt_dict['availability_ids']:
-                params = (availability_id, appt_dict['doctor_id'], appt_dict['patient_id'])
-                self.db.write_one(insert_stmt, params)
-
-        elif isinstance(appointment, WalkinAppointment):
-            params = (appt_dict['availability_id'], appt_dict['doctor_id'], appt_dict['patient_id'])
-            self.db.write_one(insert_stmt, params)
+        params = (appt_dict['availability'].id, appt_dict['availability'].doctor_id, appt_dict['patient_id'])
+        self.db.write_one(insert_stmt, params)
 
     def get_booking(self, booking_id):
         select_stmt = 'SELECT * FROM Booking WHERE id = ?'

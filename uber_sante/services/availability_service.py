@@ -69,7 +69,7 @@ class AvailabilityService:
 
     def validate_availability_and_reserve(self, availability_id):
 
-        select_stmt = "SELECT * FROM Availability WHERE availability_id = ? AND free = 1"
+        select_stmt = "SELECT * FROM Availability WHERE id = ? AND free = 1"
 
         update_stmt = 'UPDATE Availability SET free = 0 WHERE id = ?'
 
@@ -85,6 +85,6 @@ class AvailabilityService:
 
             return Availability(result['id'], result['doctor_id'], result['start'],
                                 result['room'], result['free'], result['year'],
-                                result['month'],result['day'])
+                                result['month'],result['day'], result['booking_type'])
 
 
