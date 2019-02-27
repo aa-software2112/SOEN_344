@@ -118,6 +118,10 @@ def patient():
 
         return js.create_json(None, "Patient record created", js.ResponseReturnCode.CODE_201)
 
+
+@controllers.route('/appointment', methods=['DELETE'])
+def appointment():
+
     if request.method == 'DELETE':
     # example use case: remove appointment
     # params: patient_id (int, required), availability_id (int, required)
