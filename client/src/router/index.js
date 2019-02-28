@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Ping from '@/components/Ping';
 import Navbar from '@/components/Navbar';
+import Register from '@/components/Register';
 import axios from 'axios';
 import * as Cookies from 'js-cookie';
 
@@ -21,6 +22,11 @@ export default new Router({
       path: '/nav',
       name: 'Navbar',
       component: Navbar
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
     }
   ]
 });
