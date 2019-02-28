@@ -9,13 +9,16 @@
     </div>
     <div class="navbar-right">
     <a class="navbar-brand" href="/register" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies.isSet">Register</a>
-    <a class="navbar-brand" href="/registerDoctor" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Register Doctor/Nurse</a>
     <a class="navbar-brand" href="/login" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies.isSet">Login</a>
     
+    <!-- Admin Tabs -->
+    <a class="navbar-brand" href="/registerDoctor" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Register Doctor/Nurse</a>
+    
+    
     <!-- Patient Tabs-->
-    <a class="navbar-brand" href="/cart" v-if="this.$cookies.get('logged') == 'True' || !this.$cookies">Cart</a>
-    <a class="navbar-brand" href="/schedule" v-if="this.$cookies.get('logged') == 'True' || !this.$cookies">Schedule Appointment</a>
-    <a class="navbar-brand" href="/appointment" v-if="this.$cookies.get('logged') == 'True' || !this.$cookies">Appointment</a>
+    <a class="navbar-brand" href="/cart" v-if="this.$cookies.get('logged') == 'True'">Cart</a>
+    <a class="navbar-brand" href="/schedule" v-if="this.$cookies.get('logged') == 'True'">Schedule Appointment</a>
+    <a class="navbar-brand" href="/appointment" v-if="this.$cookies.get('logged') == 'True'">Appointment</a>
     </div>
 </nav>
 </div>
