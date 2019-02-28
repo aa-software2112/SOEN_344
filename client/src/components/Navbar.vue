@@ -9,6 +9,11 @@
     <a class="navbar-brand" href="/Register" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies">Register</a>
     <a class="navbar-brand" href="#" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Register Doctor/Nurse</a>
     <a class="navbar-brand" href="/Login" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies">Login</a>
+    
+    <!-- Patient Tabs-->
+    <a class="navbar-brand" href="/Cart" v-if="this.$cookies.get('logged') == 'True' || !this.$cookies">Cart</a>
+    <a class="navbar-brand" href="/Schedule" v-if="this.$cookies.get('logged') == 'True' || !this.$cookies">Schedule Appointment</a>
+    <a class="navbar-brand" href="/Appointment" v-if="this.$cookies.get('logged') == 'True' || !this.$cookies">Appointment</a>
     </div>
 </nav>
 </div>
@@ -43,7 +48,8 @@ export default {
 }
 
 .navbar-right{
-  float: right;
+ position:absolute; 
+ right:0px; 
 }
 
 </style>
