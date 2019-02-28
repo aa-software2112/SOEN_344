@@ -1,8 +1,6 @@
 /* eslint-disable */
 <template>
-<div id="app-container">
-    <Navbar></Navbar>
-    
+<div id="app-container">    
     <div id="main-content-area" class="main-color content-fluid">
         <h1> Register as Patient </h1>
         </br>
@@ -63,13 +61,10 @@
 
 <script>
 import axios from 'axios'
-import Navbar from './Navbar'
 
 export default {
   name: 'Register',
-  components: {
-    'Navbar': Navbar
-  },
+
   data() {
     return {
         info: null
