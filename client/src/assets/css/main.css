@@ -31,3 +31,9 @@ html, body {
 {
     background-color: white;
 }
+
+.logo {
+    background-image : url('../UberSante.png');
+    padding: 40px;
+    background-size: contain;
+}
