@@ -24,6 +24,9 @@ class Availability:
                               int((self.start%Availability.SECONDS_IN_HOUR)/Availability.SECONDS_IN_MINUTE),
                                  "AM" if self.start / (Availability.SECONDS_IN_HOUR) < 12 else "PM")
 
+    def get_id(self):
+        return self.id
+
     def get_day(self):
         return self.day
 
