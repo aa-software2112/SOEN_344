@@ -6,9 +6,9 @@
       <a class="navbar-brand" href="/">UberSante</a>
     </div>
     <div class="navbar-right">
-    <a class="navbar-brand" href="/Register" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies">Register</a>
+    <a class="navbar-brand" href="/Register" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies.isSet">Register</a>
     <a class="navbar-brand" href="#" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Register Doctor/Nurse</a>
-    <a class="navbar-brand" href="/Login" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies">Login</a>
+    <a class="navbar-brand" href="/Login" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies.isSet">Login</a>
     
     <!-- Patient Tabs-->
     <a class="navbar-brand" href="/Cart" v-if="this.$cookies.get('logged') == 'True' || !this.$cookies">Cart</a>

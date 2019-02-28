@@ -1,8 +1,6 @@
 /* eslint-disable */
 <template>
   <div class="main">
-    <navbar></navbar>
-
     <div class='page-main'>
        <h1>
          {{ msg }}
@@ -13,15 +11,8 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar';
- 
 export default {
   name: 'Home',
-
-  components: {
-    'navbar': Navbar
-  },
-
   data() {
     return {
       msg: "Welcome to UberSante"
