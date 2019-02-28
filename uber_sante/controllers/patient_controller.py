@@ -1,5 +1,3 @@
-import os
-
 from . import controllers
 from uber_sante.utils import cookie_helper
 from uber_sante.models.patient import Patient
@@ -9,6 +7,7 @@ from uber_sante.services.patient_service import CreatePatientStatus
 from uber_sante.utils import json_helper as js
 from flask import Flask, request, jsonify, make_response
 from uber_sante.utils import cookie_helper
+
 
 patient_service = PatientService()
 
@@ -22,7 +21,10 @@ def view_cookie():
 
 @controllers.route('/logout', methods=['GET'])
 def logout():
-
+    """
+    Logout of ANY user type
+    :return:
+    """
     if request.method == 'GET':
 
         resp = js.create_json(data=None, message="Successfully logged out!",

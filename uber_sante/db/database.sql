@@ -1,4 +1,13 @@
 /* Table creation */
+
+CREATE TABLE IF NOT EXISTS Admin
+(
+    id          INTEGER    NOT NULL PRIMARY KEY AUTOINCREMENT,
+    email       TEXT        NOT NULL,
+    password    TEXT        NOT NULL
+
+);
+
 CREATE TABLE IF NOT EXISTS Doctor
 (
   id                  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -50,6 +59,10 @@ CREATE TABLE IF NOT EXISTS Booking
 );
 
 /* Fake tuple insertion using Mockaroo */
+/* Admin - make only one */
+insert into Admin (id, email, password)
+values (1, 'admin@ubersante.com', 'admin');
+
 /* Doctor */
 insert into Doctor (id, physician_permit_nb, first_name, last_name, specialty, city, password)
 values (1, 1406023, 'Nestor', 'Gonnel', 'cardiologist', 'gatineau', 'password');
