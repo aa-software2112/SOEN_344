@@ -15,13 +15,13 @@ def availability():
         # TODO: connect the call to the scheduler class to try reserving the availability (line 51)
         # TODO: connect the call to the booking_service to create the booking in the Booking table (line 54)
 
-        doctor_id = request.args.get('doctor_id')
-        start = request.args.get('start')
-        room = request.args.get('room')
-        year = request.args.get('year')
-        month = request.args.get('month')
-        day = request.args.get('day')
-        booking_type = request.args.get('booking_type')
+        doctor_id = request.get_json().get('doctor_id')
+        start = request.get_json().get('start')
+        room = request.get_json().get('room')
+        year = request.get_json().get('year')
+        month = request.get_json().get('month')
+        day = request.get_json().get('day')
+        booking_type = request.get_json().get('booking_type')
 
         result = AvailabilityService().create_availability(doctor_id, start, room, '1', year, month, day, booking_type)
 
