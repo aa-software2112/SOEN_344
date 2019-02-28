@@ -13,7 +13,8 @@
     
     <!-- Admin Tabs -->
     <a class="navbar-brand" href="/registerDoctor" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Register Doctor/Nurse</a>
-    
+      <a class="navbar-brand" href="/createAvailability" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Make Availability</a>
+
     
     <!-- Patient Tabs-->
     <a class="navbar-brand" href="/cart" v-if="this.$cookies.get('logged') == 'True'">Cart</a>
