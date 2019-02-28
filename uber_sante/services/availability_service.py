@@ -87,4 +87,10 @@ class AvailabilityService:
                                 result['room'], result['free'], result['year'],
                                 result['month'],result['day'], result['booking_type'])
 
+    def create_availability(self, doctor_id, start, room, free, year, month, day, booking_type):
 
+            insert_stmt = "INSERT INTO Availability(doctor_id, start, room, free, year, month, day, booking_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            params = (doctor_id, start, room, free, year, month, day, booking_type)
+
+            self.db.write_one(insert_stmt, params)
+            return params
