@@ -37,3 +37,7 @@ html, body {
     padding: 40px;
     background-size: contain;
 }
+
+.error-message {
+    color: red;
+}
