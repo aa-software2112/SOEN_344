@@ -5,6 +5,7 @@ from uber_sante.models.scheduler import AppointmentRequestType
 from tests.test_base import BaseTestClass
 from uber_sante.utils import cache
 from uber_sante.utils.dbutil import DBUtil
+from unittest.mock import MagicMock
 
 class BookingTest(BaseTestClass):
     """
@@ -47,7 +48,15 @@ class BookingTest(BaseTestClass):
 
         :return: N/A
         """
-        DBUtil.get_instance().reset_database()
+        self.mock_db_read({"id":self.availability_id,
+                           "doctor_id":"20",
+                           "start":"32400",
+                           "room":"881",
+                           "free":"1",
+                           "year":"2019",
+                           "month":"4",
+                           "day":"8",
+                           "booking_type":AppointmentRequestType.WALKIN.value})
 
         valid_info = {"patient_id": self.patient_id, "availability_id":self.availability_id}
 
@@ -62,12 +71,19 @@ class BookingTest(BaseTestClass):
 
         :return: N/A
         """
+        # Because there is no guaranteed order with which
+        # success/fail test will run, it is not guaranteed that an appointment would have been
+        # booked first at this point; so we mock the DBUtil to return None, which would signify
+        # that the availability is no longer valid
+        self.mock_db_read()
+
         valid_info = {"patient_id": self.patient_id, "availability_id": self.availability_id}
 
         response = self.send_put(self.booking_url, valid_info)
 
         self.assert_status_code(response, 400)
         self.assert_json_message(response, "Appointment slot already booked", error=True)
+
 
     def test_missing_checkout_parameter(self):
         """

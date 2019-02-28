@@ -9,6 +9,7 @@ class UserTypes(Enum):
     DOCTOR = "doctor"
     NURSE = "nurse"
     PATIENT = "patient"
+    ADMIN = "admin"
 
 
 def set_user_logged(response, id, user_type):
@@ -26,14 +27,20 @@ def set_user_logged(response, id, user_type):
     response.set_cookie(CookieKeys.LOGGED.value, str(True))
     return response
 
-def user_is_logged(request):
+def user_is_logged(request, as_user_type=None):
     """
 
     :param request: The request containing the user's cookie
+    :param as_user_type: If selected (using UserTypes enum), makes sure
+    that the user is logged in AS the type specified by the UserType
     :return: True if user is logged, false otherwise
     """
     if request.cookies.get(CookieKeys.LOGGED.value) == "True":
-        return True
+
+        if not as_user_type == None:
+            return request.cookies.get(CookieKeys.USER_TYPE.value) == as_user_type.value
+        else:
+            return True
 
     return False
 
