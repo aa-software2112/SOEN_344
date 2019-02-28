@@ -2,8 +2,10 @@
 <template>
 <div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="logo">
+  </div>
     <div class="navbar-header">
-      <a class="navbar-brand" href="/">UberSante</a>
+      <a class="navbar-brand" href="/">Home</a>
     </div>
     <div class="navbar-right">
     <a class="navbar-brand" href="/Register" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies.isSet">Register</a>
