@@ -4,9 +4,11 @@ from . import controllers
 from uber_sante.utils import cookie_helper
 from uber_sante.models.patient import Patient
 from uber_sante.services.patient_service import PatientService
+from uber_sante.utils.cache import get_from_cache
 from uber_sante.services.patient_service import CreatePatientStatus
 from uber_sante.utils import json_helper as js
 from flask import Flask, request, jsonify, make_response
+from uber_sante.utils import cookie_helper
 
 patient_service = PatientService()
 
@@ -60,8 +62,7 @@ def login():
 
         return resp, js.ResponseReturnCode.CODE_200.value
 
-
-@controllers.route('/patient', methods=['GET', 'PUT'])
+@controllers.route('/patient', methods=['GET', 'PUT', 'DELETE'])
 def patient():
 
     if request.method == 'GET':
@@ -116,3 +117,31 @@ def patient():
             return js.create_json(None, "Email address already registered", js.ResponseReturnCode.CODE_500)
 
         return js.create_json(None, "Patient record created", js.ResponseReturnCode.CODE_201)
+
+
+@controllers.route('/appointment', methods=['DELETE'])
+def appointment():
+
+    if request.method == 'DELETE':
+    # example use case: remove appointment
+    # params: patient_id (int, required), availability_id (int, required)
+    # return: success/failure
+
+        if not cookie_helper.user_is_logged(request):
+            return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
+
+        patient_id = request.args.get('patient_id')
+        availability_id = request.args.get('availability_id')
+
+        if availability_id is None:
+            return js.create_json(data=None, message="No appointment specified", return_code=js.ResponseReturnCode.CODE_400)
+        if patient_id is None:
+            return js.create_json(data=None, message="No patient specified", return_code=js.ResponseReturnCode.CODE_400)
+
+        patient = get_from_cache(patient_id)
+        result = patient.remove_from_cart(availability_id)
+
+        if result is None:
+            return js.create_json(data=None, message="Appointment not found/removed", return_code=js.ResponseReturnCode.CODE_400)
+
+        return js.create_json(data=None, message="Appointment removed", return_code=js.ResponseReturnCode.CODE_200)
