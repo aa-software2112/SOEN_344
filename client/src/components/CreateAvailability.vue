@@ -6,7 +6,7 @@
         </br>
         <div class="container reg-container" id="patient-reg">
             
-            <form id="create-form" @submit.prevent="processForm">
+            <form id="form-availability" @submit.prevent="processForm">
                 <div class="form-group">
                     <label for="start">Start</label>
                     <input type="text" class="input" name="start" v-model="start">
@@ -64,8 +64,7 @@ export default {
   
   methods: {
      processForm: function () {
-      alert("Creating Availability");
-
+       alert("Creating Availability");
       axios.put('http://localhost:5000/availability', {
           start: this.start,
           room: this.room,
@@ -73,8 +72,12 @@ export default {
           month: this.month,
           day: this.day,
           booking_type: this.booking_type,
-          doctor_id: this.doctor_id}
-        )
+          doctor_id: this.doctor_id})
+        .then(function (response) {
+          console.log(JSON.stringify(response));})
+        .catch(function (error) {
+          alert(error);
+        });
     } 
   }
 
@@ -84,9 +87,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-#app 
-{
-    margin: 0;
-}
-
+  
 </style>
