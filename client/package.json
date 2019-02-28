@@ -16,7 +16,9 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.13",
+    "js-cookie": "^2.2.0",
     "vue": "^2.6.7",
+    "vue-cookies": "^1.5.12",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
