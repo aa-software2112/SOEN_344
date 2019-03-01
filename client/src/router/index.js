@@ -10,7 +10,7 @@ import RegisterDoctor from '@/components/RegisterDoctor';
 import Login from '@/components/Login';
 import axios from 'axios';
 import * as Cookies from 'js-cookie';
-
+//axios.defaults.withCredentials = true;
 Vue.use(Router);
 
 Vue.prototype.$cookies = Cookies;
