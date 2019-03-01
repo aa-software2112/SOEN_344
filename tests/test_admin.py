@@ -1,8 +1,11 @@
-from uber_sante.services.admin_service import AdminService
-from uber_sante.utils.dbutil import DBUtil
-from tests.test_base import BaseTestClass
-from uber_sante.utils import cache
 from unittest.mock import MagicMock
+
+from tests.test_base import BaseTestClass
+
+from uber_sante.utils import cache
+from uber_sante.utils.dbutil import DBUtil
+
+from uber_sante.services.admin_service import AdminService
 
 
 class AdminTest(BaseTestClass):
@@ -25,7 +28,7 @@ class AdminTest(BaseTestClass):
         # For registering a doctor
         self.register_doctor_url = "http://localhost:5000/registerDoctor"
         self.doctor_information = {
-            "physician_permit_nb":1827364,
+            "physician_permit_nb": 1827364,
             "first_name": "Test",
             "last_name": "Doctor",
             "specialty": "TestDoctor",
@@ -55,19 +58,19 @@ class AdminTest(BaseTestClass):
         :return: N/A
         """
         valid_admin_login = {
-                                "email": self.valid_admin_email,
-                                "password":"invalidPassword"
-                             }
+            "email": self.valid_admin_email,
+            "password": "invalidPassword"
+        }
 
         invalid_admin_login = {
-                                "email": "invalid@email.com",
-                                "password":self.password
-                              }
+            "email": "invalid@email.com",
+            "password": self.password
+        }
 
         response = self.send_post(self.login_url, valid_admin_login)
 
         self.assert_status_code(response, 400)
-        self.assert_json_message (response, "Incorrect Admin Login information", error=True)
+        self.assert_json_message(response, "Incorrect Admin Login information", error=True)
 
         response = self.send_post(self.login_url, invalid_admin_login)
 
@@ -97,6 +100,3 @@ class AdminTest(BaseTestClass):
 
         resp = self.send_post(self.register_doctor_url, self.doctor_information)
         self.assert_status_code(resp, 200)
-
-
-

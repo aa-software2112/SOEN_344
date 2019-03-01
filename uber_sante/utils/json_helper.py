@@ -1,6 +1,6 @@
-
 from flask import jsonify
 from enum import Enum
+
 
 class ResponseReturnCode(Enum):
     CODE_200 = 200
@@ -61,6 +61,7 @@ def json_success(data=None, message=None, status=None):
 
     return jsonify(data=format_data(data), message=message, status=status)
 
+
 def json_error(data=None, error_code=None, message=None, status=None):
     '''
     Data passed, if a custom-class, should implement the __dict__() method
@@ -74,7 +75,6 @@ def json_error(data=None, error_code=None, message=None, status=None):
     return jsonify(data=format_data(data),
                    error={"code": error_code, "message": message},
                    status=status)
-
 
 
 def format_data(data):
@@ -101,7 +101,7 @@ def format_data(data):
         return data
 
     # Check that __dict__ method exists, and don't throw error if it doesn't (3rd param)
-    method = getattr(data,"__dict__",None)
+    method = getattr(data, "__dict__", None)
 
     # Method exists
     if not(method is None):

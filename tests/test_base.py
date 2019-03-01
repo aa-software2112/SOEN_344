@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import MagicMock
-from uber_sante.utils.dbutil import DBUtil
+
 from uber_sante import app
+from uber_sante.utils.dbutil import DBUtil
+
 
 class BaseTestClass(unittest.TestCase):
-
 
     def setUp(self):
         self.app = app.test_client(use_cookies=True)
@@ -63,7 +64,8 @@ class BaseTestClass(unittest.TestCase):
 
         return self.app.post(url, query_string=dict_of_data,
                              headers={'content-type': 'application/json',
-                                      'COOKIE':c})
+                                      'COOKIE': c})
+
     def login_as_admin(self):
 
         valid_admin_login = {

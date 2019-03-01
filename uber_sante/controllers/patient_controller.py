@@ -1,18 +1,20 @@
-from . import controllers
-from uber_sante.utils import cookie_helper
-from uber_sante.utils.date import Date
-from uber_sante.models.patient import Patient
-from uber_sante.services.patient_service import PatientService
-from uber_sante.utils.cache import get_from_cache
-from uber_sante.services.patient_service import CreatePatientStatus
-from uber_sante.models.patient import MakeAnnualStatus
-from uber_sante.services.availability_service import AvailabilityService
-from uber_sante.models.scheduler import ScheduleRequest, Scheduler, RequestEnum, AppointmentRequestType
-from uber_sante.utils import json_helper as js
-from flask import Flask, request, jsonify, make_response
-from uber_sante.utils.cache import get_from_cache, set_to_cache
-from uber_sante.utils import cookie_helper
 from datetime import *
+from flask import Flask, request, jsonify, make_response
+
+from . import controllers
+
+from uber_sante.utils import cookie_helper, json_helper as js
+from uber_sante.utils.date import Date
+from uber_sante.utils.cache import get_from_cache, set_to_cache
+
+from uber_sante.models.patient import Patient
+from uber_sante.models.patient import MakeAnnualStatus
+from uber_sante.models.scheduler import ScheduleRequest, Scheduler, RequestEnum, AppointmentRequestType
+
+from uber_sante.services.patient_service import PatientService
+from uber_sante.services.patient_service import CreatePatientStatus
+from uber_sante.services.availability_service import AvailabilityService
+
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
@@ -21,8 +23,7 @@ availability_service = AvailabilityService()
 @controllers.route('/viewmycookie', methods=['GET'])
 def view_cookie():
 
-    return js.create_json(data=request.cookies, message="Here is your cookie",
-                              return_code=js.ResponseReturnCode.CODE_200)
+    return js.create_json(data=request.cookies, message="Here is your cookie", return_code=js.ResponseReturnCode.CODE_200)
 
 
 @controllers.route('/logout', methods=['GET'])
@@ -33,8 +34,7 @@ def logout():
     """
     if request.method == 'GET':
 
-        resp = js.create_json(data=None, message="Successfully logged out!",
-                              return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
+        resp = js.create_json(data=None, message="Successfully logged out!", return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
         resp = cookie_helper.logout_user_cookie(resp)
         return resp, js.ResponseReturnCode.CODE_200.value
 
@@ -53,8 +53,7 @@ def login():
         password = request.args.get('password')
 
         # Validate the login information
-        patient_id = patient_service.validate_login_info(
-            health_card_nb, password)
+        patient_id = patient_service.validate_login_info(health_card_nb, password)
 
         # There was no patient linked with the health card number and password
         if patient_id == -1:
@@ -65,10 +64,10 @@ def login():
 
         # set the cookie in the response object
         resp = js.create_json(data=None, message="Logged in successfully", return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
-        resp = cookie_helper.set_user_logged(
-            resp, patient_id, cookie_helper.UserTypes.PATIENT.value)
+        resp = cookie_helper.set_user_logged(resp, patient_id, cookie_helper.UserTypes.PATIENT.value)
 
         return resp, js.ResponseReturnCode.CODE_200.value
+
 
 @controllers.route('/patient', methods=['GET', 'PUT', 'DELETE'])
 def patient():
@@ -126,7 +125,7 @@ def patient():
 
         return js.create_json(None, "Patient record created", js.ResponseReturnCode.CODE_201)
 
-      
+
 @controllers.route('/get_schedule', methods=['POST'])
 def get_schedule():
 
@@ -139,18 +138,15 @@ def get_schedule():
         year = int(date.year)
         month = int(date.month)
         day = int(date.day)
+
         if request_type == RequestEnum.MONTHLY_REQUEST:
-
             sr_monthly = ScheduleRequest(request_type, appointment_request_type, Date(year, month))
-
             monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly)
 
             return js.create_json(data=monthly_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
 
         if request_type == RequestEnum.DAILY_REQUEST:
-
             sr_daily = ScheduleRequest(request_type, appointment_request_type, Date(year, month, day))
-
             daily_schedule = Scheduler.get_instance().get_schedule(sr_daily)
 
             return js.create_json(data=daily_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
@@ -165,11 +161,8 @@ def make_annual_appointment():
         patient_id = request.args.get('patient_id')
 
         patient_service.test_and_set_patient_into_cache(patient_id)
-
         patient = get_from_cache(patient_id)
-
         availability = availability_service.get_availability(availability_id)
-
 
         result = patient.make_annual_appointment(availability)
 
@@ -177,8 +170,7 @@ def make_annual_appointment():
             return js.create_json(None, "Successfully added annual appointment", js.ResponseReturnCode.CODE_200)
 
         elif result == MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT:
-            return js.create_json(None, "Patient already has an annual appointment in cart",
-                                  js.ResponseReturnCode.CODE_400)
+            return js.create_json(None, "Patient already has an annual appointment in cart", js.ResponseReturnCode.CODE_400)
 
 
 @controllers.route('/make_walkin_appointment', methods=['PUT'])
@@ -190,22 +182,21 @@ def make_walkin_appointment():
         patient_id = request.args.get('patient_id')
 
         patient_service.test_and_set_patient_into_cache(patient_id)
-
         patient = get_from_cache(patient_id)
-
         availability = availability_service.get_availability(availability_id)
 
         patient.make_walkin_appointment(availability)
 
         return js.create_json(None, "Successfully added walkin appointment", js.ResponseReturnCode.CODE_200)
 
+
 @controllers.route('/appointment', methods=['DELETE'])
 def appointment():
 
     if request.method == 'DELETE':
-    # example use case: remove appointment
-    # params: patient_id (int, required), availability_id (int, required)
-    # return: success/failure
+        # example use case: remove appointment
+        # params: patient_id (int, required), availability_id (int, required)
+        # return: success/failure
 
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)

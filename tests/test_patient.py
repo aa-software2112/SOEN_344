@@ -1,10 +1,14 @@
-from uber_sante.services.patient_service import PatientService
+from tests.test_base import BaseTestClass
+
+from uber_sante.utils import cache
+from uber_sante.utils.dbutil import DBUtil
+
 from uber_sante.models.appointment import Appointment
 from uber_sante.models.availability import Availability
 from uber_sante.models.scheduler import AppointmentRequestType
-from tests.test_base import BaseTestClass
-from uber_sante.utils import cache
-from uber_sante.utils.dbutil import DBUtil
+
+from uber_sante.services.patient_service import PatientService
+
 
 class PatientTest(BaseTestClass):
     """
@@ -26,8 +30,10 @@ class PatientTest(BaseTestClass):
         self.login_url = "http://localhost:5000/login"
         self.valid_health_card_nb = "DRSJ 9971 0157"
         self.password = "password"
-        valid_health_card_and_pw = {"health_card_nb": self.valid_health_card_nb,
-                                    "password": self.password}
+        valid_health_card_and_pw = {
+            "health_card_nb": self.valid_health_card_nb,
+            "password": self.password
+        }
 
         response = self.send_post(self.login_url, valid_health_card_and_pw)
         self.assert_status_code(response, 200)
@@ -35,9 +41,18 @@ class PatientTest(BaseTestClass):
         """ Create and store patient in cache"""
         PatientService().test_and_set_patient_into_cache(self.patient_id)
         self.patient_1 = cache.get_from_cache(self.patient_id)
-        self.availability_1 = Availability(self.availability_id, "20", "32400", "881", "1", "2019", "4", "8", AppointmentRequestType.WALKIN)
-        self.appointment_1 = Appointment(self.patient_id, self.availability_1)
 
+        self.availability_1 = Availability(
+            self.availability_id,
+            "20",
+            "32400",
+            "881",
+            "1",
+            "2019",
+            "4",
+            "8",
+            AppointmentRequestType.WALKIN)
+        self.appointment_1 = Appointment(self.patient_id, self.availability_1)
 
     def test_remove_appointment_endpoint_success(self):
         """
@@ -46,7 +61,10 @@ class PatientTest(BaseTestClass):
         """
         self.patient_1.add_walkin_to_cart(self.appointment_1)
 
-        valid_info = {"patient_id": self.patient_id, "availability_id":self.availability_id}
+        valid_info = {
+            "patient_id": self.patient_id,
+            "availability_id": self.availability_id
+        }
 
         response = self.send_delete(self.patient_url, valid_info)
 
@@ -60,10 +78,12 @@ class PatientTest(BaseTestClass):
         """
         self.patient_1.add_walkin_to_cart(self.appointment_1)
 
-        valid_info = {"patient_id": self.patient_id, "availability_id": self.availability_id}
+        valid_info = {
+            "patient_id": self.patient_id,
+            "availability_id": self.availability_id
+        }
 
-
-        #Make sure the appointment is properly removed before testing the error.
+        # Make sure the appointment is properly removed before testing the error.
         removed = self.send_delete(self.patient_url, valid_info)
         self.assert_status_code(removed, 200)
 
@@ -77,8 +97,12 @@ class PatientTest(BaseTestClass):
         Testing missing arguments for remove_appointment endpoint
         :return: N/A
         """
-        patient_id_only = {"patient_id": self.patient_id}
-        availability_id_only = {"availability_id": self.availability_id}
+        patient_id_only = {
+            "patient_id": self.patient_id
+        }
+        availability_id_only = {
+            "availability_id": self.availability_id
+        }
 
         response_patient = self.send_delete(self.patient_url, patient_id_only)
         response_availability = self.send_delete(self.patient_url, availability_id_only)
