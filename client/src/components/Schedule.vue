@@ -66,7 +66,7 @@ export default {
      processForm: function () {
        var self=this;
        self.submit='True';
-      axios.post('http://127.0.0.1:5000/get_schedule',{request_type: this.request_type, appointment_request_type: this.appointment_request_type, date: this.date} )
+      axios.post('http://localhost:5000/get_schedule',{request_type: this.request_type, appointment_request_type: this.appointment_request_type, date: this.date} )
         .then(response => {
             self.results = response.data
             self.current_type = this.request_type
