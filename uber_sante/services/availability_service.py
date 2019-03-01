@@ -1,4 +1,4 @@
-import uber_sante.models.scheduler
+import uber_sante.models
 from uber_sante.utils.dbutil import DBUtil
 from uber_sante.models.availability import Availability
 
@@ -62,14 +62,6 @@ class AvailabilityService:
         return Availability(result['id'], result['doctor_id'], result['start'],
                             result['room'], result['free'], result['year'], result['month'],
                             result['day'], uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
-    """
-    def free_availabilities(self, availability_ids):
-
-        for availability_id in availability_ids:
-            update_stmt = 'UPDATE Availability SET free = 1 WHERE id = ?'
-            params = (availability_id,)
-            self.db.write_one(update_stmt, params)
-    """
 
     def free_availability(self, availability_id):
 
