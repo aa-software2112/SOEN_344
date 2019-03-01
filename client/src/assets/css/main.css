@@ -1,0 +1,39 @@
+html, body {
+    height: 100%;
+    min-height: 100%;
+}
+#app-container, #app{
+    height: 100%;
+    
+}
+
+.main-color, #app {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+    background: darkseagreen !important 
+}
+
+#main-content-area {
+    padding-top: 50px;
+    min-height: 100%;
+}
+
+.reg-container{
+    max-width:500px;
+    
+}
+
+.submit 
+{
+    background-color: white;
+}
+
+.logo {
+    background-image : url('../UberSante.png');
+    padding: 40px;
+    background-size: contain;
+}
