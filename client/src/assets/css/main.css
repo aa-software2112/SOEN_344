@@ -14,7 +14,6 @@ html, body {
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
-    background: darkseagreen !important 
 }
 
 #main-content-area {
@@ -22,18 +21,25 @@ html, body {
     min-height: 100%;
 }
 
-.reg-container{
-    max-width:500px;
-    
+.submit, button
+{
+  border-color: #17a2b8 !important;
+  border-radius: 50px;
 }
 
-.submit 
-{
-    background-color: white;
-}
 
 .logo {
     background-image : url('../UberSante.png');
     padding: 40px;
     background-size: contain;
+}
+
+.reg-container{
+  margin-top: 20px;
+}
+
+body {font-family: "Times New Roman", Georgia, Serif;}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display";
+  letter-spacing: 5px;
 }
