@@ -71,16 +71,17 @@ def book():
     # TODO: connect the call to the scheduler class to free the availability (line 72)
     # TODO: connect the call to the booking_service to delete the booking fromn the Booking table(line 75)
 
-        availability_id = request.args.get('availability_id')
+        booking_id = request.args.get('booking_id')
         
-        if availability_id is None:
-            return jsonify('No booking specified'), 400
+        if booking_id is None:
+            return js.create_json(data=None, message="No booking specified", return_code=js.ResponseReturnCode.CODE_400)
         
-        result = True # scheduler.free_booking(availability_id) # returns true or false
+        f_key = BookingService().cancel(booking_id) # returns primary key of booking's corresponding availability
 
-        if result:
-            True # booking_service.delete_booking(availability_id)
+        if f_key:
+            Scheduler.free_availabilities(f_key)
         else:
-            jsonify('Unable to delete booking'), 400
+            return js.create_json(data=None, message="Unable to delete booking", return_code=js.ResponseReturnCode.CODE_400)
         
-        jsonify('Booking deleted'), 200
+        return js.create_json(data=None, message="Booking successfully deleted", return_code=js.ResponseReturnCode.CODE_200)
+
