@@ -12,6 +12,8 @@ from uber_sante.utils import json_helper as js
 from flask import Flask, request, jsonify, make_response
 from uber_sante.utils.cache import get_from_cache, set_to_cache
 from uber_sante.utils.cookie_helper import *
+from uber_sante.models.appointment import Appointment
+from uber_sante.models.availability import Availability
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
@@ -237,16 +239,31 @@ def appointment():
 
 @controllers.route('/cart', methods=['GET'])
 def cart():
+
     if request.method == 'GET':
-        # getting patient_id from cookie
-        patient_id = request.cookies.get(CookieKeys.ID)
+        # # getting patient_id from cookie
+        # patient_id = request.cookies.get(CookieKeys.ID)
+        #
+        # # get patient from cache
+        # patient = get_from_cache(patient_id)
+        #
+        # cart = patient.get_cart()
 
-        # get patient from cache
-        patient = get_from_cache(patient_id)
 
-        cart = patient.get_cart()
 
-        return js.create_json(data=cart.appointments, message="List of appointments",
+        appointmentList = []
+
+        availability1 = Availability(1, 1, 32400, '088', 0, 2019, 2, 26, AppointmentRequestType.WALKIN).__dict__
+        availability2 = Availability(2, 2, 32400, '053', 0, 2019, 3, 31, AppointmentRequestType.ANNUAL).__dict__
+        app1 = Appointment(1, availability1).__dict__
+        app2 = Appointment(2, availability2).__dict__
+
+        appointmentList.append(app1)
+        appointmentList.append(app2)
+
+
+        return js.create_json(data=appointmentList, message="List of appointments",
                               return_code=js.ResponseReturnCode.CODE_200)
 
+    #return jsonify({"appointments": [1, 2, 3]}), 200
 

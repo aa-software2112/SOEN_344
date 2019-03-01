@@ -9,7 +9,7 @@ class RequestEnum(Enum):
     MONTHLY_REQUEST = "MONTHLY"
 
 
-class AppointmentRequestType(Enum):
+class AppointmentRequestType(str, Enum):
     ANNUAL = "ANNUAL"
     WALKIN = "WALKIN"
     ALL = "ALL"
