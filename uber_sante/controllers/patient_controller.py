@@ -11,7 +11,7 @@ from uber_sante.models.scheduler import ScheduleRequest, Scheduler, RequestEnum,
 from uber_sante.utils import json_helper as js
 from flask import Flask, request, jsonify, make_response
 from uber_sante.utils.cache import get_from_cache, set_to_cache
-from uber_sante.utils import cookie_helper
+from uber_sante.utils.cookie_helper import *
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
@@ -234,3 +234,19 @@ def appointment():
             return js.create_json(data=None, message="Appointment not found/removed", return_code=js.ResponseReturnCode.CODE_400)
 
         return js.create_json(data=None, message="Appointment removed", return_code=js.ResponseReturnCode.CODE_200)
+
+@controllers.route('/cart', methods=['GET'])
+def cart():
+    if request.method == 'GET':
+        # getting patient_id from cookie
+        patient_id = request.cookies.get(CookieKeys.ID)
+
+        # get patient from cache
+        patient = get_from_cache(patient_id)
+
+        cart = patient.get_cart()
+
+        return js.create_json(data=cart.appointments, message="List of appointments",
+                              return_code=js.ResponseReturnCode.CODE_200)
+
+
