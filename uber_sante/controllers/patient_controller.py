@@ -12,6 +12,7 @@ from uber_sante.utils import json_helper as js
 from flask import Flask, request, jsonify, make_response
 from uber_sante.utils.cache import get_from_cache, set_to_cache
 from uber_sante.utils import cookie_helper
+from datetime import *
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
@@ -126,43 +127,33 @@ def patient():
         return js.create_json(None, "Patient record created", js.ResponseReturnCode.CODE_201)
 
       
-@controllers.route('/get_monthly_schedule', methods=['GET'])
-def get_monthly_schedule():
+@controllers.route('/get_schedule', methods=['POST'])
+def get_schedule():
 
-    if request.method == 'GET':
+    if request.method == 'POST':
 
-        request_type = RequestEnum(request.args.get('request_type'))
+        request_type = RequestEnum(request.get_json().get('request_type'))
+        appointment_request_type = AppointmentRequestType(request.get_json().get('appointment_request_type'))
 
-        appointment_request_type = AppointmentRequestType(request.args.get('appointment_request_type'))
+        date = datetime.strptime(request.get_json().get('date'), '%Y-%m-%d').date()
+        year = int(date.year)
+        month = int(date.month)
+        day = int(date.day)
+        if request_type == RequestEnum.MONTHLY_REQUEST:
 
-        year = int(request.args.get('year'))
-        month = int(request.args.get('month'))
+            sr_monthly = ScheduleRequest(request_type, appointment_request_type, Date(year, month))
 
-        sr_monthly = ScheduleRequest(request_type, appointment_request_type, Date(year, month))
+            monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly)
 
-        monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly)
+            return js.create_json(monthly_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
 
-        return js.create_json(monthly_schedule.as_dict(), None, js.ResponseReturnCode.CODE_200)
+        if request_type == RequestEnum.DAILY_REQUEST:
 
+            sr_daily = ScheduleRequest(request_type, appointment_request_type, Date(year, month, day))
 
-@controllers.route('/get_daily_schedule', methods=['GET'])
-def get_daily_schedule():
+            daily_schedule = Scheduler.get_instance().get_schedule(sr_daily)
 
-    if request.method == 'GET':
-
-        request_type = RequestEnum(request.args.get('request_type'))
-
-        appointment_request_type = AppointmentRequestType(request.args.get('appointment_request_type'))
-
-        year = int(request.args.get('year'))
-        month = int(request.args.get('month'))
-        day = int(request.args.get('day'))
-
-        sr_daily = ScheduleRequest(request_type, appointment_request_type, Date(year, month, day))
-
-        daily_schedule = Scheduler.get_instance().get_schedule(sr_daily)
-
-        return js.create_json(daily_schedule.as_dict(), None, js.ResponseReturnCode.CODE_200)
+            return js.create_json(daily_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
 
 
 @controllers.route('/make_annual_appointment', methods=['PUT'])
