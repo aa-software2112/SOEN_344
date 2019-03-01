@@ -1,3 +1,4 @@
+import uber_sante.models.scheduler
 from uber_sante.utils.dbutil import DBUtil
 from uber_sante.models.availability import Availability
 
@@ -46,10 +47,21 @@ class AvailabilityService:
         for result in results:
             list_of_availabilities.append(Availability(result['id'], result['doctor_id'], result['start'],
                                                        result['room'], result['free'], result['year'], result['month'],
-                                                       result['day']))
+                                                       result['day'], result['booking_type']))
 
         return list_of_availabilities
 
+    def get_availability(self, availability_id):
+        """ Queries the Availability db by availability_id and returns an Availability object """
+
+        select_stmt = 'SELECT * FROM Availability WHERE id = ?'
+        params = (availability_id, )
+
+        result = self.db.read_one(select_stmt, params)
+
+        return Availability(result['id'], result['doctor_id'], result['start'],
+                            result['room'], result['free'], result['year'], result['month'],
+                            result['day'], uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
     """
     def free_availabilities(self, availability_ids):
 
