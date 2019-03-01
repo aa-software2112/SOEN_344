@@ -5,8 +5,9 @@ from uber_sante.services.availability_service import AvailabilityService
 
 
 class RequestEnum(Enum):
-    DAILY_REQUEST = 1
-    MONTHLY_REQUEST = 2
+    DAILY_REQUEST = "DAILY"
+    MONTHLY_REQUEST = "MONTHLY"
+
 
 class AppointmentRequestType(Enum):
     ANNUAL = "ANNUAL"

@@ -8,7 +8,6 @@ from uber_sante.utils.date import Date
 class Schedule(ABC):
 
     def __init__(self):
-
         pass
 
     @abstractmethod
@@ -19,6 +18,7 @@ class Schedule(ABC):
          the schedule's representation scope (month or day) for front-end display
         """
         pass
+
 
 class DailySchedule(Schedule):
 
@@ -50,13 +50,11 @@ class DailySchedule(Schedule):
 
             # The availability is free, so one slot exists on this day
             if avail.is_free():
-
                 availability_exists = True
 
                 break
 
         return availability_exists
-
 
     def display_daily_schedule(self):
 
@@ -65,8 +63,16 @@ class DailySchedule(Schedule):
         print("\tAvail today?:{}".format(self.availability_exists_today()))
 
         for avail in self.availabilities:
-
             print("\t\t{}".format(avail))
+
+    def as_dict(self):
+        dict = {}
+
+        for availability in self.availabilities:
+            dict[availability.get_id()] = availability.__dict__
+
+        return dict
+
 
 class MonthlySchedule(Schedule):
 
@@ -111,21 +117,20 @@ class MonthlySchedule(Schedule):
         # Loop over all availabilities, separating them into lists by date of
         # availability
         for avail in list_of_availabilities:
-
             # Expect integer days
             avail_dict[int(avail.get_day())].append(avail)
 
         # Get list of availabilities by day, and create daily schedules of them
         for day, v in avail_dict.items():
             self.daily_schedules[day] = DailySchedule(avail_dict[day], Date(self.date_of_monthly_schedule.get_year(),
-                                                                        self.date_of_monthly_schedule.get_month(),day))
+                                                                            self.date_of_monthly_schedule.get_month(),
+                                                                            day))
 
     def get_list_of_daily_schedules(self):
 
         return_list = []
 
         for day in range(self.min_date_key, self.max_date_key + 1):
-
             return_list.append(self.daily_schedules[day])
 
         return return_list
@@ -134,12 +139,18 @@ class MonthlySchedule(Schedule):
 
         return self.date_of_monthly_schedule.get_date_string()
 
-
     def display_monthly_schedule(self):
 
         for day in range(self.min_date_key, self.max_date_key + 1):
-
             self.daily_schedules[day].display_daily_schedule()
+
+    def as_dict(self):
+        dict = {}
+
+        for day in range(self.min_date_key, self.max_date_key + 1):
+            dict[day] = self.daily_schedules[day].as_dict()
+
+        return dict
 
 
 if __name__ == "__main__":
@@ -151,13 +162,10 @@ if __name__ == "__main__":
         for day in range(1, 27 + 1):
 
             for num_avails in range(1, 15 + 1):
-
-                avails.append(Availability(-1, -1, num_avails*3600+(num_avails + repetitions)*20, "RM", True, 2018, 7, day))
-
+                avails.append(
+                    Availability(-1, -1, num_avails * 3600 + (num_avails + repetitions) * 20, "RM", True, 2018, 7, day))
 
     m = MonthlySchedule(avails, Date(2018, 7))
 
     for sched in m.get_list_of_daily_schedules():
-
         print("{}, avail?{}".format(sched.get_schedule_date_string(), sched.availability_exists_today()))
-

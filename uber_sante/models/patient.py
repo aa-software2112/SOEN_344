@@ -1,4 +1,12 @@
+from enum import Enum
 from uber_sante.models.cart import Cart
+from uber_sante.models.appointment import Appointment
+
+
+class MakeAnnualStatus(Enum):
+    SUCCESS = 1
+    HAS_ANNUAL_APPOINTMENT = 2
+
 
 class Patient:
 
@@ -13,6 +21,21 @@ class Patient:
         self.home_address = address
         self.email = email
         self.cart = Cart()
+
+    def has_annual_appointment(self):
+        return self.cart.contains_annual_appointment()
+
+    def make_annual_appointment(self, availability):
+
+        if self.has_annual_appointment():
+            return MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT
+
+        else:
+            self.add_annual_to_cart(Appointment(self.id, availability))
+            return MakeAnnualStatus.SUCCESS
+
+    def make_walkin_appointment(self, availability):
+        self.add_walkin_to_cart((Appointment(self.id, availability)))
 
     def add_walkin_to_cart(self, walkin):
         self.cart.add_appointment(walkin)
@@ -45,7 +68,7 @@ class Patient:
             'cart': self.cart.__dict__
         }
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     p = Patient(1, "frank", "smith", "1234 5678 9012", "24121992", "F", "5144435211", "7331", "frank.smith@gmail.ca")
     print(p.__dict__())
