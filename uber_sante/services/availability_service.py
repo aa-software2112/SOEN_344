@@ -1,4 +1,4 @@
-import uber_sante.models.scheduler
+import uber_sante.models
 from uber_sante.utils.dbutil import DBUtil
 from uber_sante.models.availability import Availability
 
