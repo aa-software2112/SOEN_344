@@ -7,6 +7,7 @@ import Cart from '@/components/Cart'
 import Schedule from '@/components/Schedule'
 import CreateAvailability from '@/components/CreateAvailability'
 import RegisterDoctor from '@/components/RegisterDoctor';
+import Login from '@/components/Login';
 import axios from 'axios';
 import * as Cookies from 'js-cookie';
 
@@ -51,6 +52,11 @@ export default new Router({
       path: '/createAvailability',
       name: 'CreateAvailability',
       component: CreateAvailability
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
     }
   ]
 });

@@ -21,3 +21,4 @@ def test():
             results.append(row)
 
         return jsonify(results), 200
+

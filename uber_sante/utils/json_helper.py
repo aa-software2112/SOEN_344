@@ -51,6 +51,7 @@ def create_json(data=None, message=None, return_code=ResponseReturnCode.CODE_200
     resp.headers.add('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
     resp.headers.add('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token')
 
+
     if as_tuple == True:
         return resp, return_code.value
     else:

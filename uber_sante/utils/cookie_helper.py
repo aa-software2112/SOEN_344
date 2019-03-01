@@ -4,6 +4,7 @@ class CookieKeys(Enum):
     LOGGED = "logged"
     ID = "id"
     USER_TYPE = "user_type"
+    USER_OBJ = "user_obj"
 
 class UserTypes(Enum):
     DOCTOR = "doctor"
