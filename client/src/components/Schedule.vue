@@ -5,21 +5,21 @@
     <form id="form-availability" @submit.prevent="processForm">
       <div class="form-group">
         <label for="request_type">Request Type</label>
-        <select v-model="request_type" name="request_type">
+        <select v-model="request_type" name="request_type" required>
           <option value="DAILY">Daily</option>
           <option value="MONTHLY">Monthly</option>
         </select>
       </div>
       <div class="form-group">
         <label for="appointment_request_type">Appointment Type</label>
-        <select v-model="appointment_request_type" name="appointment_request_type">
+        <select v-model="appointment_request_type" name="appointment_request_type" required>
           <option value="ANNUAL">Annual</option>
           <option value="WALKIN">Walkin</option>
         </select>
       </div>
       <div class="form-group">
         <label for="date">Year</label>
-        <input type="Date" class="input" name="date" v-model="date">
+        <input type="Date" class="input" name="date" v-model="date" required>
       </div>
       <button type="submit" class="btn btn-default submit">Submit</button>
     </form>
