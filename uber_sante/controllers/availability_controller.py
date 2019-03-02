@@ -1,7 +1,8 @@
-from . import controllers
-from uber_sante.services.availability_service import AvailabilityService
 from flask import request, jsonify
+
+from . import controllers
 from uber_sante.utils import json_helper as js
+from uber_sante.services.availability_service import AvailabilityService
 
 
 @controllers.route('/availability', methods=['GET', 'PUT', 'DELETE'])

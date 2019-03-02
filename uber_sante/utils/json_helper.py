@@ -1,6 +1,6 @@
-
 from flask import jsonify
 from enum import Enum
+
 
 class ResponseReturnCode(Enum):
     CODE_200 = 200
@@ -49,7 +49,7 @@ def create_json(data=None, message=None, return_code=ResponseReturnCode.CODE_200
     # Allows external server to call this backend API
     resp.headers.add('Access-Control-Allow-Origin', '*')
     resp.headers.add('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
-    resp.headers.add('Access-Control-Allow-Headers', '  Origin, Content-Type, X-Auth-Token')
+    resp.headers.add('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token')
 
     if as_tuple == True:
         return resp, return_code.value
@@ -61,6 +61,7 @@ def json_success(data=None, message=None, status=None):
 
     return jsonify(data=format_data(data), message=message, status=status)
 
+
 def json_error(data=None, error_code=None, message=None, status=None):
     '''
     Data passed, if a custom-class, should implement the __dict__() method
@@ -71,10 +72,7 @@ def json_error(data=None, error_code=None, message=None, status=None):
     :param status: The string status of the message, either "success", or "error"
     :return: The json responses with all data set
     '''
-    return jsonify(data=format_data(data),
-                   error={"code": error_code, "message": message},
-                   status=status)
-
+    return jsonify(data=format_data(data), error={"code": error_code, "message": message}, status=status)
 
 
 def format_data(data):
@@ -101,7 +99,7 @@ def format_data(data):
         return data
 
     # Check that __dict__ method exists, and don't throw error if it doesn't (3rd param)
-    method = getattr(data,"__dict__",None)
+    method = getattr(data, "__dict__", None)
 
     # Method exists
     if not(method is None):

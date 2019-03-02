@@ -1,10 +1,12 @@
+import json
 import unittest
 from unittest.mock import MagicMock
-from uber_sante.utils.dbutil import DBUtil
+
 from uber_sante import app
+from uber_sante.utils.dbutil import DBUtil
+
 
 class BaseTestClass(unittest.TestCase):
-
 
     def setUp(self):
         self.app = app.test_client(use_cookies=True)
@@ -24,6 +26,10 @@ class BaseTestClass(unittest.TestCase):
     def mock_db_write(self, return_value=None):
         DBUtil.get_instance().write_one = MagicMock(return_value=return_value)
 
+    def send_get(self, url, dict_of_data=None):
+
+        return self.app.get(url, query_string=dict_of_data, headers=self.json_header)
+
     def send_post(self, url, dict_of_data=None):
 
         return self.custom_post(url, dict_of_data)
@@ -37,15 +43,15 @@ class BaseTestClass(unittest.TestCase):
         return self.app.delete(url, query_string=dict_of_data, headers=self.json_header)
 
     def assert_json_data(self, response, expected):
-
-        assert(response.json["data"] == expected)
+        result = json.loads(response.get_data().decode("utf-8"))
+        assert(result["data"] == expected)
 
     def assert_json_message(self, response, expected, error=False):
-
+        result = json.loads(response.get_data().decode("utf-8"))
         if error:
-            assert(response.json["error"]["message"] == expected)
+            assert(result["error"]["message"] == expected)
         else:
-            assert(response.json["message"] == expected)
+            assert(result["message"] == expected)
 
     def assert_status_code(self, response, expected):
         assert(response.status_code == expected)
@@ -63,7 +69,8 @@ class BaseTestClass(unittest.TestCase):
 
         return self.app.post(url, query_string=dict_of_data,
                              headers={'content-type': 'application/json',
-                                      'COOKIE':c})
+                                      'COOKIE': c})
+
     def login_as_admin(self):
 
         valid_admin_login = {
