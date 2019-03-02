@@ -77,9 +77,8 @@ def book():
             return js.create_json(data=None, message="No booking specified", return_code=js.ResponseReturnCode.CODE_400)
         
         f_key = BookingService().cancel(booking_id) # returns primary key of booking's corresponding availability
-
         if f_key:
-            Scheduler.free_availabilities(f_key)
+            Scheduler.get_instance().free_availability(f_key)
         else:
             return js.create_json(data=None, message="Unable to delete booking", return_code=js.ResponseReturnCode.CODE_400)
         

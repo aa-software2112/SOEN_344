@@ -36,9 +36,10 @@ class BookingService:
     def cancel(self, booking_id):
         
         #retrieving booking's primary key from db
-        key_retrieval = 'SHOW KEYS FROM Booking WHERE Key_name = ? id = ?'
-        params = ('PRIMARY', booking_id,)
-        f_key = self.db.read_one(key_retrieval, params)
+        key_retrieval = 'SELECT availability_id FROM Booking WHERE id = ?'
+        params = (booking_id, )
+        f_key_dict = self.db.read_one(key_retrieval, params)
+        f_key = f_key_dict['availability_id']
         
         #deleting corresponding booking
         delete_stmt = 'DELETE FROM Booking WHERE id = ?'
