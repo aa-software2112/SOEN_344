@@ -1,3 +1,4 @@
+import json
 import unittest
 from unittest.mock import MagicMock
 
@@ -42,15 +43,15 @@ class BaseTestClass(unittest.TestCase):
         return self.app.delete(url, query_string=dict_of_data, headers=self.json_header)
 
     def assert_json_data(self, response, expected):
-
-        assert(response.json["data"] == expected)
+        result = json.loads(response.get_data().decode("utf-8"))
+        assert(result["data"] == expected)
 
     def assert_json_message(self, response, expected, error=False):
-
+        result = json.loads(response.get_data().decode("utf-8"))
         if error:
-            assert(response.json["error"]["message"] == expected)
+            assert(result["error"]["message"] == expected)
         else:
-            assert(response.json["message"] == expected)
+            assert(result["message"] == expected)
 
     def assert_status_code(self, response, expected):
         assert(response.status_code == expected)

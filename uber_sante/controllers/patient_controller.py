@@ -69,7 +69,7 @@ def login():
         return resp, js.ResponseReturnCode.CODE_200.value
 
 
-@controllers.route('/patient', methods=['GET', 'PUT', 'DELETE'])
+@controllers.route('/patient', methods=['GET', 'PUT'])
 def patient():
 
     if request.method == 'GET':
@@ -92,9 +92,6 @@ def patient():
         # params: [various, look below] (int or string, required)
         # return: sucess/failure
 
-        if request.args is None:
-            return js.create_json(None, "No patient information provided", js.ResponseReturnCode.CODE_400)
-
         health_card_nb = request.args.get('health_card_nb')
         date_of_birth = request.args.get('date_of_birth')
         gender = request.args.get('gender')
@@ -104,6 +101,25 @@ def patient():
         first_name = request.args.get('first_name')
         last_name = request.args.get('last_name')
         password = request.args.get('password')
+
+        if health_card_nb is None:
+            return js.create_json(data=None, message="No health card number provided", return_code=js.ResponseReturnCode.CODE_400)
+        if date_of_birth is None:
+            return js.create_json(data=None, message="No data of birth provided", return_code=js.ResponseReturnCode.CODE_400)
+        if gender is None:
+            return js.create_json(data=None, message="No gender provided", return_code=js.ResponseReturnCode.CODE_400)
+        if phone_nb is None:
+            return js.create_json(data=None, message="No phone number provided", return_code=js.ResponseReturnCode.CODE_400)
+        if home_address is None:
+            return js.create_json(data=None, message="No home address provided", return_code=js.ResponseReturnCode.CODE_400)
+        if email is None:
+            return js.create_json(data=None, message="No email provided", return_code=js.ResponseReturnCode.CODE_400)
+        if first_name is None:
+            return js.create_json(data=None, message="No first name provided", return_code=js.ResponseReturnCode.CODE_400)
+        if last_name is None:
+            return js.create_json(data=None, message="No last name provided", return_code=js.ResponseReturnCode.CODE_400)
+        if password is None:
+            return js.create_json(data=None, message="No password provided", return_code=js.ResponseReturnCode.CODE_400)
 
         result = patient_service.create_patient(
             health_card_nb,
@@ -118,12 +134,12 @@ def patient():
         )
 
         if result == CreatePatientStatus.HEALTH_CARD_ALREADY_EXISTS:
-            return js.create_json(None, "Health card number already registered", js.ResponseReturnCode.CODE_500)
+            return js.create_json(data=None, message="Health card number already registered", return_code=js.ResponseReturnCode.CODE_500)
 
         if result == CreatePatientStatus.EMAIL_ALREADY_EXISTS:
-            return js.create_json(None, "Email address already registered", js.ResponseReturnCode.CODE_500)
+            return js.create_json(data=None, message="Email address already registered", return_code=js.ResponseReturnCode.CODE_500)
 
-        return js.create_json(None, "Patient record created", js.ResponseReturnCode.CODE_201)
+        return js.create_json(data=None, message="Patient record created", return_code=js.ResponseReturnCode.CODE_201)
 
 
 @controllers.route('/get_schedule', methods=['POST'])
@@ -167,10 +183,10 @@ def make_annual_appointment():
         result = patient.make_annual_appointment(availability)
 
         if result == MakeAnnualStatus.SUCCESS:
-            return js.create_json(None, "Successfully added annual appointment", js.ResponseReturnCode.CODE_200)
+            return js.create_json(data=None, message="Successfully added annual appointment", return_code=js.ResponseReturnCode.CODE_200)
 
         elif result == MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT:
-            return js.create_json(None, "Patient already has an annual appointment in cart", js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="Patient already has an annual appointment in cart", return_code=js.ResponseReturnCode.CODE_400)
 
 
 @controllers.route('/make_walkin_appointment', methods=['PUT'])
@@ -187,7 +203,7 @@ def make_walkin_appointment():
 
         patient.make_walkin_appointment(availability)
 
-        return js.create_json(None, "Successfully added walkin appointment", js.ResponseReturnCode.CODE_200)
+        return js.create_json(data=None, message="Successfully added walkin appointment", return_code=js.ResponseReturnCode.CODE_200)
 
 
 @controllers.route('/appointment', methods=['DELETE'])

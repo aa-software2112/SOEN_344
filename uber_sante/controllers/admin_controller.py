@@ -25,8 +25,7 @@ def login_admin():
 
         # User is already logged in (regardless of login-type {patient, admin, nurse, doctor})
         if cookie_helper.user_is_logged(request):
-            return js.create_json(data=None, message="Already logged in",
-                                  return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="Already logged in", return_code=js.ResponseReturnCode.CODE_400)
 
         email = request.args.get('email')
         password = request.args.get('password')
@@ -34,11 +33,9 @@ def login_admin():
         admin_id = admin_service.validate_login_info(email, password)
 
         if admin_id == -1:
-            return js.create_json(data=None, message="Incorrect Admin Login information",
-                                  return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="Incorrect Admin Login information", return_code=js.ResponseReturnCode.CODE_400)
 
-        resp = js.create_json(data=None, message="Logged in successfully",
-                              return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
+        resp = js.create_json(data=None, message="Logged in successfully", return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
         resp = cookie_helper.set_user_logged(resp, admin_id,
                                              cookie_helper.UserTypes.ADMIN.value)
 

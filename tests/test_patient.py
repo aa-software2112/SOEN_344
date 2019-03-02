@@ -119,7 +119,7 @@ class PatientTest(BaseTestClass):
         self.assert_json_message(response_availability, "No patient specified", error=True)
 
 
-    def test_getting_patient_by_id(self):
+    def test_get_patient_by_id(self):
         """
         Test GET /patient with a valid Id
         :return: N/A
@@ -131,7 +131,7 @@ class PatientTest(BaseTestClass):
         self.assert_status_code(response, 200)
     
 
-    def test_getting_patient_no_id_provided(self):
+    def test_get_patient_no_id_provided(self):
         """
         Test GET /patient with no Id
         :return: N/A
@@ -141,11 +141,88 @@ class PatientTest(BaseTestClass):
         self.assert_json_message(response, "Patient Id is not specified", error=True)
 
 
-    def test_getting_patient_cannot_get(self):
+    def test_get_patient_cannot_get(self):
         """
         Test GET /patient with a bad Id
         :return: N/A
         """
-        response = self.send_get(self.patient_url, self.patient_id_fake)
-        self.assert_status_code(response, 400)
+        patient_id_fake = {
+            "patient_id": self.patient_id_fake
+        }
+        response = self.send_get(self.patient_url, patient_id_fake)
+        self.assert_status_code(response, 500)
         self.assert_json_message(response, "Could not retrieve patient", error=True)
+
+    
+    # def test_put_patient(self):
+    #     """
+    #     Test PUT /patient with good object attributes
+    #     :return: N/A
+    #     """
+    #     response = self.mock_db_write({
+            # "health_card_nb": "AAAA 1111 1111",
+            # "date_of_birth": "1900-01-01",
+            # "gender": "M",
+            # "phone_nb": "111-111-1111",
+            # "home_address": "01 First Avenue",
+            # "email": "johndoe@merriam-webster.com",
+            # "first_name": "John",
+            # "last_name": "Doe",
+            # "password": "password123",
+    #     })
+    #     self.assert_status_code(response, 201)
+    #     self.assert_json_message(response, "Patient record created", error=False)
+
+
+    def test_put_patient_no_info(self):
+        """
+        Test PUT /patient with no object attributes
+        :return: N/A
+        """
+        response = self.send_put(self.patient_url)
+        self.assert_status_code(response, 400)
+        self.assert_json_message(response, "No health card number provided", error=True)
+
+
+    def test_put_patient_duplicate_health_card(self):
+        """
+        Test PUT /patient with duplicate health card number
+        :return: N/A
+        """
+        patient_duplicate_health = {
+            "health_card_nb": "XGCB 1090 0810",
+            "date_of_birth": "1900-01-01",
+            "gender": "M",
+            "phone_nb": "111-111-1111",
+            "home_address": "01 First Avenue",
+            "email": "A",
+            "first_name": "John",
+            "last_name": "Doe",
+            "password": "password123",
+        }
+
+        response = self.send_put(self.patient_url, patient_duplicate_health)
+        self.assert_status_code(response, 500)
+        self.assert_json_message(response, "Health card number already registered", error=True)
+
+    
+    def test_put_patient_duplicate_email(self):
+        """
+        Test PUT /patient with duplicate email
+        :return: N/A
+        """
+        patient_duplicate_email = {
+            "health_card_nb": "A",
+            "date_of_birth": "1900-01-01",
+            "gender": "M",
+            "phone_nb": "111-111-1111",
+            "home_address": "01 First Avenue",
+            "email": "setridge0@ucsd.edu",
+            "first_name": "John",
+            "last_name": "Doe",
+            "password": "password123",
+        }
+        
+        response = self.send_put(self.patient_url, patient_duplicate_email)
+        self.assert_status_code(response, 500)
+        self.assert_json_message(response, "Email address already registered", error=True)
