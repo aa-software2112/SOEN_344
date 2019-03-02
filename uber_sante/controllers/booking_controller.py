@@ -66,10 +66,8 @@ def book():
 
     if request.method == 'DELETE':
     # example use case: cancel_booking
-    # params: availability_id (int, required)
+    # params: booking_id (int, required)
     # return: success/failure
-    # TODO: connect the call to the scheduler class to free the availability (line 72)
-    # TODO: connect the call to the booking_service to delete the booking fromn the Booking table(line 75)
 
         booking_id = request.args.get('booking_id')
         
