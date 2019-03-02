@@ -1,8 +1,6 @@
 from uber_sante.models.schedule import *
-from uber_sante.models.availability import Availability
 from uber_sante.utils.date import *
 from uber_sante.services.availability_service import AvailabilityService
-
 
 class RequestEnum(Enum):
     DAILY_REQUEST = "DAILY"
