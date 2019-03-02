@@ -7,7 +7,7 @@
           {{"type: " + appointment.availability.booking_type }}
           {{appointment.availability.day + "/" + appointment.availability.month + "/" + appointment.availability.year}}
           {{"start time:" + appointment.availability.start}}
-          <button>checkout</button>
+          <button @click="remove_from_cart(appointment.availability.id)">remove</button>
         </div>
       </div>
     </div>
@@ -24,6 +24,7 @@
     data() {
       return {
         appointment_list: [],
+        patient_id: null
       };
     },
 
@@ -31,6 +32,21 @@
       log: function () {
         console.log("Hello world");
         console.log(this);
+      },
+      
+      remove_from_cart: function(availability_id) {
+        console.log("removing " + availability_id + " from cart");
+        const url = "http://127.0.0.1:5000/appointment";
+        console.log(url);
+        axios.delete(url, {
+          params: {
+            patient_id: this.patient_id,
+            availability_id:  availability_id
+          }
+        })
+          .then(response => {
+            console.log(response);
+          });
       }
 
 
@@ -41,9 +57,13 @@
       axios
         .get('http://localhost:5000/cart')
         .then(res => {
-          this.appointment_list = res.data.data;
           console.log(res);
-
+          this.appointment_list = res.data.data.appointment_list;
+          this.patient_id = res.data.data.patient_id;
+          console.log("the appointment list");
+          console.log(this.appointment_list);
+          console.log("the patient_id");
+          console.log(this.patient_id);
         });
 
     }
