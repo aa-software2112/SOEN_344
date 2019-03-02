@@ -25,6 +25,10 @@ class BaseTestClass(unittest.TestCase):
     def mock_db_write(self, return_value=None):
         DBUtil.get_instance().write_one = MagicMock(return_value=return_value)
 
+    def send_get(self, url, dict_of_data=None):
+
+        return self.app.get(url, query_string=dict_of_data, headers=self.json_header)
+
     def send_post(self, url, dict_of_data=None):
 
         return self.custom_post(url, dict_of_data)
