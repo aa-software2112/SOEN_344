@@ -1,8 +1,9 @@
 from enum import Enum
 
 from uber_sante.utils.dbutil import DBUtil
-from uber_sante.models.patient import Patient
 from uber_sante.utils.cache import get_from_cache, set_to_cache
+
+from uber_sante.models.patient import Patient
 
 
 class CreatePatientStatus(Enum):
@@ -18,22 +19,34 @@ class PatientService:
 
     def get_patient(self, patient_id):
         """Query the db for a patient by id and return the created patient object"""
-        select_stmt = 'SELECT * FROM Patient WHERE id = ?'
+        select_stmt = '''SELECT * FROM Patient
+                        WHERE id = ?'''
         params = (patient_id,)
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
             return
 
-        patient = Patient(result['id'], result['first_name'], result['last_name'], result['health_card_nb'],
-                          result['date_of_birth'],
-                          result['gender'], result['phone_nb'], result['home_address'], result['email'])
+        patient = Patient(
+            result['id'],
+            result['first_name'],
+            result['last_name'],
+            result['health_card_nb'],
+            result['date_of_birth'],
+            result['gender'],
+            result['phone_nb'],
+            result['home_address'],
+            result['email'])
 
         return patient
 
     def validate_login_info(self, health_card_nb, password):
 
-        select_stmt = 'SELECT id, password FROM Patient WHERE health_card_nb = ?'
+        select_stmt = '''SELECT
+                            id,
+                            password
+                        FROM Patient
+                        WHERE health_card_nb = ?'''
         params = (health_card_nb,)
 
         result = self.db.read_one(select_stmt, params)
@@ -58,37 +71,57 @@ class PatientService:
             return
 
         else:
-            select_stmt = "SELECT * FROM Patient WHERE id = ?"
+            select_stmt = '''SELECT * FROM Patient
+                            WHERE id = ?'''
             params = (patient_id,)
             result = self.db.read_one(select_stmt, params)
 
-            patient = Patient(result['id'], result['first_name'], result['last_name'], result['health_card_nb'],
-                              result['date_of_birth'], result['gender'], result['phone_nb'], result['home_address'],
-                              result['email'])
+            patient = Patient(
+                result['id'],
+                result['first_name'],
+                result['last_name'],
+                result['health_card_nb'],
+                result['date_of_birth'],
+                result['gender'],
+                result['phone_nb'],
+                result['home_address'],
+                result['email'])
 
             set_to_cache(patient_id, patient)
 
-    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,
-                       last_name, password):
+    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password):
 
         # Check if health card already exists in db
-        select_stmt = 'SELECT id FROM Patient WHERE health_card_nb = ?'
+        select_stmt = '''SELECT
+                            id
+                        FROM Patient
+                        WHERE health_card_nb = ?'''
         params = (health_card_nb,)
         if self.db.read_one(select_stmt, params) is not None:
             return CreatePatientStatus.HEALTH_CARD_ALREADY_EXISTS
 
         # Check if email already exists in db
-        select_stmt = 'SELECT id FROM Patient WHERE email = ?'
+        select_stmt = '''SELECT
+                            id
+                        FROM Patient
+                        WHERE email = ?'''
         params = (email,)
         if self.db.read_one(select_stmt, params) is not None:
             return CreatePatientStatus.EMAIL_ALREADY_EXISTS
 
         else:
-            insert_stmt = 'INSERT INTO Patient(health_card_nb, date_of_birth, gender, ' \
-                          'phone_nb, home_address, email, first_name, last_name, password)' \
-                          'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name,
-                      password)
+            insert_stmt = '''INSERT INTO Patient(
+                                health_card_nb,
+                                date_of_birth,
+                                gender,
+                                phone_nb,
+                                home_address,
+                                email,
+                                first_name,
+                                last_name,
+                                password)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
 
             self.db.write_one(insert_stmt, params)
 
