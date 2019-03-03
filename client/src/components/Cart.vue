@@ -8,6 +8,7 @@
           {{appointment.availability.day + "/" + appointment.availability.month + "/" + appointment.availability.year}}
           {{"start time:" + appointment.availability.start}}
           <button @click="remove_from_cart(appointment.availability.id)">remove</button>
+          <button @click="checkout(appointment.availability.id)">checkout</button>
         </div>
       </div>
     </div>
@@ -36,7 +37,7 @@
       
       remove_from_cart: function(availability_id) {
         console.log("removing " + availability_id + " from cart");
-        const url = "http://127.0.0.1:5000/appointment";
+        const url = "http://localhost:5000/appointment";
         console.log(url);
         axios.delete(url, {
           params: {
@@ -47,6 +48,22 @@
           .then(response => {
             console.log(response);
           });
+      },
+
+      checkout: function (availability_id) {
+        alert("in checkout fct");
+        const url = "http://localhost:5000/booking";
+        console.log(url);
+        axios.put(url, {
+          params: {
+            patient_id: this.patient_id,
+            availability_id:  availability_id
+          }
+        })
+        .then(response => {
+            console.log(response);
+          });
+
       }
 
 
