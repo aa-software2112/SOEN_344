@@ -87,3 +87,27 @@ def book():
             jsonify('Unable to delete booking'), 400
 
         jsonify('Booking deleted'), 200
+
+        if request.method == 'UPDATE':
+        # example use case: update_booking
+        # params: booking_id (int, required), availability_id (int, required), patient_id (int,required)
+        # return: success/failure
+
+        availability_id = request.args.get('availability_id')
+        booking_id = request.args.get('booking_id')
+
+
+        if availability_id is None or if booking_id is None:
+            return jsonify('No booking or availability specified'), 400
+
+        availability_obj = Scheduler().get_instance().reserve_appointment_availability(availability_id)
+        
+        if availability_obj is not None:
+            f_key = BookingService().cancel(booking_id)
+            if f_key:
+                Scheduler.get_instance().free_availability(f_key)
+                BookingService().write_booking()
+        else:
+            jsonify('Unable to update booking'), 400
+
+        jsonify('Booking updated'), 200
