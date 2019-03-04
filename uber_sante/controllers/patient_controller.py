@@ -219,7 +219,6 @@ def appointment():
         # example use case: remove appointment
         # params: patient_id (int, required), availability_id (int, required)
         # return: success/failure
-
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
@@ -241,31 +240,34 @@ def appointment():
 
 @controllers.route('/cart', methods=['GET'])
 def cart():
-
+    """ view cart use case """
     if request.method == 'GET':
-        # # getting patient_id from cookie
-        # patient_id = request.cookies.get(CookieKeys.ID)
-        #
-        # # get patient from cache
-        # patient = get_from_cache(patient_id)
-        #
-        # cart = patient.get_cart()
 
+        # ensure user is logged-in to proceed
+        if not cookie_helper.user_is_logged(request):
+            return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
+        # getting patient_id from cookie
+        patient_id = request.cookies.get(CookieKeys.ID.value)
+        # get patient from cache
+        patient = get_from_cache(patient_id)
 
-        appointmentList = []
+        cart = patient.get_cart()
 
-        availability1 = Availability(1, 1, 32400, '088', 0, 2019, 2, 26, AppointmentRequestType.WALKIN).__dict__
-        availability2 = Availability(2, 2, 32400, '053', 0, 2019, 3, 31, AppointmentRequestType.ANNUAL).__dict__
-        app1 = Appointment(1, availability1).__dict__
-        app2 = Appointment(2, availability2).__dict__
+        # list of Appointment objects
+        appointment_list = cart.get_appointments()
 
-        appointmentList.append(app1)
-        appointmentList.append(app2)
+        new_appointment_list = []
 
+        # object parsing going on here to be able to send it with json format
+        for appointment in appointment_list:
+            new_availability = appointment.availability.__dict__
+            new_appointment = Appointment(patient_id, new_availability).__dict__
+            new_appointment_list.append(new_appointment)
 
-        return js.create_json(data=appointmentList, message="List of appointments",
+        data_to_send = {'appointment_list': new_appointment_list, 'patient_id': patient_id}
+
+        return js.create_json(data=data_to_send, message="List of appointments with patient id",
                               return_code=js.ResponseReturnCode.CODE_200)
 
-    #return jsonify({"appointments": [1, 2, 3]}), 200
 
