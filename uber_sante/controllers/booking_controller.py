@@ -67,23 +67,19 @@ def book():
             return js.create_json(data=None, message="Appointment slot already booked", return_code=js.ResponseReturnCode.CODE_400)
 
     if request.method == 'DELETE':
-        # example use case: cancel_booking
-        # params: availability_id (int, required)
-        # return: success/failure
-        # TODO: connect the call to the scheduler class to free the availability (line 72)
-        # TODO: connect the call to the booking_service to delete the booking fromn the Booking table(line 75)
+    # example use case: cancel_booking
+    # params: booking_id (int, required)
+    # return: success/failure
 
-        availability_id = request.args.get('availability_id')
-
-        if availability_id is None:
-            return jsonify('No booking specified'), 400
-
-        # scheduler.free_booking(availability_id) # returns true or false
-        result = True
-
-        if result:
-            True  # booking_service.delete_booking(availability_id)
+        booking_id = request.args.get('booking_id')
+        
+        if booking_id is None:
+            return js.create_json(data=None, message="No booking specified", return_code=js.ResponseReturnCode.CODE_400)
+        
+        f_key = BookingService().cancel(booking_id) # returns primary key of booking's corresponding availability
+        if f_key:
+            Scheduler.get_instance().free_availability(f_key)
         else:
-            jsonify('Unable to delete booking'), 400
-
-        jsonify('Booking deleted'), 200
+            return js.create_json(data=None, message="Unable to delete booking", return_code=js.ResponseReturnCode.CODE_400)
+        
+        return js.create_json(data=None, message="Booking successfully deleted", return_code=js.ResponseReturnCode.CODE_200)
