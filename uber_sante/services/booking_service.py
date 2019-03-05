@@ -23,6 +23,7 @@ class BookingService:
 
 
     def get_booking(self, booking_id):
+        
         select_stmt = '''SELECT * FROM Booking
                         WHERE id = ?'''
         params = (booking_id,)
@@ -40,9 +41,18 @@ class BookingService:
         return booking
 
     def cancel_booking(self, booking_id):
+        
         delete_stmt = '''DELETE FROM Booking 
                         WHERE id = ?'''
         params = (booking_id,)
+        self.db.write_one(delete_stmt, params)
+
+
+    def cancel_booking_from_availability(self, availability_id):
+        
+        delete_stmt = '''DELETE FROM Booking
+                        WHERE availability_id = ?'''
+        params = (availability_id,)
         self.db.write_one(delete_stmt, params)
 
         return True
@@ -56,7 +66,7 @@ class BookingService:
                             FROM Booking
                             WHERE id = ?'''
         params = (booking_id, )
-        
+
         f_key_dict = self.db.read_one(key_retrieval, params)
         f_key = f_key_dict['availability_id']
         

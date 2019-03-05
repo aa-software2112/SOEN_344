@@ -43,28 +43,28 @@ def availability():
         return js.create_json(data=[result], message="Availability record created",  return_code=js.ResponseReturnCode.CODE_201)
 
         
-        if request.method == 'DELETE':
-            # example use case: delete doctor availability
-            # params: appointment_id (int, required)
-            # return: success/failure message
+    if request.method == 'DELETE':
+        # example use case: delete doctor availability
+        # params: appointment_id (int, required)
+        # return: success/failure message
 
-            availability_id = request.get_json().get('id')
-            
-            if availability_id is None:
-                    return js.create_json(data=None, message="No availability id provided",  return_code=js.ResponseReturnCode.CODE_400)
+        availability_id = request.get_json().get('id')
+        
+        if availability_id is None:
+            return js.create_json(data=None, message="No availability id provided",  return_code=js.ResponseReturnCode.CODE_400)
 
-            result = None
-            is_free = AvailabilityService().get_availability(availability_id).free
+        result = None
+        is_free = AvailabilityService().get_availability(availability_id).free
 
-            if is_free:
-                    result = AvailabilityService().cancel_availability(availability_id)
+        if is_free:
+            result = AvailabilityService().cancel_availability(availability_id)
+        else:
+            bookingResult = BookingService().cancel_booking_from_availability(availability_id)
+
+            if bookingResult:
+                AvailabilityService().cancel_availability(availability_id)
             else:
-                    bookingResult = BookingService().cancel_booking(availability_id)
-
-                    if bookingResult:
-                            AvailabilityService().cancel_availability(availability_id)
-                    else:
-                            return js.create_json(data=None, message="Cannot delete doctor availability",  return_code=js.ResponseReturnCode.CODE_500)
-     
-            return js.create_json(data=None, message="Successfully deleted doctor availability",  return_code=js.ResponseReturnCode.CODE_200)
+                return js.create_json(data=None, message="Cannot delete doctor availability",  return_code=js.ResponseReturnCode.CODE_500)
+    
+        return js.create_json(data=None, message="Successfully deleted doctor availability",  return_code=js.ResponseReturnCode.CODE_200)
 
