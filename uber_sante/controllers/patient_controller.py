@@ -15,6 +15,12 @@ from uber_sante.services.patient_service import PatientService
 from uber_sante.services.patient_service import CreatePatientStatus
 from uber_sante.services.availability_service import AvailabilityService
 
+from uber_sante.models.scheduler import ScheduleRequest, Scheduler, RequestEnum, AppointmentRequestType
+from flask import Flask, request, jsonify, make_response
+from uber_sante.utils.cookie_helper import *
+from uber_sante.models.appointment import Appointment
+from uber_sante.models.availability import Availability
+
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
@@ -213,7 +219,6 @@ def appointment():
         # example use case: remove appointment
         # params: patient_id (int, required), availability_id (int, required)
         # return: success/failure
-
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
@@ -232,3 +237,37 @@ def appointment():
             return js.create_json(data=None, message="Appointment not found/removed", return_code=js.ResponseReturnCode.CODE_400)
 
         return js.create_json(data=None, message="Appointment removed", return_code=js.ResponseReturnCode.CODE_200)
+
+@controllers.route('/cart', methods=['GET'])
+def cart():
+    """ view cart use case """
+    if request.method == 'GET':
+
+        # ensure user is logged-in to proceed
+        if not cookie_helper.user_is_logged(request):
+            return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
+
+        # getting patient_id from cookie
+        patient_id = request.cookies.get(CookieKeys.ID.value)
+        # get patient from cache
+        patient = get_from_cache(patient_id)
+
+        cart = patient.get_cart()
+
+        # list of Appointment objects
+        appointment_list = cart.get_appointments()
+
+        new_appointment_list = []
+
+        # object parsing going on here to be able to send it with json format
+        for appointment in appointment_list:
+            new_availability = appointment.availability.__dict__
+            new_appointment = Appointment(patient_id, new_availability).__dict__
+            new_appointment_list.append(new_appointment)
+
+        data_to_send = {'appointment_list': new_appointment_list, 'patient_id': patient_id}
+
+        return js.create_json(data=data_to_send, message="List of appointments with patient id",
+                              return_code=js.ResponseReturnCode.CODE_200)
+
+
