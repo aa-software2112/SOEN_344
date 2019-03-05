@@ -147,6 +147,54 @@ def patient():
 
         return js.create_json(data=None, message="Patient record created", return_code=js.ResponseReturnCode.CODE_201)
 
+@controllers.route('/patient/<string:patient_id>', methods=['PUT'])
+def update_patient(patient_id):
+
+    if request.method == "PUT":
+        # params: patient_id (string, required)
+        # return: sucess/failure
+        # note: the email and health card number of the user cannot be changed
+        
+        date_of_birth = request.args.get('date_of_birth')
+        gender = request.args.get('gender')
+        phone_nb = request.args.get('phone_nb')
+        home_address = request.args.get('home_address')
+        first_name = request.args.get('first_name')
+        last_name = request.args.get('last_name')
+        password = request.args.get('password')
+
+        if patient_id is None:
+            return js.create_json(data=None, message="No patient id provided", return_code=js.ResponseReturnCode.CODE_400)
+        if date_of_birth is None:
+            return js.create_json(data=None, message="No data of birth provided", return_code=js.ResponseReturnCode.CODE_400)
+        if gender is None:
+            return js.create_json(data=None, message="No gender provided", return_code=js.ResponseReturnCode.CODE_400)
+        if phone_nb is None:
+            return js.create_json(data=None, message="No phone number provided", return_code=js.ResponseReturnCode.CODE_400)
+        if home_address is None:
+            return js.create_json(data=None, message="No home address provided", return_code=js.ResponseReturnCode.CODE_400)
+        if first_name is None:
+            return js.create_json(data=None, message="No first name provided", return_code=js.ResponseReturnCode.CODE_400)
+        if last_name is None:
+            return js.create_json(data=None, message="No last name provided", return_code=js.ResponseReturnCode.CODE_400)
+        if password is None:
+            return js.create_json(data=None, message="No password provided", return_code=js.ResponseReturnCode.CODE_400)
+         
+        result = patient_service.update_patient(
+            patient_id,
+            date_of_birth,
+            gender,
+            phone_nb,
+            home_address,
+            first_name,
+            last_name,
+            password
+        )
+
+        if result == CreatePatientStatus.EMAIL_ALREADY_EXISTS:
+            return js.create_json(data=None, message="Email address already registered", return_code=js.ResponseReturnCode.CODE_500)
+
+        return js.create_json(data=None, message="Patient record updated", return_code=js.ResponseReturnCode.CODE_201)
 
 @controllers.route('/get_schedule', methods=['POST'])
 def get_schedule():
