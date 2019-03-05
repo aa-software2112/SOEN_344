@@ -9,6 +9,7 @@ class BookingService:
     def __init__(self):
         self.db = DBUtil.get_instance()
 
+
     def write_booking(self, appointment):
 
         appt_dict = appointment.__dict__
@@ -19,6 +20,7 @@ class BookingService:
                         VALUES (?, ?, ?)'''
         params = (appt_dict['availability'].id, appt_dict['availability'].doctor_id, appt_dict['patient_id'])
         self.db.write_one(insert_stmt, params)
+
 
     def get_booking(self, booking_id):
         select_stmt = '''SELECT * FROM Booking
@@ -43,16 +45,24 @@ class BookingService:
         params = (booking_id,)
         self.db.write_one(delete_stmt, params)
 
-    def cancel(self, booking_id):
+        return True
+
+
+    def cancel_booking_return_key(self, booking_id):
         
         #retrieving booking's primary key from db
-        key_retrieval = 'SELECT availability_id FROM Booking WHERE id = ?'
+        key_retrieval = '''SELECT
+                                availability_id
+                            FROM Booking
+                            WHERE id = ?'''
         params = (booking_id, )
+        
         f_key_dict = self.db.read_one(key_retrieval, params)
         f_key = f_key_dict['availability_id']
         
         #deleting corresponding booking
-        delete_stmt = 'DELETE FROM Booking WHERE id = ?'
+        delete_stmt = '''DELETE FROM Booking
+                        WHERE id = ?'''
         params = (booking_id,)
         self.db.write_one(delete_stmt, params)
 
