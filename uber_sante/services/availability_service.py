@@ -8,6 +8,7 @@ class AvailabilityService:
     def __init__(self):
         self.db = DBUtil.get_instance()
 
+
     def get_availabilities(self, schedule_request):
         """
         Queries the Availability table according to the schedule_request object
@@ -60,6 +61,7 @@ class AvailabilityService:
 
         return list_of_availabilities
 
+
     def get_availability(self, availability_id):
         """ Queries the Availability db by availability_id and returns an Availability object """
 
@@ -68,6 +70,9 @@ class AvailabilityService:
         params = (availability_id, )
 
         result = self.db.read_one(select_stmt, params)
+        
+        if result is None:
+            return False
 
         return Availability(
             result['id'],
@@ -80,6 +85,7 @@ class AvailabilityService:
             result['day'],
             uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
 
+
     def free_availability(self, availability_id):
 
         update_stmt = '''UPDATE Availability
@@ -88,6 +94,7 @@ class AvailabilityService:
         params = (availability_id, )
 
         self.db.write_one(update_stmt, params)
+
 
     def validate_availability_and_reserve(self, availability_id):
 
@@ -118,18 +125,29 @@ class AvailabilityService:
                 result['day'],
                 result['booking_type'])
 
+
     def create_availability(self, doctor_id, start, room, free, year, month, day, booking_type):
 
-            insert_stmt = '''INSERT INTO Availability(
-                                doctor_id,
-                                start, room,
-                                free,
-                                year,
-                                month,
-                                day,
-                                booking_type)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
-            params = (doctor_id, start, room, free, year, month, day, booking_type)
+        insert_stmt = '''INSERT INTO Availability(
+                            doctor_id,
+                            start, room,
+                            free,
+                            year,
+                            month,
+                            day,
+                            booking_type)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
+        params = (doctor_id, start, room, free, year, month, day, booking_type)
 
-            self.db.write_one(insert_stmt, params)
-            return params
+        self.db.write_one(insert_stmt, params)
+        return params
+
+    
+    def cancel_availability(self, availability_id):
+    
+        delete_stmt = '''DELETE FROM Availability
+                        WHERE id = ?'''
+        params = (availability_id, )
+
+        self.db.write_one(delete_stmt, params)
+        return True

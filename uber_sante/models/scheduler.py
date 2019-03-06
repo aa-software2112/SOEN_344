@@ -68,6 +68,7 @@ class Scheduler:
 
         return Scheduler._instance
 
+
     def __init__(self):
 
         if Scheduler._instance is not None:
@@ -77,6 +78,7 @@ class Scheduler:
 
         # TODO should be replaced with singleton: AvailabilityService.get_instance()
         self.availability_service = AvailabilityService()
+
 
     def get_schedule(self, schedule_request, av=None):
         """
@@ -108,6 +110,7 @@ class Scheduler:
 
         return return_schedule
 
+
     def reserve_appointment(self, appointment):
         """
         This method converts an appointment into a booking using the availability service
@@ -117,6 +120,7 @@ class Scheduler:
         """
         # Method call returns a boolean that describe whether the availability was successfully reserved
         return self.availability_service.validate_availability_and_reserve(appointment.availability.id)
+
 
     def free_availability(self, availability_key):
         """
