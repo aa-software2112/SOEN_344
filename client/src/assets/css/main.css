@@ -47,3 +47,17 @@ html, body {
 .error-message {
     color: red;
 }
+
+.login-button {
+    background-color: #26619C;
+    color: white;
+    font-size: 30px;
+    width: 250px;
+    margin-top: 25px;
+    
+}
+
+a:hover {
+    text-decoration: none;
+    color: white;
+}

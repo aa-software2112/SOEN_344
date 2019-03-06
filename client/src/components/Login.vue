@@ -2,27 +2,22 @@
 <template>
 <div id="app-container">    
     <div id="main-content-area" class="main-color content-fluid">
-        <h1> Patient Login </h1>
-        
-        <h3 class="error-message">{{message}}</h3>
+        <h1>Login as...</h1>
         </br>
-        <div class="container reg-container" id="patient-reg">
-            
-            <form @submit="submitForm" class="reg-form" action="" >
-                
-                <div class="form-group">
-                    <label for="health_card_nb">Health Card Number</label>
-                    <input type="text" class="form-control" v-model="health_card_nb" id="health_card_nb">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input minlength="6" type="password" class="form-control" v-model="password" id="password">
-                </div>
-                
-                <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
-            
-            </form>
-           
+        <div class="container reg-container" id="login-select">
+        
+            <div class="row justify-content-center">
+                <a href="" class="login-button" v-on:click="gotoPatientLogin">Patient</a>
+            </div>
+            <div class="row justify-content-center">
+                <a href="" class="login-button" v-on:click="gotoNurseLogin">Nurse</a>
+            </div>
+            <div class="row justify-content-center">
+                <a href="" class="login-button" v-on:click="gotoDoctorLogin">Doctor</a>
+            </div>
+            <div class="row justify-content-center">
+                <a href="" class="login-button" v-on:click="gotoAdminLogin">Administrator</a>
+            </div>
         </div>
     </div>
     
@@ -34,38 +29,26 @@ import axios from 'axios';
 
 export default {
   name: 'Login',
-
-  data () {
-  return {
-    health_card_nb : '',
-    password : '',
-    message: ''
-    }
-  },
-  
-  
   methods: {
     
-    submitForm(e)
-    {   
-        e.preventDefault();
-        const p = 'http://127.0.0.1:5000/login';
-        
-        axios.post(p, 
-        {
-            health_card_nb : this.health_card_nb,
-            password : this.password
-        })
-        .then(response => {
-        this.$router.go({path:"/"});
-        //this.message = response.data.message + response.headers["set-cookie"];
-        console.log(response);
-        })
-        .catch(error => {
-        console.log(error)
-        this.message = error.response.data.error.message;
-        })
+    gotoPatientLogin()
+    {
+        this.$router.push({path:'/patientLogin'})
+    },
     
+    gotoNurseLogin()
+    {
+        this.$router.push({path:'/nurseLogin'})
+    },
+    
+    gotoDoctorLogin()
+    {
+        this.$router.push({path:'/doctorLogin'})
+    },
+    
+    gotoAdminLogin()
+    {
+        this.$router.push({path:'/adminLogin'})
     }
   }
 }

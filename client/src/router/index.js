@@ -8,6 +8,10 @@ import Schedule from '@/components/Schedule'
 import CreateAvailability from '@/components/CreateAvailability'
 import RegisterDoctor from '@/components/RegisterDoctor';
 import Login from '@/components/Login';
+import PatientLogin from '@/components/PatientLogin';
+import NurseLogin from '@/components/NurseLogin';
+import DoctorLogin from '@/components/DoctorLogin';
+import AdminLogin from '@/components/AdminLogin';
 import axios from 'axios';
 import * as Cookies from 'js-cookie';
 axios.defaults.withCredentials = true;
@@ -57,6 +61,26 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/patientLogin',
+      name: 'PatientLogin',
+      component: PatientLogin
+    },
+    {
+      path: '/nurseLogin',
+      name: 'NurseLogin',
+      component: NurseLogin
+    },
+    {
+      path: '/doctorLogin',
+      name: 'DoctorLogin',
+      component: DoctorLogin
+    },
+    {
+      path: '/adminLogin',
+      name: 'AdminLogin',
+      component: AdminLogin
     }
   ]
 });
