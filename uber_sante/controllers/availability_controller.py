@@ -15,13 +15,13 @@ def availability():
         # params: appointment_id (int, required, from cookie), patient_id(int, required)
         # return: success/failure
 
-        doctor_id = request.get_json().get('doctor_id')
-        start = request.get_json().get('start')
-        room = request.get_json().get('room')
-        year = request.get_json().get('year')
-        month = request.get_json().get('month')
-        day = request.get_json().get('day')
-        booking_type = request.get_json().get('booking_type')
+        doctor_id = request.args.get('doctor_id')
+        start = request.args.get('start')
+        room = request.args.get('room')
+        year = request.args.get('year')
+        month = request.args.get('month')
+        day = request.args.get('day')
+        booking_type = request.args.get('booking_type')
 
         if doctor_id is None:
             return js.create_json(data=None, message="No doctor id provided",  return_code=js.ResponseReturnCode.CODE_400)
@@ -48,13 +48,18 @@ def availability():
         # params: appointment_id (int, required)
         # return: success/failure message
 
-        availability_id = request.get_json().get('id')
+        availability_id = request.args.get('id')
         
         if availability_id is None:
             return js.create_json(data=None, message="No availability id provided",  return_code=js.ResponseReturnCode.CODE_400)
 
+        availability_result = AvailabilityService().get_availability(availability_id)
+
+        if availability_result == False:
+            return js.create_json(data=None, message="Doctor availability does not exist",  return_code=js.ResponseReturnCode.CODE_400)
+
+        is_free = availability_result.free
         result = None
-        is_free = AvailabilityService().get_availability(availability_id).free
 
         if is_free:
             result = AvailabilityService().cancel_availability(availability_id)
@@ -64,7 +69,7 @@ def availability():
             if bookingResult:
                 AvailabilityService().cancel_availability(availability_id)
             else:
-                return js.create_json(data=None, message="Cannot delete doctor availability",  return_code=js.ResponseReturnCode.CODE_500)
+                return js.create_json(data=None, message="Could not delete doctor availability",  return_code=js.ResponseReturnCode.CODE_500)
     
         return js.create_json(data=None, message="Successfully deleted doctor availability",  return_code=js.ResponseReturnCode.CODE_200)
 

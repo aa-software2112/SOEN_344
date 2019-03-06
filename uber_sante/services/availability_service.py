@@ -70,6 +70,9 @@ class AvailabilityService:
         params = (availability_id, )
 
         result = self.db.read_one(select_stmt, params)
+        
+        if result is None:
+            return False
 
         return Availability(
             result['id'],
