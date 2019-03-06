@@ -59,7 +59,7 @@ def availability():
         if is_free:
             result = AvailabilityService().cancel_availability(availability_id)
         else:
-            bookingResult = BookingService().cancel_booking_from_availability(availability_id)
+            bookingResult = BookingService().cancel_booking_with_availability(availability_id)
 
             if bookingResult:
                 AvailabilityService().cancel_availability(availability_id)
