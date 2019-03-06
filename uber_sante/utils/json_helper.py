@@ -47,9 +47,9 @@ def create_json(data=None, message=None, return_code=ResponseReturnCode.CODE_200
         resp = json_error(data, return_code.value, message, "error")
 
     # Allows external server to call this backend API
-    resp.headers.add('Access-Control-Allow-Origin', '*')
+    resp.headers.add('Access-Control-Allow-Origin', 'http://127.0.0.1:8081')
     resp.headers.add('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
-    resp.headers.add('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token')
+    resp.headers.add('Access-Control-Allow-Headers', 'Origin, Accept, X-HTTP-Method-Override, Content-Type, X-Auth-Token, Authorization')
     resp.headers.add('Access-Control-Allow-Credentials', 'true')
 
 

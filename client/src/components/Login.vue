@@ -49,7 +49,7 @@ export default {
     submitForm(e)
     {   
         e.preventDefault();
-        const p = 'http://localhost:5000/login';
+        const p = 'http://127.0.0.1:5000/login';
         
         axios.post(p, 
         {
@@ -57,8 +57,8 @@ export default {
             password : this.password
         })
         .then(response => {
-        this.$router.push("/home");
-        this.message = response.data.message;
+        this.$router.go({path:"/"});
+        //this.message = response.data.message + response.headers["set-cookie"];
         console.log(response);
         })
         .catch(error => {

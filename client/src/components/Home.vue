@@ -4,6 +4,7 @@
     <div class='page-main'>
        <h1>
          {{ msg }}
+         {{this.$cookies.get('logged')}}
          </h1>
     </div>
     

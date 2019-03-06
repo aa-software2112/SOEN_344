@@ -23,9 +23,9 @@ def set_user_logged(response, id, user_type):
     UserTypes.value --> To set a doctor, use UserTypes.DOCTOR.value as this parameter
     :return: The Response with the cookie attached
     """
-    response.set_cookie(CookieKeys.USER_TYPE.value, user_type)
-    response.set_cookie(CookieKeys.ID.value, str(id))
-    response.set_cookie(CookieKeys.LOGGED.value, str(True))
+    response.set_cookie(CookieKeys.USER_TYPE.value, user_type, domain="127.0.0.1:8081")
+    response.set_cookie(CookieKeys.ID.value, str(id), domain="127.0.0.1:8081")
+    response.set_cookie(CookieKeys.LOGGED.value, str(True), domain="127.0.0.1:8081")
     return response
 
 def user_is_logged(request, as_user_type=None):

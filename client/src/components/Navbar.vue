@@ -8,8 +8,9 @@
       <a class="navbar-brand" href="/">Home</a>
     </div>
     <div class="navbar-right">
-    <a class="navbar-brand" href="/register" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies.isSet">Register</a>
-    <a class="navbar-brand" href="/login" v-if="this.$cookies.get('logged') == 'False' || !this.$cookies.isSet">Login</a>
+    <a class="navbar-brand" href="/register" v-if="notLoggedPatient">Register</a>
+    <a class="navbar-brand" href="/login" v-if="notLoggedPatient">Login</a>
+    <a class="navbar-brand" href="#" v-on:click="logout" v-if="isLogged">Logout</a>
     
     <!-- Admin Tabs -->
     <a class="navbar-brand" href="/registerDoctor" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Register Doctor/Nurse</a>
@@ -21,16 +22,51 @@
     <a class="navbar-brand" href="/schedule" v-if="this.$cookies.get('logged') == 'True'">Schedule Appointment</a>
     <a class="navbar-brand" href="/appointment" v-if="this.$cookies.get('logged') == 'True'">Appointment</a>
     </div>
+    
 </nav>
 </div>
 </template>
 
+
 <script>
-import axios from 'axios'
- 
+import axios from 'axios';
 
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  methods : {
+    logout(e)
+    {
+        e.preventDefault();
+        const p = 'http://127.0.0.1:5000/logout';
+        
+        axios.get(p)
+        .then(response => {
+        this.$router.go({path:"/"});
+        //this.message = response.data.message + response.headers["set-cookie"];
+        console.log(response);
+        })
+        .catch(error => {
+        console.log(error)
+        this.message = error.response.data.error.message;
+        })
+    }
+  
+  },
+  
+  computed:{
+    
+    notLoggedPatient: function()
+    {
+        return !(this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'patient')
+    },
+    
+    isLogged: function()
+    {
+        return this.$cookies.get('logged') == 'True'
+    }
+    
+    }
+
 }
 </script>
 
