@@ -10,13 +10,14 @@ from flask import request
 admin_service = AdminService()
 doctor_service = DoctorService()
 
-@controllers.route('/loginAdmin', methods=['POST'])
+@controllers.route('/loginAdmin', methods=['POST', 'OPTIONS'])
 def login_admin():
     """
     The endpoint for logging in as an administrator;
     This is necessary in order to register a doctor or a nurse -
     only an admin can do this
     """
+
     if request.method == 'POST':
 
         # User is already logged in (regardless of login-type {patient, admin, nurse, doctor})
@@ -25,8 +26,8 @@ def login_admin():
                                   return_code=js.ResponseReturnCode.CODE_400)
 
 
-        email = request.args.get('email')
-        password = request.args.get('password')
+        email = request.get_json().get('email')
+        password = request.get_json().get('password')
 
         admin_id = admin_service.validate_login_info(email, password)
 

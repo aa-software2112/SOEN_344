@@ -1,6 +1,6 @@
 import uuid
 
-class doctor:
+class Doctor:
 
     def __init__(self, f_name, l_name, ppn, specialty, city):
         self.id = uuid.uuid4()

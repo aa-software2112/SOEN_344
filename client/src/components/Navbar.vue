@@ -9,7 +9,7 @@
     </div>
     <div class="navbar-right">
     <a class="navbar-brand" href="/register" v-if="notLoggedPatient">Register</a>
-    <a class="navbar-brand" href="/login" v-if="notLoggedPatient">Login</a>
+    <a class="navbar-brand" href="/login" v-if="notLogged">Login</a>
     <a class="navbar-brand" href="#" v-on:click="logout" v-if="isLogged">Logout</a>
     
     <!-- Admin Tabs -->
@@ -41,7 +41,7 @@ export default {
         
         axios.get(p)
         .then(response => {
-        this.$router.go({path:"/"});
+        this.$router.go({path:'/'});
         //this.message = response.data.message + response.headers["set-cookie"];
         console.log(response);
         })
@@ -60,6 +60,10 @@ export default {
         return !(this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'patient')
     },
     
+    notLogged: function()
+    {
+        return this.$cookies.get('logged') == 'False'
+    },
     isLogged: function()
     {
         return this.$cookies.get('logged') == 'True'

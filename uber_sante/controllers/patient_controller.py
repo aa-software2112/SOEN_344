@@ -41,9 +41,6 @@ def logout():
 @controllers.route('/login', methods=['POST', 'OPTIONS'])
 def login():
 
-    if request.method == 'OPTIONS':
-        return js.create_json(data=None,message=None,return_code=js.ResponseReturnCode.CODE_200)
-
     # Grab the data from the post request
     if request.method == 'POST':
 
