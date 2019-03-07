@@ -1,85 +1,83 @@
 /* eslint-disable */
 <template>
-<div id="app-container">    
+  <div id="app-container">
     <div id="main-content-area" class="main-color content-fluid">
-        <h1> Make Doctor Availability </h1>
-        </br>
-        <div class="container reg-container" id="patient-reg">
-            
-            <form id="form-availability" @submit.prevent="processForm">
-                <div class="form-group">
-                    <label for="start">Start</label>
-                    <input type="text" class="input" name="start" v-model="start">
-                </div> 
-                <div class="form-group">
-                    <label for="room">Room</label>
-                    <input type="text" class="input" name="room" v-model="room">
-                </div>
-                <div class="form-group">
-                    <label for="year">Year</label>
-                    <input type="text" class="input" name="year" v-model="year">
-                </div>
-                <div class="form-group">
-                    <label for="month">Month</label>
-                    <input type="text" class="input" name="month" v-model="month">
-                </div>
-                 <div class="form-group">
-                    <label for="day">Day</label>
-                    <input type="text" class="input" name="day" v-model="day">
-                </div>
-                <div class="form-group">
-                <label for="booking_type">Availability Type</label>
-                    <select v-model="booking_type" name="book_type">
-                        <option value="ANNUAL">Annual</option>
-                        <option value="WALKIN">Walkin</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-default submit">Submit</button>
-            </form>
-           
-        
-        </div>
+        <form id="form-availability" class="form" @submit.prevent="processForm">
+          <h1> Make Doctor Availability </h1>
+          <div class="form-group">
+            <label for="booking_type">Availability Type</label>
+            <select v-model="booking_type" name="book_type" required>
+              <option value="ANNUAL">Annual</option>
+              <option value="WALKIN">Walkin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="start">Appointment Time</label>
+            <input v-if="booking_type === 'WALKIN'" type="time" value="09:00" min="9:00" max="16:00"  step="1200" v-model="start" required>
+            <input v-else type="time" value="09:00" min="9:00" max="16:00"  step="3600" v-model="start" required>
+            <br>
+            <span class="help-text">Hours are 9am to 4pm</span>
+          </div>
+          <div class="form-group">
+            <label for="room">Room</label>
+            <select v-model="room" name="book_type" required>
+              <option value="101">101</option>
+              <option value="102">102</option>
+              <option value="103">103</option>
+              <option value="104">104</option>
+              <option value="105">105</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="Date" class="input" name="date" v-model="date" required>
+          </div>
+          <button type="submit" class="btn btn-default submit">Submit</button>
+        </form>
     </div>
-    
-</div>
+  </div>
 </template>
 
 <script>
-import axios from 'axios'
+  import axios from 'axios'
 
-export default {
-  name: 'CreateAvailability',
+  export default {
+    name: 'CreateAvailability',
 
-  data() {
-    return {
+    data() {
+      return {
         start: '',
         room: '',
         year: '',
         month: '',
         day: '',
+        date: '',
         booking_type: '',
-        doctor_id: '02'
-    }
-  },
-  
-  methods: {
-     processForm: function () {
-       alert("Creating Availability");
-      axios.put('http://localhost:5000/availability', {
+        doctor_id: this.$cookies.get('id')
+      }
+    },
+
+    methods: {
+      processForm: function () {
+        this.date = new Date(this.date);
+
+        axios.put('http://127.0.0.1:5000/availability', {
           start: this.start,
           room: this.room,
-          year: this.year,
-          month: this.month,
-          day: this.day,
+          year: this.date.getFullYear(),
+          month: this.date.getMonth(),
+          day: this.date.getDay(),
           booking_type: this.booking_type,
-          doctor_id: this.doctor_id})
-        .then(function (response) {
-          console.log(JSON.stringify(response));})
-        .catch(function (error) {
-          alert(error);
-        });
-    } 
-  }
+          doctor_id: this.doctor_id
+        })
+          .then(function (response) {
+            alert(response.data.message);
+          })
+          .catch(function (error) {
+            alert(error);
+          });
+      }
+    }
 
   }
 

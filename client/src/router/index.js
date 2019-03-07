@@ -4,7 +4,7 @@ import Home from '@/components/Home'
 import Navbar from '@/components/Navbar';
 import RegisterPatient from '@/components/RegisterPatient';
 import Cart from '@/components/Cart'
-import Schedule from '@/components/Schedule'
+import SearchAppointment from '@/components/SearchAppointment'
 import CreateAvailability from '@/components/CreateAvailability'
 import RegisterDoctor from '@/components/RegisterDoctor';
 import RegisterNurse from '@/components/RegisterNurse';
@@ -46,9 +46,9 @@ export default new Router({
       component: Cart
     },
     {
-      path: '/schedule',
-      name: 'Schedule',
-      component: Schedule
+      path: '/searchAppointment',
+      name: 'SearchAppointment',
+      component: SearchAppointment
     },
     {
       path: '/registerDoctor',

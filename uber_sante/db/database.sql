@@ -277,45 +277,45 @@ values (50, 'JSWA 8200 1562', '1971-04-20', 'F', '514-957-0686', '67 Moland Hill
 
 /* Availability */
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (1, 1, 32400, '088', 0, 2019, 2, 26, "ANNUAL");
+values (1, 1, 32400, '103', 0, 2019, 2, 26, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (2, 2, 32400, '053', 0, 2019, 3, 31, "ANNUAL");
+values (2, 2, 32400, '104', 0, 2019, 3, 31, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (3, 3, 32400, '672', 0, 2019,2,16, "ANNUAL");
+values (3, 3, 32400, '105', 0, 2019,2,16, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (4, 4, 32400, '718', 0, 2019,2,18, "ANNUAL");
+values (4, 4, 32400, '101', 0, 2019,2,18, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (5, 5, 32400, '164', 0, 2019,3,31, "WALKIN");
+values (5, 5, 32400, '102', 0, 2019,3,31, "WALKIN");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
 values (6, 6, 32400, '103', 0, 2019,4,3, "WALKIN");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (7, 7, 32400, '828', 0, 2019, 2, 23, "ANNUAL");
+values (7, 7, 32400, '104', 0, 2019, 2, 23, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (8, 8, 32400, '371', 0, 2019, 3, 8, "ANNUAL");
+values (8, 8, 32400, '103', 0, 2019, 3, 8, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (9, 9, 32400, '372', 0, 2019, 3, 22, "ANNUAL");
+values (9, 9, 32400, '105', 0, 2019, 3, 22, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (10, 10, 32400, '642', 0, 2019, 4, 1, "ANNUAL");
+values (10, 10, 32400, '102', 0, 2019, 4, 1, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (11, 11, 32400, '387', 0, 2019, 3, 1, "ANNUAL");
+values (11, 11, 32400, '101', 0, 2019, 3, 1, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (12, 12, 32400, '537', 0, 2019, 3, 27, "ANNUAL");
+values (12, 12, 32400, '103', 0, 2019, 3, 27, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (13, 13, 32400, '470', 0, 2019, 3, 26, "ANNUAL");
+values (13, 13, 32400, '104', 0, 2019, 3, 26, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (14, 14, 32400, '433', 0, 2019, 2, 23, "ANNUAL");
+values (14, 14, 32400, '102', 0, 2019, 2, 23, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (15, 15, 32400, '345', 0, 2019, 4, 04, "ANNUAL");
+values (15, 15, 32400, '105', 0, 2019, 4, 04, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (16, 16, 32400, '253', 0, 2019, 2, 26, "WALKIN");
+values (16, 16, 32400, '104', 0, 2019, 2, 26, "WALKIN");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (17, 17, 32400, '429', 0, 2019, 2, 14, "WALKIN");
+values (17, 17, 32400, '104', 0, 2019, 2, 14, "WALKIN");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (18, 18, 32400, '119', 1, 2019, 4, 8, "WALKIN");
+values (18, 18, 32400, '103', 1, 2019, 4, 8, "WALKIN");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (19, 19, 32400, '136', 1, 2019, 4, 2, "WALKIN");
+values (19, 19, 32400, '102', 1, 2019, 4, 2, "WALKIN");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (20, 20, 32400, '881', 1, 2019, 4, 8, "WALKIN");
+values (20, 20, 32400, '101', 1, 2019, 4, 8, "WALKIN");
 
 /* Booking */
 insert into Booking (id, availability_id, doctor_id, patient_id) values (1, 1, 1, 19);

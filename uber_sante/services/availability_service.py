@@ -1,6 +1,7 @@
 import uber_sante.models
 from uber_sante.utils.dbutil import DBUtil
 from uber_sante.models.availability import Availability
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 
 class AvailabilityService:
@@ -51,7 +52,7 @@ class AvailabilityService:
                 Availability(
                     result['id'],
                     result['doctor_id'],
-                    result['start'],
+                    TimeInterpreter().get_start_time_string(result['start']),
                     result['room'],
                     result['free'],
                     result['year'],
