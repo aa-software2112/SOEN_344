@@ -151,3 +151,17 @@ class AvailabilityService:
 
         self.db.write_one(delete_stmt, params)
         return True
+
+    def room_is_available_at_this_time(self, start, room, year, month, day):
+        """ Checks the Availability table to see if the room is already taken at the given time """
+        select_stmt = '''SELECT * FROM Availability WHERE start = ? AND room = ? AND year = ? AND month = ? AND day = ? AND FREE = 1'''
+        params = (start, room, year, month, day)
+
+        result = self.db.read_one(select_stmt, params)
+
+        if result is None:
+            return True
+
+        else:
+            return False
+
