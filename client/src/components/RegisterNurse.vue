@@ -2,17 +2,17 @@
 <template>
 <div id="app-container">    
     <div id="main-content-area" class="main-color content-fluid">
-        <h1>Register Doctor</h1>
+        <h1>Register Nurse</h1>
         <h3 class="error-message">{{fail_message}}</h3>
         <h3 class="success-message">{{success_message}}</h3>
         </br>
-        <div class="container reg-container" id="doctor-reg">
+        <div class="container reg-container" id="nurse-reg">
             
-            <form v-if="canRegisterDoctor" @submit="checkForm" class="reg-form" action="">
+            <form v-if="canRegisterNurse" @submit="checkForm" class="reg-form" action="">
                 
                 <div class="form-group">
-                    <label for="physician_permit_nb">Physician Permit Number</label>
-                    <input type="text" class="form-control" v-model="physician_permit_nb" name="physician_permit_nb" id="physician_permit_nb">
+                    <label for="access_id">Physician Permit Number</label>
+                    <input type="text" class="form-control" v-model="access_id" name="access_id" id="access_id">
                 </div> 
                 <div class="form-group">
                     <label for="first_name">First Name</label>
@@ -23,21 +23,13 @@
                     <input type="text" class="form-control" v-model="last_name" name="last_name" id="last_name">
                 </div>
                 <div class="form-group">
-                    <label for="city">City</label>
-                    <input type="text" class="form-control" v-model="city" name="city" id="city">
-                </div>
-                <div class="form-group">
-                    <label for="specialty">Specialty</label>
-                    <input type="text" class="form-control" v-model="specialty" name="specialty" id="specialty">
-                </div>
-                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" v-model="password" name="password" id="password">
                 </div>
                 
                 <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
             </form>
-            <h3 v-else-if="notIsAdmin" class="error-message">Must be an Administrator to register a Doctor</h3>
+            <h3 v-else-if="notIsAdmin" class="error-message">Must be an Administrator to register a Nurse</h3>
             
             
         
@@ -51,17 +43,15 @@
 import axios from 'axios'
 
 export default {
-  name: 'RegisterDoctor',
+  name: 'RegisterNurse',
 
   data() {
     return {
-        physician_permit_nb: '',
+        access_id: '',
         first_name: '',
         last_name: '',
-        city: '',
-        specialty: '',
         password: '',
-        doctor_created: false,
+        nurse_created: false,
         fail_message: '',
         success_message: ''
     
@@ -71,9 +61,8 @@ export default {
   methods: {
     checkForm: function(e) {
         e.preventDefault();
-        if (!this.physician_permit_nb || !this.first_name ||
-                !this.last_name || !this.city || !this.specialty ||
-                !this.password)
+        if (!this.access_id || !this.first_name ||
+                !this.last_name || !this.password)
         {
             this.message = "Data missing";
             return false;
@@ -84,17 +73,15 @@ export default {
   
     submitForm()
     {   
-        axios.put('http://127.0.0.1:5000/doctor', 
+        axios.put('http://127.0.0.1:5000/nurse', 
         {
-            physician_permit_nb: this.physician_permit_nb,
+            access_id: this.access_id,
             first_name: this.first_name,
             last_name: this.last_name,
-            city: this.city,
-            specialty: this.specialty,
             password: this.password
         })
         .then(response => {
-        this.doctor_created = true
+        this.nurse_created = true
         this.fail_message = ''
         this.success_message = response.data.message
         console.log(response);
@@ -109,9 +96,9 @@ export default {
   
   computed: 
   {
-    canRegisterDoctor: function()
+    canRegisterNurse: function()
     {
-        return this.doctor_created == false && this.$cookies.get('user_type') == 'admin'
+        return this.nurse_created == false && this.$cookies.get('user_type') == 'admin'
     
     },
     

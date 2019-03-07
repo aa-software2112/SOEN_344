@@ -2,7 +2,7 @@
 <template>
 <div id="app-container">    
     <div id="main-content-area" class="main-color content-fluid">
-        <h1>Register as Patient</h1>
+        <h1>Register a Patient</h1>
         <h3 class="error-message">{{message}}</h3>
         </br>
         <div class="container reg-container" id="patient-reg">
@@ -83,6 +83,7 @@ export default {
   
   methods: {
     checkForm: function(e) {
+        e.preventDefault();
         if (!this.health_card_nb || !this.date_of_birth ||
                 !this.gender || !this.phone_nb || !this.home_address ||
                 !this.email || !this.first_name || !this.last_name || 
@@ -92,9 +93,7 @@ export default {
             this.message = "Data missing";
             return false;
         }
-        
         this.submitForm();
-        e.preventDefault();
         return false;
     },
   

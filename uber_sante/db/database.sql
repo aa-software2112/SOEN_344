@@ -1,4 +1,13 @@
 /* Table creation */
+CREATE TABLE IF NOT EXISTS Nurse
+(
+  id                  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  access_id           TEXT NOT NULL,
+  first_name          TEXT    NOT NULL,
+  last_name           TEXT    NOT NULL,
+  password TEXT NOT NULL
+);
+
 
 CREATE TABLE IF NOT EXISTS Admin
 (
@@ -59,6 +68,15 @@ CREATE TABLE IF NOT EXISTS Booking
 );
 
 /* Fake tuple insertion using Mockaroo */
+/* Nurse */
+insert into Nurse (id, access_id, first_name, last_name, password)
+values (1, "ABC 12345", 'Nurse', 'Jackie', 'password');
+insert into Nurse (id, access_id, first_name, last_name, password)
+values (2, "DEF 12345", 'Nurse', 'Tony', 'password');
+insert into Nurse (id, access_id, first_name, last_name, password)
+values (3, "XYZ 12345", 'Nurse', 'Laurent', 'password');
+
+
 /* Admin - make only one */
 insert into Admin (id, email, password)
 values (1, 'admin@ubersante.com', 'admin');

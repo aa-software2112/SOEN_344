@@ -126,3 +126,22 @@ class PatientService:
             self.db.write_one(insert_stmt, params)
 
             return CreatePatientStatus.SUCCESS
+
+
+    def update_patient(self, patient_id, date_of_birth, gender, phone_nb, home_address, first_name,last_name, password):
+
+        insert_stmt = '''UPDATE Patient
+                        SET date_of_birth = ?,
+                            gender = ?,
+                            phone_nb = ?,
+                            home_address = ?,
+                            first_name = ?,
+                            last_name = ?,
+                            password = ?
+                        WHERE id = ?
+                        '''
+        params = (date_of_birth, gender, phone_nb, home_address, first_name, last_name, password, patient_id)
+        
+        self.db.write_one(insert_stmt, params)
+
+        return CreatePatientStatus.SUCCESS

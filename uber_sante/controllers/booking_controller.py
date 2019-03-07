@@ -96,7 +96,7 @@ def book():
         if booking_id is None:
             return js.create_json(data=None, message="No booking specified", return_code=js.ResponseReturnCode.CODE_400)
         
-        f_key = BookingService().cancel(booking_id) # returns primary key of booking's corresponding availability
+        f_key = BookingService().cancel_booking_return_key(booking_id) # returns primary key of booking's corresponding availability
         if f_key:
             Scheduler.get_instance().free_availability(f_key)
         else:

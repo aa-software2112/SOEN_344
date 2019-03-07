@@ -23,6 +23,7 @@ class PatientTest(BaseTestClass):
         super(PatientTest, self).setUp()
         self.patient_url = "http://localhost:5000/patient"
         self.appointment_url = "http://localhost:5000/appointment"
+        self.cart_url = "http://localhost:5000/cart"
         self.patient_id = "16"
         self.patient_id_fake = "-1"
         self.availability_id = "20"
@@ -226,3 +227,19 @@ class PatientTest(BaseTestClass):
         response = self.send_put(self.patient_url, patient_duplicate_email)
         self.assert_status_code(response, 500)
         self.assert_json_message(response, "Email address already registered", error=True)
+
+    def test_patient_view_cart(self):
+        """
+        Testing the view cart endpoint
+        :return: N/A
+        """
+
+        self.patient_1.add_walkin_to_cart(self.appointment_1)
+
+        response = self.send_get(self.cart_url)
+
+        self.assert_status_code(response, 200)
+        self.assert_json_message(response, "List of appointments with patient id")
+
+
+

@@ -15,6 +15,12 @@ from uber_sante.services.patient_service import PatientService
 from uber_sante.services.patient_service import CreatePatientStatus
 from uber_sante.services.availability_service import AvailabilityService
 
+from uber_sante.models.scheduler import ScheduleRequest, Scheduler, RequestEnum, AppointmentRequestType
+from flask import Flask, request, jsonify, make_response
+from uber_sante.utils.cookie_helper import *
+from uber_sante.models.appointment import Appointment
+from uber_sante.models.availability import Availability
+
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
@@ -39,7 +45,7 @@ def logout():
         return resp, js.ResponseReturnCode.CODE_200.value
 
 
-@controllers.route('/login', methods=['POST'])
+@controllers.route('/login', methods=['POST', 'OPTIONS'])
 def login():
 
     # Grab the data from the post request
@@ -49,8 +55,11 @@ def login():
         if cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="Already logged in!", return_code=js.ResponseReturnCode.CODE_400)
 
-        health_card_nb = request.args.get('health_card_nb')
-        password = request.args.get('password')
+        if request.get_json() is None:
+            return js.create_json(None, "No login information provided", js.ResponseReturnCode.CODE_400)
+
+        health_card_nb = request.get_json().get('health_card_nb')
+        password = request.get_json().get('password')
 
         # Validate the login information
         patient_id = patient_service.validate_login_info(health_card_nb, password)
@@ -92,15 +101,18 @@ def patient():
         # params: [various, look below] (int or string, required)
         # return: sucess/failure
 
-        health_card_nb = request.args.get('health_card_nb')
-        date_of_birth = request.args.get('date_of_birth')
-        gender = request.args.get('gender')
-        phone_nb = request.args.get('phone_nb')
-        home_address = request.args.get('home_address')
-        email = request.args.get('email')
-        first_name = request.args.get('first_name')
-        last_name = request.args.get('last_name')
-        password = request.args.get('password')
+        if request.get_json() is None:
+            return js.create_json(None, "No patient information provided", js.ResponseReturnCode.CODE_400)
+
+        health_card_nb = request.get_json().get('health_card_nb')
+        date_of_birth = request.get_json().get('date_of_birth')
+        gender = request.get_json().get('gender')
+        phone_nb = request.get_json().get('phone_nb')
+        home_address = request.get_json().get('home_address')
+        email = request.get_json().get('email')
+        first_name = request.get_json().get('first_name')
+        last_name = request.get_json().get('last_name')
+        password = request.get_json().get('password')
 
         if health_card_nb is None:
             return js.create_json(data=None, message="No health card number provided", return_code=js.ResponseReturnCode.CODE_400)
@@ -141,6 +153,54 @@ def patient():
 
         return js.create_json(data=None, message="Patient record created", return_code=js.ResponseReturnCode.CODE_201)
 
+@controllers.route('/patient/<string:patient_id>', methods=['PUT'])
+def update_patient(patient_id):
+
+    if request.method == "PUT":
+        # params: patient_id (string, required)
+        # return: sucess/failure
+        # note: the email and health card number of the user cannot be changed
+        
+        date_of_birth = request.args.get('date_of_birth')
+        gender = request.args.get('gender')
+        phone_nb = request.args.get('phone_nb')
+        home_address = request.args.get('home_address')
+        first_name = request.args.get('first_name')
+        last_name = request.args.get('last_name')
+        password = request.args.get('password')
+
+        if patient_id is None:
+            return js.create_json(data=None, message="No patient id provided", return_code=js.ResponseReturnCode.CODE_400)
+        if date_of_birth is None:
+            return js.create_json(data=None, message="No data of birth provided", return_code=js.ResponseReturnCode.CODE_400)
+        if gender is None:
+            return js.create_json(data=None, message="No gender provided", return_code=js.ResponseReturnCode.CODE_400)
+        if phone_nb is None:
+            return js.create_json(data=None, message="No phone number provided", return_code=js.ResponseReturnCode.CODE_400)
+        if home_address is None:
+            return js.create_json(data=None, message="No home address provided", return_code=js.ResponseReturnCode.CODE_400)
+        if first_name is None:
+            return js.create_json(data=None, message="No first name provided", return_code=js.ResponseReturnCode.CODE_400)
+        if last_name is None:
+            return js.create_json(data=None, message="No last name provided", return_code=js.ResponseReturnCode.CODE_400)
+        if password is None:
+            return js.create_json(data=None, message="No password provided", return_code=js.ResponseReturnCode.CODE_400)
+         
+        result = patient_service.update_patient(
+            patient_id,
+            date_of_birth,
+            gender,
+            phone_nb,
+            home_address,
+            first_name,
+            last_name,
+            password
+        )
+
+        if result == CreatePatientStatus.EMAIL_ALREADY_EXISTS:
+            return js.create_json(data=None, message="Email address already registered", return_code=js.ResponseReturnCode.CODE_500)
+
+        return js.create_json(data=None, message="Patient record updated", return_code=js.ResponseReturnCode.CODE_201)
 
 @controllers.route('/get_schedule', methods=['POST'])
 def get_schedule():
@@ -213,7 +273,6 @@ def appointment():
         # example use case: remove appointment
         # params: patient_id (int, required), availability_id (int, required)
         # return: success/failure
-
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
@@ -232,3 +291,37 @@ def appointment():
             return js.create_json(data=None, message="Appointment not found/removed", return_code=js.ResponseReturnCode.CODE_400)
 
         return js.create_json(data=None, message="Appointment removed", return_code=js.ResponseReturnCode.CODE_200)
+
+@controllers.route('/cart', methods=['GET'])
+def cart():
+    """ view cart use case """
+    if request.method == 'GET':
+
+        # ensure user is logged-in to proceed
+        if not cookie_helper.user_is_logged(request):
+            return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
+
+        # getting patient_id from cookie
+        patient_id = request.cookies.get(CookieKeys.ID.value)
+        # get patient from cache
+        patient = get_from_cache(patient_id)
+
+        cart = patient.get_cart()
+
+        # list of Appointment objects
+        appointment_list = cart.get_appointments()
+
+        new_appointment_list = []
+
+        # object parsing going on here to be able to send it with json format
+        for appointment in appointment_list:
+            new_availability = appointment.availability.__dict__
+            new_appointment = Appointment(patient_id, new_availability).__dict__
+            new_appointment_list.append(new_appointment)
+
+        data_to_send = {'appointment_list': new_appointment_list, 'patient_id': patient_id}
+
+        return js.create_json(data=data_to_send, message="List of appointments with patient id",
+                              return_code=js.ResponseReturnCode.CODE_200)
+
+

@@ -48,7 +48,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'Register',
+  name: 'CreateAvailability',
 
   data() {
     return {
