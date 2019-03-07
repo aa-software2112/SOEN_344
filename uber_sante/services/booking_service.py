@@ -77,3 +77,4 @@ class BookingService:
         self.db.write_one(delete_stmt, params)
 
         return f_key
+
