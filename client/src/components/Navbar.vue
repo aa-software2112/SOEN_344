@@ -92,7 +92,7 @@ export default {
     },
     notLoggedOrNoCookiesSet: function()
     {
-        return this.$cookies.get('logged') == 'False' || !this.$cookies.isSet
+        return this.$cookies.get('logged') == 'False' || this.$cookies.get('logged') == null
     
     },
     

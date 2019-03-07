@@ -4,6 +4,7 @@
     <div class='page-main'>
        <h1>
          {{ msg }}
+         {{this.$cookies.get('user_type') == null}}
          </h1>
     </div>
     
