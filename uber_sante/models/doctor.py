@@ -8,3 +8,15 @@ class Doctor:
         self.specialty = specialty
         self.city = city
         self.password = password
+
+    
+    def __dict__(self):
+        return {
+            'id': self.id,
+            'physician_permit_nb': self.physician_permit_nb,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'specialty': self.specialty,
+            'city': self.city,
+            'password': self.password,
+        }

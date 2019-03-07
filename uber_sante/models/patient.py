@@ -74,4 +74,4 @@ class Patient:
 
 if __name__ == "__main__":
     p = Patient(1, "frank", "smith", "1234 5678 9012", "24121992", "F", "5144435211", "7331", "frank.smith@gmail.ca")
-    print(p.__dict__())
+    print(p.__dict__)

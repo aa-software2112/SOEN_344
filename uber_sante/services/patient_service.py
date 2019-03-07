@@ -10,6 +10,7 @@ class CreatePatientStatus(Enum):
     SUCCESS = 1
     HEALTH_CARD_ALREADY_EXISTS = -1
     EMAIL_ALREADY_EXISTS = -2
+    PATIENT_NAME_DOES_NOT_EXIST = -3
 
 
 class PatientService:
@@ -19,6 +20,7 @@ class PatientService:
 
     def get_patient(self, patient_id):
         """Query the db for a patient by id and return the created patient object"""
+
         select_stmt = '''SELECT * FROM Patient
                         WHERE id = ?'''
         params = (patient_id,)
@@ -39,6 +41,34 @@ class PatientService:
             result['email'])
 
         return patient
+    
+    def get_patient_by_last_name(self, last_name):
+        """Query the db for a patient by the patient's last name and return the created patient object"""
+
+        select_stmt = f"""SELECT * FROM Patient
+                        WHERE last_name LIKE '%{last_name}%'"""
+        params = ()
+        results = self.db.read_all(select_stmt, params)
+
+        if len(results) == 0:
+            return -3
+
+        list_of_patient = []
+
+        for result in results:
+            list_of_patient.append(
+                Patient(
+                    result['id'],
+                    result['first_name'],
+                    result['last_name'],
+                    result['health_card_nb'],
+                    result['date_of_birth'],
+                    result['gender'],
+                    result['phone_nb'],
+                    result['home_address'],
+                    result['email']))
+        
+        return list_of_patient
 
     def validate_login_info(self, health_card_nb, password):
 

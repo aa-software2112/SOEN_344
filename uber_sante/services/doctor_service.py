@@ -31,9 +31,9 @@ class DoctorService:
             params = (doctor_id,)
             result = self.db.read_one(select_stmt, params)
             doctor = Doctor(result['id'],
-                            result['physician_permit_nb'],
                             result['first_name'],
                             result['last_name'],
+                            result['physician_permit_nb'],
                             result['specialty'],
                             result['city'],
                             result['password'])
@@ -88,6 +88,7 @@ class DoctorService:
 
 
     def get_doctor(self, doctor_id):
+        """Query the db for a doctor by id and return the created doctor object"""
 
         select_stmt = '''SELECT * FROM Doctor
                         WHERE doctor_id = ?'''
@@ -97,37 +98,36 @@ class DoctorService:
         if result is None:
             return 3
         
-        doctor = Doctor(
-            result['id'],
-            result['physician_permit_nb'],
-            result['first_name'],
-            result['last_name'],
-            result['specialty'],
-            result['city'],
-            result['password'])
+        doctor = Doctor(result['id'],
+                        result['first_name'],
+                        result['last_name'],
+                        result['physician_permit_nb'],
+                        result['specialty'],
+                        result['city'],
+                        result['password'])
 
         return doctor
 
 
-    def get_doctor_by_name(self, doctor_last_name):
+    def get_doctor_by_last_name(self, last_name):
+        """Query the db for a doctor by the doctor's last name and return the created doctor object"""
 
-        select_stmt = """SELECT * FROM Doctor
-                        WHERE last_name LIKE '%?%' """
-        params = (doctor_last_name,)
+        select_stmt = f"""SELECT * FROM Doctor
+                        WHERE last_name LIKE '%{last_name}%'"""
+        params = ()
         results = self.db.read_all(select_stmt, params)
 
-        if results is None:
+        if len(results) == 0:
             return 4
         
         list_of_doctors = []
 
         for result in results:
             list_of_doctors.append(
-                Doctor(
-                    result['id'],
-                    result['physician_permit_nb'],
+                Doctor(result['id'],
                     result['first_name'],
                     result['last_name'],
+                    result['physician_permit_nb'],
                     result['specialty'],
                     result['city'],
                     result['password']))

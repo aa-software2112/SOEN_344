@@ -31,18 +31,26 @@ def view_cookie():
 def patient():
 
     if request.method == 'GET':
-        # params: patient_id (int, required)
+        # params: patient_id (int, semi-required), last_name (text, semi-required)
         # return: patient object
 
         patient_id = request.args.get('patient_id')
+        patient_last_name = request.args.get('last_name')
 
-        if patient_id is None:
-            return js.create_json(data=None, message="Patient Id is not specified", return_code=js.ResponseReturnCode.CODE_400)
+        if patient_id is None and patient_last_name is None:
+            return js.create_json(data=None, message="No patient params specified", return_code=js.ResponseReturnCode.CODE_400)
 
-        result = patient_service.get_patient(patient_id)
+        result = None
+
+        if patient_last_name is not None:
+            result = patient_service.get_patient_by_last_name(patient_last_name)
+        else: 
+            result = patient_service.get_patient(patient_id)
 
         if result is None:
             return js.create_json(data=None, message="Could not retrieve patient", return_code=js.ResponseReturnCode.CODE_500)
+        if result == -3:
+            return js.create_json(data=None, message=f"Patient with last name '{patient_last_name}' does not exist", return_code=js.ResponseReturnCode.CODE_400)
 
         return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
@@ -222,7 +230,7 @@ def appointment():
         # example use case: remove appointment
         # params: patient_id (int, required), availability_id (int, required)
         # return: success/failure
-        
+
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
