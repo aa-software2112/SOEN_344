@@ -2,11 +2,13 @@ from enum import Enum
 from uber_sante.utils.cache import get_from_cache, set_to_cache
 from uber_sante.models.doctor import Doctor
 from uber_sante.utils.dbutil import DBUtil
+from uber_sante.models.doctor import Doctor
 
 class CreateDoctorStatus(Enum):
-    PHYSICIAN_NUMBER_ALREADY_EXISTS = 1
-    SUCCESS = 2
-
+    SUCCESS = 1
+    PHYSICIAN_NUMBER_ALREADY_EXISTS = 2
+    DOCTOR_ID_DOES_NOT_EXIST = 3
+    DOCTOR_NAME_DOES_NOT_EXIST = 4
 
 class DoctorService:
 
@@ -78,3 +80,51 @@ class DoctorService:
         self.db.write_one(insert_stmt, params)
 
         return CreateDoctorStatus.SUCCESS
+
+
+    def get_doctor(self, doctor_id):
+
+        select_stmt = '''SELECT * FROM Doctor
+                        WHERE doctor_id = ?'''
+        params = (doctor_id,)
+        result = self.db.read_one(select_stmt, params)
+
+        if result is None:
+            return 3
+        
+        doctor = Doctor(
+            result['id'],
+            result['physician_permit_nb'],
+            result['first_name'],
+            result['last_name'],
+            result['specialty'],
+            result['city'],
+            result['password'])
+
+        return doctor
+
+
+    def get_doctor_by_name(self, doctor_last_name):
+
+        select_stmt = """SELECT * FROM Doctor
+                        WHERE last_name LIKE '%?%' """
+        params = (doctor_last_name,)
+        results = self.db.read_all(select_stmt, params)
+
+        if results is None:
+            return 4
+        
+        list_of_doctors = []
+
+        for result in results:
+            list_of_doctors.append(
+                Doctor(
+                    result['id'],
+                    result['physician_permit_nb'],
+                    result['first_name'],
+                    result['last_name'],
+                    result['specialty'],
+                    result['city'],
+                    result['password']))
+        
+        return list_of_doctors

@@ -47,7 +47,7 @@ def availability():
             return js.create_json(data=None, message="No booking type provided",
                                   return_code=js.ResponseReturnCode.CODE_400)
 
-        result = AvailabilityService().create_availability(doctor_id, start, room, '1', year, month, day, booking_type)
+        result = availability_service.create_availability(doctor_id, start, room, '1', year, month, day, booking_type)
 
         return js.create_json(data=[result], message="Availability record created",
                               return_code=js.ResponseReturnCode.CODE_201)
@@ -63,7 +63,7 @@ def availability():
             return js.create_json(data=None, message="No availability id provided",
                                   return_code=js.ResponseReturnCode.CODE_400)
 
-        availability_result = AvailabilityService().get_availability(availability_id)
+        availability_result = availability_service.get_availability(availability_id)
 
         if availability_result == False:
             return js.create_json(data=None, message="Doctor availability does not exist",
@@ -73,12 +73,12 @@ def availability():
         result = None
 
         if is_free:
-            result = AvailabilityService().cancel_availability(availability_id)
+            result = availability_service.cancel_availability(availability_id)
         else:
             bookingResult = BookingService().cancel_booking_with_availability(availability_id)
 
             if bookingResult:
-                AvailabilityService().cancel_availability(availability_id)
+                availability_service.cancel_availability(availability_id)
             else:
                 return js.create_json(data=None, message="Could not delete doctor availability",
                                       return_code=js.ResponseReturnCode.CODE_500)
