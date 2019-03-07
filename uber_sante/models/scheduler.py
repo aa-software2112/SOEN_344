@@ -118,16 +118,6 @@ class Scheduler:
         # Method call returns a boolean that describe whether the availability was successfully reserved
         return self.availability_service.validate_availability_and_reserve(appointment.availability.id)
 
-    def reserve_appointment_availability(self, availability_id):
-        """
-        This method converts an appointment into a booking using the availability service
-
-        :param appointment: The appointment object to convert into a booking
-        :return: True if successfully booked, False otherwise
-        """
-        # Method call returns a boolean that describe whether the availability was successfully reserved
-        return self.availability_service.validate_availability_and_reserve(availability_id)
-
     def free_availability(self, availability_key):
         """
         Uses the availability service to free the availabilities based on its primary keys (a list of 1 or 3 values)
