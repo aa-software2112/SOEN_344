@@ -3,14 +3,14 @@ from flask import request, jsonify
 from . import controllers
 
 from uber_sante.utils import json_helper as js
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService
 
-from uber_sante.utils.time_interpreter import TimeInterpreter
 
-availability_service = AvailabilityService()
 booking_service = BookingService()
+availability_service = AvailabilityService()
 
 
 @controllers.route('/availability', methods=['GET', 'PUT', 'DELETE'])
