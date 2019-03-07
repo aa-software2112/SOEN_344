@@ -7,6 +7,7 @@ from .booking_controller import *
 from .patient_controller import *
 from .admin_controller import *
 from .doctor_controller import *
+from .nurse_controller import *
 
 @controllers.route('/')
 def index():

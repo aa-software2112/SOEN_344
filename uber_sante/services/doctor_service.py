@@ -26,7 +26,7 @@ class DoctorService:
             select_stmt = "SELECT * FROM Doctor WHERE id = ?"
             params = (doctor_id,)
             result = self.db.read_one(select_stmt, params)
-            doctor = Doctor(result['first_name'], result['last_name'], result['physician_permit_nb'],
+            doctor = Doctor(result['id'], result['first_name'], result['last_name'], result['physician_permit_nb'],
                             result['specialty'], result['city'])
 
 
