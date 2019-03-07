@@ -1,11 +1,12 @@
-from uber_sante.utils.dbutil import DBUtil
 from enum import Enum
 from uber_sante.utils.cache import get_from_cache, set_to_cache
 from uber_sante.models.doctor import Doctor
+from uber_sante.utils.dbutil import DBUtil
 
 class CreateDoctorStatus(Enum):
     PHYSICIAN_NUMBER_ALREADY_EXISTS = 1
     SUCCESS = 2
+
 
 class DoctorService:
 
@@ -55,15 +56,23 @@ class DoctorService:
     def create_doctor(self, physician_permit_nb, first_name, last_name, specialty, city, password):
 
         # Check if physician permit number already exists
-        select_stmt = 'SELECT id FROM Doctor WHERE physician_permit_nb = ?'
+        select_stmt = '''SELECT 
+                            id
+                        FROM Doctor
+                        WHERE physician_permit_nb = ?'''
         params = (physician_permit_nb,)
 
         if self.db.read_one(select_stmt, params) is not None:
             return CreateDoctorStatus.PHYSICIAN_NUMBER_ALREADY_EXISTS
 
-        insert_stmt = 'INSERT INTO Doctor(physician_permit_nb, first_name, last_name, ' \
-                      'specialty, city, password)' \
-                      'VALUES (?, ?, ?, ?, ?, ?)'
+        insert_stmt = '''INSERT INTO Doctor(
+                            physician_permit_nb,
+                            first_name,
+                            last_name,
+                            specialty,
+                            city,
+                            password)
+                        VALUES (?, ?, ?, ?, ?, ?)'''
         params = (physician_permit_nb, first_name, last_name, specialty, city, password)
 
         self.db.write_one(insert_stmt, params)

@@ -54,6 +54,9 @@ class Patient:
     def get_id(self):
         return self.id
 
+    def get_cart(self):
+        return self.cart
+
     def __dict__(self):
         return {
             'id': self.id,

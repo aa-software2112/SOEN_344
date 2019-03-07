@@ -1,6 +1,6 @@
-from uber_sante.services.patient_service import PatientService
 from tests.test_base import BaseTestClass
 from uber_sante.utils import cache
+from uber_sante.services.patient_service import PatientService
 
 
 class LoginTest(BaseTestClass):
@@ -28,8 +28,10 @@ class LoginTest(BaseTestClass):
 
         :return: N/A
         """
-        valid_health_card_and_pw = {"health_card_nb": self.valid_health_card_nb,
-                                    "password":self.password}
+        valid_health_card_and_pw = {
+            "health_card_nb": self.valid_health_card_nb,
+            "password": self.password
+        }
 
         response = self.send_post(self.login_url, valid_health_card_and_pw)
 
@@ -41,16 +43,20 @@ class LoginTest(BaseTestClass):
         Attempt login and expect login failure
         :return: N/A
         """
-        valid_health_card_invalid_pw = {"health_card_nb": self.valid_health_card_nb,
-                                         "password": "invalidPassword"}
+        valid_health_card_invalid_pw = {
+            "health_card_nb": self.valid_health_card_nb,
+            "password": "invalidPassword"
+        }
 
-        invalid_health_card = {"health_card_nb": "x",
-                                         "password": self.password}
+        invalid_health_card = {
+            "health_card_nb": "x",
+            "password": self.password
+        }
 
-        response = self.send_post(self.login_url,valid_health_card_invalid_pw)
+        response = self.send_post(self.login_url, valid_health_card_invalid_pw)
 
         self.assert_status_code(response, 400)
-        self.assert_json_message (response, "Invalid login information", error=True)
+        self.assert_json_message(response, "Invalid login information", error=True)
 
         response = self.send_post(self.login_url, invalid_health_card)
 

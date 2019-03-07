@@ -12,6 +12,9 @@ class Cart:
                 return appointment
         return None
 
+    def get_appointments(self):
+        return self.appointments
+
     def remove_appointment(self, availability_id):
         """ searches through the list of appointments and if found it removes it and returns it"""
         index = 0
