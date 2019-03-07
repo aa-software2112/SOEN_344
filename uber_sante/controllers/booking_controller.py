@@ -7,8 +7,10 @@ from uber_sante.utils import json_helper as js
 from uber_sante.utils.cache import get_from_cache
 
 from uber_sante.models.scheduler import Scheduler
+from uber_sante.models.appointment import Appointment
 
 from uber_sante.services.booking_service import BookingService
+from uber_sante.services.availability_service import AvailabilityService
 
 
 @controllers.route('/booking', methods=['GET', 'PUT', 'DELETE'])
@@ -50,7 +52,24 @@ def book():
         if patient_id is None:
             return js.create_json(data=None, message="No patient specified", return_code=js.ResponseReturnCode.CODE_400)
 
-        # TODO: Remove Dummy appointment below and use the implementation below
+        # update booking
+        if booking_id is not None:
+            availability_obj = AvailabilityService().get_availability(availability_id)
+            appointment = (Appointment(patient_id, availability_obj)) # creating appointment without using cart
+
+            if availability_obj is not None:
+                f_key = BookingService().cancel(booking_id)
+
+                if f_key:
+                    Scheduler.get_instance().free_availability(f_key)
+                    BookingService().write_booking(appointment)
+                    return js.create_json(data={appointment}, message="Appointment successfully updated", return_code=js.ResponseReturnCode.CODE_200)
+                else:
+                    return js.create_json(data=None, message="Appointment not updated", return_code=js.ResponseReturnCode.CODE_400)
+            else:
+                return js.create_json(data=None, message="Unable to update booking", return_code=js.ResponseReturnCode.CODE_400)
+
+        # TODO: Remove Dummy appointment below and use the implementation 
         patient = get_from_cache(patient_id)  # get the patient from cache
         appointment = patient.cart.get_appointment(availability_id)
 
@@ -58,16 +77,6 @@ def book():
 
         if result:
             removed = patient.cart.remove_appointment(availability_id)
-
-            if booking_id is not None:
-                f_key = BookingService().cancel(booking_id)
-                if f_key:
-                    Scheduler.get_instance().free_availability(f_key)
-                    BookingService().write_booking()
-                    return js.create_json(data={appointment}, message="Appointment successfully updated", return_code=js.ResponseReturnCode.CODE_200)
-                else:
-                    return js.create_json(data=None, message="Appointment not updated", return_code=js.ResponseReturnCode.CODE_400)
-
             BookingService().write_booking(appointment)
             
             if removed is None:
@@ -94,29 +103,4 @@ def book():
             return js.create_json(data=None, message="Unable to delete booking", return_code=js.ResponseReturnCode.CODE_400)
         
         return js.create_json(data=None, message="Booking successfully deleted", return_code=js.ResponseReturnCode.CODE_200)
-
-    '''if request.method == 'UPDATE':
-        # example use case: update_booking
-        # params: booking_id (int, required), availability_id (int, required), patient_id (int,required)
-        # return: success/failure
-
-        availability_id = request.args.get('availability_id')
-        booking_id = request.args.get('booking_id')
-        patient_id = request.args.get('patient_id')
-
-
-        if availability_id is None or if booking_id is None:
-            return jsonify('No booking or availability specified'), 400
-
-        availability_obj = Scheduler().get_instance().reserve_appointment_availability(availability_id)
-        
-        if availability_obj is not None:
-            f_key = BookingService().cancel(booking_id)
-            if f_key:
-                Scheduler.get_instance().free_availability(f_key)
-                BookingService().write_booking()
-        else:
-            jsonify('Unable to update booking'), 400
-
-        jsonify('Booking updated'), 200'''
 
