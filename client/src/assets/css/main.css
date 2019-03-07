@@ -48,7 +48,11 @@ html, body {
     color: red;
 }
 
-.login-button {
+.success-message {
+    color: green;
+}
+
+.login-button, .register-menu-button {
     background-color: #26619C;
     color: white;
     font-size: 30px;

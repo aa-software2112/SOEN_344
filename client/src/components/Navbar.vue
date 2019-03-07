@@ -8,14 +8,14 @@
       <a class="navbar-brand" href="/">Home</a>
     </div>
     <div class="navbar-right">
-    <a class="navbar-brand" href="/register" v-if="notLoggedPatient">Register</a>
+    <a class="navbar-brand" href="/registerPatient" v-if="notLoggedPatient">Register</a>
     <a class="navbar-brand" href="/login" v-if="notLogged">Login</a>
     <a class="navbar-brand" href="#" v-on:click="logout" v-if="isLogged">Logout</a>
     
     <!-- Admin Tabs -->
-    <a class="navbar-brand" href="/registerDoctor" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Register Doctor/Nurse</a>
     <a class="navbar-brand" href="/createAvailability" v-if="this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'">Make Availability</a>
-
+    <a class="navbar-brand" href="/adminRegistrationMenu" v-if="isLoggedAdmin">Registration Menu</a>
+    
     
     <!-- Patient Tabs-->
     <a class="navbar-brand" href="/cart" v-if="this.$cookies.get('logged') == 'True'">Cart</a>
@@ -67,6 +67,11 @@ export default {
     isLogged: function()
     {
         return this.$cookies.get('logged') == 'True'
+    },
+    isLoggedAdmin: function() 
+    {
+        return this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'admin'
+    
     }
     
     }

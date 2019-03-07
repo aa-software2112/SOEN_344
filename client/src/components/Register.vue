@@ -2,7 +2,7 @@
 <template>
 <div id="app-container">    
     <div id="main-content-area" class="main-color content-fluid">
-        <h1> Register as Patient </h1>
+        <h1>Register as Patient</h1>
         <h3 class="error-message">{{message}}</h3>
         </br>
         <div class="container reg-container" id="patient-reg">
@@ -63,7 +63,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'Register',
+  name: 'RegisterPatient',
 
   data () {
   return {
@@ -114,7 +114,6 @@ export default {
         })
         .then(response => {
         this.$router.push({path:"/login"});
-        this.message = response.data.message;
         console.log(response);
         })
         .catch(error => {
