@@ -58,6 +58,7 @@ export default {
         })
         .then(response => {
         this.$router.push({path:"/"});
+        location.reload();
         console.log(response);
         })
         .catch(error => {

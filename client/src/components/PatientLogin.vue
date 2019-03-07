@@ -58,6 +58,7 @@ export default {
         })
         .then(response => {
         this.$router.push({path:"/"});
+        location.reload();
         //this.message = response.data.message + response.headers["set-cookie"];
         console.log(response);
         })

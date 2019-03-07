@@ -57,7 +57,8 @@ export default {
             password : this.password
         })
         .then(response => {
-        this.$router.go({path:"/"});
+        this.$router.push({path:"/"});
+        location.reload();
         //this.message = response.data.message + response.headers["set-cookie"];
         console.log(response);
         })

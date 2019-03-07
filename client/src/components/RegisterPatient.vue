@@ -2,7 +2,7 @@
 <template>
 <div id="app-container">    
     <div id="main-content-area" class="main-color content-fluid">
-        <h1>Register as Patient</h1>
+        <h1>Register a Patient</h1>
         <h3 class="error-message">{{message}}</h3>
         </br>
         <div class="container reg-container" id="patient-reg">
