@@ -1,6 +1,8 @@
+from uber_sante.utils.date import *
+
 from uber_sante.models.schedule import *
 from uber_sante.models.availability import Availability
-from uber_sante.utils.date import *
+
 from uber_sante.services.availability_service import AvailabilityService
 
 
@@ -147,14 +149,30 @@ if __name__ == "__main__":
 
             for num_avails in range(1, 15 + 1):
                 monthly_avails.append(
-                    Availability(-1, -1, num_avails * 3600 + (num_avails + repetitions) * 20, "RM", True, 2018, 7, day))
+                    Availability(
+                        -1,
+                        -1,
+                        num_avails * 3600 + (num_avails + repetitions) * 20,
+                        "RM",
+                        True,
+                        2018,
+                        7,
+                        day,
+                        AppointmentRequestType.ALL))
 
     # Get availabilities for a single day
     daily_avails = []
     for num_avails in range(1, 15 + 1):
         daily_avails.append(
-            Availability(-1, -1, num_avails * 3600 + (num_avails + repetitions) * 20, "RM", True, 2019,
-                         DateEnum.APRIL.value, 16))
+            Availability(
+                -1,
+                -1,
+                num_avails * 3600 + (num_avails + repetitions) * 20,
+                "RM",
+                True,
+                2019,
+                DateEnum.APRIL.value, 16,
+                AppointmentRequestType.ALL))
 
     # create a monthly schedule
     monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly, monthly_avails)

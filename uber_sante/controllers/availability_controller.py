@@ -113,5 +113,4 @@ def modify_availability():
         booking_service.cancel_booking_with_availability(availability_id)
         availability_service.cancel_availability(availability_id)
 
-        return js.create_json(data=[result], message="Availability successfully modified",
-                              return_code=js.ResponseReturnCode.CODE_201)
+        return js.create_json(data=[result], message="Availability successfully modified", return_code=js.ResponseReturnCode.CODE_201)

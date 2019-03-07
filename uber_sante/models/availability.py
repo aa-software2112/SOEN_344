@@ -1,5 +1,7 @@
 from uber_sante.utils.date import Date
 from uber_sante.utils.time_interpreter import TimeInterpreter
+
+
 class Availability:
 
     def __init__(self, availability_id, doctor_id, start, room, free, year, month, day, booking_type):

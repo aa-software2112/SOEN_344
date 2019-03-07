@@ -1,8 +1,9 @@
-from abc import ABC, abstractmethod
 from calendar import monthrange
+from abc import ABC, abstractmethod
 
-from uber_sante.models.availability import Availability
 from uber_sante.utils.date import Date
+from uber_sante.models.availability import Availability
+from uber_sante.models.scheduler import AppointmentRequestType
 
 
 class Schedule(ABC):
@@ -163,7 +164,16 @@ if __name__ == "__main__":
 
             for num_avails in range(1, 15 + 1):
                 avails.append(
-                    Availability(-1, -1, num_avails * 3600 + (num_avails + repetitions) * 20, "RM", True, 2018, 7, day))
+                    Availability(
+                        -1,
+                        -1,
+                        num_avails * 3600 + (num_avails + repetitions) * 20,
+                        "RM",
+                        True,
+                        2018,
+                        7,
+                        day,
+                        AppointmentRequestType.ALL))
 
     m = MonthlySchedule(avails, Date(2018, 7))
 
