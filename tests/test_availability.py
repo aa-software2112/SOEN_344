@@ -20,6 +20,7 @@ class AvailabilityTest(BaseTestClass):
         self.modify_availability_url = "http://localhost:5000/availability/modify"
 
         self.availability = {
+            "availability_id": 1,
             "doctor_id": "20",
             "start": "32400",
             "room": "088",
@@ -30,26 +31,18 @@ class AvailabilityTest(BaseTestClass):
         }
 
     def test_modify_availability_success(self):
-        self.new_availability = {
-            "doctor_id": "20",
-            "start": "33600",
-            "room": "667",
-            "year": "2019",
-            "month": "4",
-            "day": "8",
-            "booking_type": AppointmentRequestType.WALKIN.value
-        }
 
-        # Modify the original availability
         self.mock_db_read()
         self.mock_db_write()
 
-        resp = self.send_put(self.modify_availability_url, self.new_availability)
+        resp = self.send_put(self.modify_availability_url, self.availability)
 
         self.assert_status_code(resp, 201)
 
     def test_modify_availability_fail(self):
+
         self.mock_db_read(not None)
+        self.mock_db_write()
 
         resp = self.send_put(self.modify_availability_url, self.availability)
 
