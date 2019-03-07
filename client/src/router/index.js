@@ -21,6 +21,7 @@ Vue.use(Router);
 
 Vue.prototype.$cookies = Cookies;
 
+
 export default new Router({
   mode: 'history',
   routes: [
