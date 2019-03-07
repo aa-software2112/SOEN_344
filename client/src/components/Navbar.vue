@@ -17,7 +17,7 @@
             </div>
             
             <!-- Any non-logged user -->
-            <div v-if="notLogged">
+            <div v-if="notLoggedOrNoCookiesSet">
                 <a class="navbar-brand" href="/registerPatient">Register</a>
                 <a class="navbar-brand" href="/login">Login</a>
             </div>
@@ -89,6 +89,11 @@ export default {
     loggedPatient: function()
     {
         return (this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'patient')
+    },
+    notLoggedOrNoCookiesSet: function()
+    {
+        return this.$cookies.get('logged') == 'False' || !this.$cookies.isSet
+    
     },
     
     notLogged: function()
