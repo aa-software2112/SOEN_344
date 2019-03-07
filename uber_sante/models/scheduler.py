@@ -9,7 +9,7 @@ class RequestEnum(Enum):
     MONTHLY_REQUEST = "MONTHLY"
 
 
-class AppointmentRequestType(Enum):
+class AppointmentRequestType(str, Enum):
     ANNUAL = "ANNUAL"
     WALKIN = "WALKIN"
     ALL = "ALL"
@@ -68,6 +68,7 @@ class Scheduler:
 
         return Scheduler._instance
 
+
     def __init__(self):
 
         if Scheduler._instance is not None:
@@ -77,6 +78,7 @@ class Scheduler:
 
         # TODO should be replaced with singleton: AvailabilityService.get_instance()
         self.availability_service = AvailabilityService()
+
 
     def get_schedule(self, schedule_request, av=None):
         """
@@ -108,6 +110,7 @@ class Scheduler:
 
         return return_schedule
 
+
     def reserve_appointment(self, appointment):
         """
         This method converts an appointment into a booking using the availability service
@@ -118,15 +121,16 @@ class Scheduler:
         # Method call returns a boolean that describe whether the availability was successfully reserved
         return self.availability_service.validate_availability_and_reserve(appointment.availability.id)
 
-    def free_availabilities(self, availability_keys):
+
+    def free_availability(self, availability_key):
         """
         Uses the availability service to free the availabilities based on its primary keys (a list of 1 or 3 values)
 
-        :param availability_keys: The availability primary-keys that need to be "freed" - made available again
+        :param availability_key: The availability primary-key that needs to be "freed" - made available again
         :return: N/A
         """
 
-        self.availability_service.free_availabilities(availability_keys)
+        self.availability_service.free_availability(availability_key)
 
 
 if __name__ == "__main__":

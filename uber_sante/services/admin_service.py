@@ -9,7 +9,11 @@ class AdminService:
 
     def validate_login_info(self, email, password):
 
-        select_stmt = 'SELECT id, password FROM Admin WHERE email = ?'
+        select_stmt = '''SELECT 
+                            id, 
+                            password 
+                        FROM Admin
+                        WHERE email = ?'''
         params = (email,)
 
         result = self.db.read_one(select_stmt, params)
