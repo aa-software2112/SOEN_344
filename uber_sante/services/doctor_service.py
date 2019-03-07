@@ -1,8 +1,9 @@
 from enum import Enum
-from uber_sante.utils.cache import get_from_cache, set_to_cache
+
 from uber_sante.models.doctor import Doctor
 from uber_sante.utils.dbutil import DBUtil
-from uber_sante.models.doctor import Doctor
+from uber_sante.utils.cache import get_from_cache, set_to_cache
+
 
 class CreateDoctorStatus(Enum):
     SUCCESS = 1
@@ -29,11 +30,15 @@ class DoctorService:
             select_stmt = "SELECT * FROM Doctor WHERE id = ?"
             params = (doctor_id,)
             result = self.db.read_one(select_stmt, params)
-            doctor = Doctor(result['id'], result['first_name'], result['last_name'], result['physician_permit_nb'],
-                            result['specialty'], result['city'])
+            doctor = Doctor(result['id'],
+                            result['physician_permit_nb'],
+                            result['first_name'],
+                            result['last_name'],
+                            result['specialty'],
+                            result['city'],
+                            result['password'])
 
-
-            set_to_cache(doctor_key, doctor)
+        set_to_cache(doctor_key, doctor)
 
     def validate_login_info(self, physician_permit_nb, password):
 

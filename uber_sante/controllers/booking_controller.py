@@ -12,6 +12,8 @@ from uber_sante.models.appointment import Appointment
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService
 
+booking_service = BookingService()
+availability_service = AvailabilityService()
 
 @controllers.route('/booking', methods=['GET', 'PUT', 'DELETE'])
 def book():
@@ -31,6 +33,7 @@ def book():
         results = True  # booking_service.get_booking(patient_id, doctor_id)
 
         return jsonify(results), 200
+
 
     if request.method == 'PUT':
         # example use case: checkout_appointment
@@ -54,15 +57,15 @@ def book():
 
         # update booking
         if booking_id is not None:
-            availability_obj = AvailabilityService().get_availability(availability_id)
+            availability_obj = availability_service.get_availability(availability_id)
             appointment = (Appointment(patient_id, availability_obj)) # creating appointment without using cart
 
             if availability_obj is not None:
-                f_key = BookingService().cancel(booking_id)
+                f_key = booking_service.cancel_booking_return_key(booking_id)
 
                 if f_key:
                     Scheduler.get_instance().free_availability(f_key)
-                    BookingService().write_booking(appointment)
+                    booking_service.write_booking(appointment)
                     return js.create_json(data={appointment}, message="Appointment successfully updated", return_code=js.ResponseReturnCode.CODE_200)
                 else:
                     return js.create_json(data=None, message="Appointment not updated", return_code=js.ResponseReturnCode.CODE_400)
@@ -77,7 +80,7 @@ def book():
 
         if result:
             removed = patient.cart.remove_appointment(availability_id)
-            BookingService().write_booking(appointment)
+            booking_service.write_booking(appointment)
             
             if removed is None:
                 return js.create_json(data=None, message="Appointment not found/removed", return_code=js.ResponseReturnCode.CODE_400)
@@ -85,6 +88,7 @@ def book():
             return js.create_json(data={appointment}, message="Appointment successfully booked", return_code=js.ResponseReturnCode.CODE_200)
         else:
             return js.create_json(data=None, message="Appointment slot already booked", return_code=js.ResponseReturnCode.CODE_400)
+
 
     if request.method == 'DELETE':
     # example use case: cancel_booking
@@ -96,7 +100,7 @@ def book():
         if booking_id is None:
             return js.create_json(data=None, message="No booking specified", return_code=js.ResponseReturnCode.CODE_400)
         
-        f_key = BookingService().cancel_booking_return_key(booking_id) # returns primary key of booking's corresponding availability
+        f_key = booking_service.cancel_booking_return_key(booking_id) # returns primary key of booking's corresponding availability
         if f_key:
             Scheduler.get_instance().free_availability(f_key)
         else:
