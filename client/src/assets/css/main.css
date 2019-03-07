@@ -2,6 +2,12 @@ html, body {
     height: 100%;
     min-height: 100%;
 }
+
+#app 
+{
+    margin: 0;
+}
+
 #app-container, #app{
     height: 100%;
     
@@ -32,6 +38,28 @@ html, body {
     background-image : url('../UberSante.png');
     padding: 40px;
     background-size: contain;
+}
+
+.error-message {
+    color: red;
+}
+
+.success-message {
+    color: green;
+}
+
+.login-button, .register-menu-button {
+    background-color: #26619C;
+    color: white;
+    font-size: 30px;
+    width: 250px;
+    margin-top: 25px;
+    
+}
+
+a:hover {
+    text-decoration: none;
+    color: white;
 }
 
 .reg-container{

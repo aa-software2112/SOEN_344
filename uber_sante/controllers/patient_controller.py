@@ -45,7 +45,7 @@ def logout():
         return resp, js.ResponseReturnCode.CODE_200.value
 
 
-@controllers.route('/login', methods=['POST'])
+@controllers.route('/login', methods=['POST', 'OPTIONS'])
 def login():
 
     # Grab the data from the post request
@@ -55,8 +55,11 @@ def login():
         if cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="Already logged in!", return_code=js.ResponseReturnCode.CODE_400)
 
-        health_card_nb = request.args.get('health_card_nb')
-        password = request.args.get('password')
+        if request.get_json() is None:
+            return js.create_json(None, "No login information provided", js.ResponseReturnCode.CODE_400)
+
+        health_card_nb = request.get_json().get('health_card_nb')
+        password = request.get_json().get('password')
 
         # Validate the login information
         patient_id = patient_service.validate_login_info(health_card_nb, password)
@@ -98,15 +101,18 @@ def patient():
         # params: [various, look below] (int or string, required)
         # return: sucess/failure
 
-        health_card_nb = request.args.get('health_card_nb')
-        date_of_birth = request.args.get('date_of_birth')
-        gender = request.args.get('gender')
-        phone_nb = request.args.get('phone_nb')
-        home_address = request.args.get('home_address')
-        email = request.args.get('email')
-        first_name = request.args.get('first_name')
-        last_name = request.args.get('last_name')
-        password = request.args.get('password')
+        if request.get_json() is None:
+            return js.create_json(None, "No patient information provided", js.ResponseReturnCode.CODE_400)
+
+        health_card_nb = request.get_json().get('health_card_nb')
+        date_of_birth = request.get_json().get('date_of_birth')
+        gender = request.get_json().get('gender')
+        phone_nb = request.get_json().get('phone_nb')
+        home_address = request.get_json().get('home_address')
+        email = request.get_json().get('email')
+        first_name = request.get_json().get('first_name')
+        last_name = request.get_json().get('last_name')
+        password = request.get_json().get('password')
 
         if health_card_nb is None:
             return js.create_json(data=None, message="No health card number provided", return_code=js.ResponseReturnCode.CODE_400)
