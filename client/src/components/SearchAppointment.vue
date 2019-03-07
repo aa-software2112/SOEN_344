@@ -1,8 +1,8 @@
 /* eslint-disable */
 <template>
   <div class="container reg-container" id="patient-reg">
-    <h1> Search for an Appointment </h1>
     <form id="form-availability" @submit.prevent="processForm">
+      <h1> Search for an Appointment </h1>
       <div class="form-group">
         <label for="request_type">Request Type</label>
         <select v-model="request_type" name="request_type" required>
@@ -18,7 +18,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="date">Year</label>
+        <label for="date">Date</label>
         <input type="Date" class="input" name="date" v-model="date" required>
       </div>
       <button type="submit" class="btn btn-default submit">Submit</button>
@@ -38,7 +38,9 @@
           <td> {{item['start']}}</td>
           <td> {{item['room']}}</td>
           <td> {{item['booking_type']}}</td>
-          <button :id="item['id']"> Book Appointment</button>
+          <td>
+            <button :id="item['id']"> Book Appointment</button>
+          </td>
 
         </tr>
       </template>
@@ -52,7 +54,9 @@
               <td> {{item['start']}}</td>
               <td> {{item['room']}}</td>
               <td> {{item['booking_type']}}</td>
-              <button :id="item['id']"> Book Appointment</button>
+              <td>
+                <button :id="item['id']"> Book Appointment</button>
+              </td>
             </tr>
           </template>
         </template>

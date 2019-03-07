@@ -27,7 +27,7 @@ html, body {
 }
 
 .submit, button {
-  border-color: #17a2b8 !important;
+  border-color: #2c3e50 !important;
   border-radius: 50px;
 }
 
@@ -51,8 +51,7 @@ html, body {
   color: white;
   font-size: 30px;
   width: 250px;
-  margin-top: 25px;
-
+  border-radius: 5px;
 }
 
 a:hover {
@@ -102,4 +101,76 @@ h1, h2, h3, h4, h5, h6 {
 
 #view button {
   margin: 10px;
+}
+
+.help-text {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: #737373;
+  font-size: 12px;
+}
+
+form {
+  font: 95% Arial, Helvetica, sans-serif;
+  max-width: 400px;
+  margin: 10px auto;
+  padding: 16px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 5px;
+}
+
+form h1 {
+  background: #333;
+  padding: 20px 0;
+  font-size: 140%;
+  font-weight: 300;
+  color: white;
+  text-align: center;
+  margin: -16px -16px 16px -16px;
+  border-radius: 5px;
+}
+
+form input,
+form textarea,
+form select, form a {
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  outline: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  width: 100%;
+  background: #fff;
+  margin-bottom: 4%;
+  border: 1px solid #ccc;
+  padding: 3%;
+  color: #555;
+  font: 95% Arial, Helvetica, sans-serif;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  box-shadow: 0 0 5px #26619C;
+  padding: 3%;
+  border: 1px solid #26619C;
+}
+
+form input{
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  width: 100%;
+  padding: 3%;
+  border-bottom: 2px solid #26619C;
+  border-top-style: none;
+  border-right-style: none;
+  border-left-style: none;
+}
+
+form button:hover {
+  background: #26619C;
 }

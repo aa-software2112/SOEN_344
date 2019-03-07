@@ -7,6 +7,8 @@ from uber_sante.utils import json_helper as js
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService
 
+from uber_sante.utils.time_interpreter import TimeInterpreter
+
 availability_service = AvailabilityService()
 booking_service = BookingService()
 
@@ -18,13 +20,13 @@ def availability():
         # params: appointment_id (int, required, from cookie), patient_id(int, required)
         # return: success/failure
 
-        doctor_id = request.args.get('doctor_id')
-        start = request.args.get('start')
-        room = request.args.get('room')
-        year = request.args.get('year')
-        month = request.args.get('month')
-        day = request.args.get('day')
-        booking_type = request.args.get('booking_type')
+        doctor_id = request.get_json().get('doctor_id')
+        start = TimeInterpreter().get_time_to_second(request.get_json().get('start'))
+        room = request.get_json().get('room')
+        year = request.get_json().get('year')
+        month = request.get_json().get('month')
+        day = request.get_json().get('day')
+        booking_type = request.get_json().get('booking_type')
 
         if doctor_id is None:
             return js.create_json(data=None, message="No doctor id provided",
