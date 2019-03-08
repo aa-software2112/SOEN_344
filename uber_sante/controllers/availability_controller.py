@@ -105,12 +105,11 @@ def availability():
         return js.create_json(data=None, message="Successfully deleted doctor availability", return_code=js.ResponseReturnCode.CODE_200)
 
 
-@controllers.route('/availability/modify', methods=['PUT'])
-def modify_availability():
+@controllers.route('/availability/<string:availability_id>', methods=['PUT'])
+def modify_availability(availability_id):
     """ Makes a new availability and deletes the old one, which is used to generate a new availability_id
     This is so that a patient who tries to book the previous availability_id won't be able to """
 
-    availability_id = request.args.get('availability_id')
     doctor_id = request.args.get('doctor_id')
     start = request.args.get('start')
     room = request.args.get('room')
