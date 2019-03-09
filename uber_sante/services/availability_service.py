@@ -7,7 +7,8 @@ from uber_sante.models.availability import Availability
 
 class AvailabilityStatus(Enum):
     SUCESS = 1
-    NO_AVAILABILITIES = 2   # no availabilities for a particular doctor
+    NO_AVAILABILITIES_FOR_DOCTOR = 2   # no availabilities for a particular doctor
+    NO_AVAILABILITIES_AT_THIS_HOUR = 3
     
 
 class AvailabilityService:
@@ -92,6 +93,7 @@ class AvailabilityService:
             result['day'],
             uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
 
+
     def get_availability_by_doctor_id(self, doctor_id):
         """ Queries the Availability db by availability_id and returns an Availability object """
 
@@ -164,20 +166,57 @@ class AvailabilityService:
                 result['booking_type'])
 
 
-    def create_availability(self, doctor_id, start, room, free, year, month, day, booking_type):
+    def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type):
 
+        select_stmt = '''SELECT * FROM Availability
+                        WHERE start = ?
+                        '''
+        select_params = (start,)
+        results = self.db.read_all(select_stmt, select_params)
+
+        if len(results) >= 1:
+            return AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR
+        
         insert_stmt = '''INSERT INTO Availability(
                             doctor_id,
-                            start, room,
+                            start,
+                            room,
                             free,
                             year,
                             month,
                             day,
                             booking_type)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
-        params = (doctor_id, start, room, free, year, month, day, booking_type)
+        insert_params = (doctor_id, start, room, free, year, month, day, booking_type)
 
-        self.db.write_one(insert_stmt, params)
+        self.db.write_one(insert_stmt, insert_params)
+        return params
+
+
+    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type):
+
+        select_stmt = '''SELECT * FROM Availability
+                        WHERE start = ?
+                        '''
+        select_params = (start,)
+        results = self.db.read_all(select_stmt, select_params)
+
+        if len(results) >= 1:
+            return AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR
+        
+        insert_stmt = '''INSERT INTO Availability(
+                            doctor_id,
+                            start,
+                            room,
+                            free,
+                            year,
+                            month,
+                            day,
+                            booking_type)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
+        insert_params = (doctor_id, start, room, free, year, month, day, booking_type)
+
+        self.db.write_one(insert_stmt, insert_params)
         return params
 
     
@@ -189,6 +228,7 @@ class AvailabilityService:
 
         self.db.write_one(delete_stmt, params)
         return AvailabilityStatus.SUCESS
+
 
     def room_is_available_at_this_time(self, start, room, year, month, day):
         """ Checks the Availability table to see if the room is already taken at the given time """

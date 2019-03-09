@@ -7,7 +7,7 @@ from uber_sante.utils.time_interpreter import TimeInterpreter
 
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService, AvailabilityStatus
-
+from uber_sante.models.sheduler import AppointmentRequestType
 
 booking_service = BookingService()
 availability_service = AvailabilityService()
@@ -36,7 +36,7 @@ def availability():
         
         if result is None:
             return js.create_json(data=None, message="Could not retrieve availabilities", return_code=js.ResponseReturnCode.CODE_500)
-        if result == AvailabilityStatus.NO_AVAILABILITIES:
+        if result == AvailabilityStatus.NO_AVAILABILITIES_FOR_DOCTOR:
             return js.create_json(data=None, message="Doctor does not have any availabilites", return_code=js.ResponseReturnCode.CODE_200)
 
         return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
@@ -70,7 +70,16 @@ def availability():
         if booking_type is None:
             return js.create_json(data=None, message="No booking type provided", return_code=js.ResponseReturnCode.CODE_400)
 
-        result = availability_service.create_availability(doctor_id, start, room, '1', year, month, day, booking_type)
+        result = None
+
+        if booking_type == AppointmentRequestType.WALKIN:
+            result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type)
+        
+        if booking_type == AppointmentRequestType.ANNUAL:
+            result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type)
+
+        if result == AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR:
+             return js.create_json(data=None, message="No rooms available at this time slot", return_code=js.ResponseReturnCode.CODE_400)
 
         return js.create_json(data=[result], message="Availability record created", return_code=js.ResponseReturnCode.CODE_201)
 
