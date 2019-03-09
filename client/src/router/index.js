@@ -46,7 +46,7 @@ export default new Router({
       component: Cart
     },
     {
-      path: '/searchAppointment',
+      path: '/schedule',
       name: 'SearchAppointment',
       component: SearchAppointment
     },
