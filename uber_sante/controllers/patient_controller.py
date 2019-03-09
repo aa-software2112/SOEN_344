@@ -54,6 +54,7 @@ def patient():
 
         return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
+
     if request.method == 'PUT':
         # params: [various, look below] (int or string, required)
         # return: sucess/failure
@@ -110,6 +111,7 @@ def patient():
 
         return js.create_json(data=None, message="Patient record created", return_code=js.ResponseReturnCode.CODE_201)
 
+
 @controllers.route('/patient/<string:patient_id>', methods=['PUT'])
 def update_patient(patient_id):
 
@@ -158,6 +160,7 @@ def update_patient(patient_id):
             return js.create_json(data=None, message="Email address already registered", return_code=js.ResponseReturnCode.CODE_500)
 
         return js.create_json(data=None, message="Patient record updated", return_code=js.ResponseReturnCode.CODE_201)
+
 
 @controllers.route('/schedule', methods=['POST'])
 def schedule():
@@ -250,6 +253,7 @@ def appointment():
 
         return js.create_json(data=None, message="Appointment removed", return_code=js.ResponseReturnCode.CODE_200)
 
+
 @controllers.route('/cart', methods=['GET'])
 def cart():
     """ view cart use case """
@@ -281,5 +285,3 @@ def cart():
 
         return js.create_json(data=data_to_send, message="List of appointments with patient id",
                               return_code=js.ResponseReturnCode.CODE_200)
-
-

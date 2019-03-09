@@ -163,7 +163,7 @@ class AvailabilityService:
                 result['year'],
                 result['month'],
                 result['day'],
-                result['booking_type'])
+                uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
 
 
     def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type):
@@ -190,7 +190,7 @@ class AvailabilityService:
         insert_params = (doctor_id, start, room, free, year, month, day, booking_type)
 
         self.db.write_one(insert_stmt, insert_params)
-        return params
+        return insert_params
 
 
     def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type):
@@ -217,7 +217,7 @@ class AvailabilityService:
         insert_params = (doctor_id, start, room, free, year, month, day, booking_type)
 
         self.db.write_one(insert_stmt, insert_params)
-        return params
+        return insert_params
 
     
     def cancel_availability(self, availability_id):
@@ -242,4 +242,3 @@ class AvailabilityService:
 
         else:
             return False
-

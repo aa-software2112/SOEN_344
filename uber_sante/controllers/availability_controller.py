@@ -132,7 +132,11 @@ def modify_availability(availability_id):
 
     else:
         # Make a new availability
-        result = availability_service.create_availability(doctor_id, start, room, '1', year, month, day, booking_type)
+        if AppointmentRequestType.WALKIN:
+            result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type)
+        
+        else:
+            result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type)
 
         # Delete the old availability and booking at this availability if there is one
         booking_service.cancel_booking_with_availability(availability_id)
