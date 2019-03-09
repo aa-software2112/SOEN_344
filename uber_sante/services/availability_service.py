@@ -1,8 +1,14 @@
-import uber_sante.models
+from enum import Enum
+
 from uber_sante.utils.dbutil import DBUtil
-from uber_sante.models.availability import Availability
 from uber_sante.utils.time_interpreter import TimeInterpreter
 
+from uber_sante.models.availability import Availability
+
+class AvailabilityStatus(Enum):
+    SUCESS = 1
+    NO_AVAILABILITIES = 2   # no availabilities for a particular doctor
+    
 
 class AvailabilityService:
 
@@ -86,6 +92,35 @@ class AvailabilityService:
             result['day'],
             uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
 
+    def get_availability_by_doctor_id(self, doctor_id):
+        """ Queries the Availability db by availability_id and returns an Availability object """
+
+        select_stmt = '''SELECT * FROM Availability
+                        WHERE doctor_id = ?'''
+        params = (doctor_id, )
+
+        results = self.db.read_all(select_stmt, params)
+        
+        if len(results) == 0:
+            return AvailabilityStatus.NO_AVAILABILITIES
+        
+        list_of_availabilities = []
+
+        for result in results:
+            list_of_availabilities.append(
+                Availability(
+                    result['id'],
+                    result['doctor_id'],
+                    result['start'],
+                    result['room'],
+                    result['free'],
+                    result['year'],
+                    result['month'],
+                    result['day'],
+                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type'])))
+
+        return list_of_availabilities
+
 
     def free_availability(self, availability_id):
 
@@ -95,6 +130,8 @@ class AvailabilityService:
         params = (availability_id, )
 
         self.db.write_one(update_stmt, params)
+
+        return AvailabilityStatus.SUCESS
 
 
     def validate_availability_and_reserve(self, availability_id):
@@ -151,7 +188,7 @@ class AvailabilityService:
         params = (availability_id, )
 
         self.db.write_one(delete_stmt, params)
-        return True
+        return AvailabilityStatus.SUCESS
 
     def room_is_available_at_this_time(self, start, room, year, month, day):
         """ Checks the Availability table to see if the room is already taken at the given time """
@@ -161,7 +198,7 @@ class AvailabilityService:
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
-            return True
+            return AvailabilityStatus.SUCESS
 
         else:
             return False

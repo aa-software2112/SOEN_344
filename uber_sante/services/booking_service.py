@@ -40,6 +40,7 @@ class BookingService:
 
         return booking
 
+
     def cancel_booking(self, booking_id):
         
         delete_stmt = '''DELETE FROM Booking 
