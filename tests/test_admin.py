@@ -20,13 +20,13 @@ class AdminTest(BaseTestClass):
         :return: N/A
         """
         super(AdminTest, self).setUp()
-        self.login_url = "http://localhost:5000/loginAdmin"
+        self.login_url = "http://localhost:5000/login/admin"
         self.logout_url = "http://localhost:5000/logout"
         self.send_post(self.logout_url)
         cache.reset_cache()
 
         # For registering a doctor
-        self.register_doctor_url = "http://localhost:5000/registerDoctor"
+        self.register_doctor_url = "http://localhost:5000/admin/register/doctor"
         self.doctor_information = {
             "physician_permit_nb": 1827364,
             "first_name": "Test",

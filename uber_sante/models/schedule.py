@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from uber_sante.utils.date import Date
 
 from uber_sante.models.availability import Availability
+import uber_sante.models.scheduler
 
 
 class Schedule(ABC):

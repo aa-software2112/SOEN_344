@@ -43,7 +43,7 @@
 
       submitForm(e) {
         e.preventDefault();
-        const p = 'http://127.0.0.1:5000/loginNurse';
+        const p = 'http://127.0.0.1:5000/login/nurse';
 
         axios.post(p,
           {

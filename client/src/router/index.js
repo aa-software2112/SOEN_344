@@ -46,7 +46,7 @@ export default new Router({
       component: Cart
     },
     {
-      path: '/searchAppointment',
+      path: '/schedule',
       name: 'SearchAppointment',
       component: SearchAppointment
     },
@@ -71,22 +71,22 @@ export default new Router({
       component: Login
     },
     {
-      path: '/patientLogin',
+      path: '/login/patient',
       name: 'PatientLogin',
       component: PatientLogin
     },
     {
-      path: '/nurseLogin',
+      path: '/login/nurse',
       name: 'NurseLogin',
       component: NurseLogin
     },
     {
-      path: '/doctorLogin',
+      path: '/login/doctor',
       name: 'DoctorLogin',
       component: DoctorLogin
     },
     {
-      path: '/adminLogin',
+      path: '/login/admin',
       name: 'AdminLogin',
       component: AdminLogin
     },
