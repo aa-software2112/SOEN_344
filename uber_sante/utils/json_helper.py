@@ -90,7 +90,12 @@ def format_data(data):
 
     # List type - do something, return data
     if isinstance(data, list):
-        return data
+        
+        new_list = []
+        for item in data:
+            new_list.append(item.__dict__())
+
+        return new_list
 
     # String type - do something, return data
     if isinstance(data, str):

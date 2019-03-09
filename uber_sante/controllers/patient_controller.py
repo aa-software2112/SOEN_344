@@ -5,22 +5,17 @@ from . import controllers
 
 from uber_sante.utils import cookie_helper, json_helper as js
 from uber_sante.utils.date import Date
+from uber_sante.utils.cookie_helper import *
 from uber_sante.utils.cache import get_from_cache, set_to_cache
 
-from uber_sante.models.patient import Patient
-from uber_sante.models.patient import MakeAnnualStatus
+from uber_sante.models.appointment import Appointment
+from uber_sante.models.availability import Availability
+from uber_sante.models.patient import Patient, MakeAnnualStatus
 from uber_sante.models.scheduler import ScheduleRequest, Scheduler, RequestEnum, AppointmentRequestType
 
 from uber_sante.services.patient_service import PatientService
 from uber_sante.services.patient_service import CreatePatientStatus
 from uber_sante.services.availability_service import AvailabilityService
-
-from uber_sante.models.scheduler import ScheduleRequest, Scheduler, RequestEnum, AppointmentRequestType
-from flask import Flask, request, jsonify, make_response
-from uber_sante.utils.cookie_helper import *
-from uber_sante.models.appointment import Appointment
-from uber_sante.models.availability import Availability
-
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
@@ -32,68 +27,30 @@ def view_cookie():
     return js.create_json(data=request.cookies, message="Here is your cookie", return_code=js.ResponseReturnCode.CODE_200)
 
 
-@controllers.route('/logout', methods=['GET'])
-def logout():
-    """
-    Logout of ANY user type
-    :return:
-    """
-    if request.method == 'GET':
-
-        resp = js.create_json(data=None, message="Successfully logged out!", return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
-        resp = cookie_helper.logout_user_cookie(resp)
-        return resp, js.ResponseReturnCode.CODE_200.value
-
-
-@controllers.route('/login', methods=['POST', 'OPTIONS'])
-def login():
-
-    # Grab the data from the post request
-    if request.method == 'POST':
-
-        # Check that the user is not already logged (users can login accross multiple PCs, however)
-        if cookie_helper.user_is_logged(request):
-            return js.create_json(data=None, message="Already logged in!", return_code=js.ResponseReturnCode.CODE_400)
-
-        if request.get_json() is None:
-            return js.create_json(None, "No login information provided", js.ResponseReturnCode.CODE_400)
-
-        health_card_nb = request.get_json().get('health_card_nb')
-        password = request.get_json().get('password')
-
-        # Validate the login information
-        patient_id = patient_service.validate_login_info(health_card_nb, password)
-
-        # There was no patient linked with the health card number and password
-        if patient_id == -1:
-            return js.create_json(data=None, message="Invalid login information", return_code=js.ResponseReturnCode.CODE_400)
-
-        # Set patient in cache
-        patient_service.test_and_set_patient_into_cache(patient_id)
-
-        # set the cookie in the response object
-        resp = js.create_json(data=None, message="Logged in successfully", return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
-        resp = cookie_helper.set_user_logged(resp, patient_id, cookie_helper.UserTypes.PATIENT.value)
-
-        return resp, js.ResponseReturnCode.CODE_200.value
-
-
 @controllers.route('/patient', methods=['GET', 'PUT'])
 def patient():
 
     if request.method == 'GET':
-        # params: patient_id (int, required)
+        # params: patient_id (int, semi-required), last_name (text, semi-required)
         # return: patient object
 
         patient_id = request.args.get('patient_id')
+        patient_last_name = request.args.get('last_name')
 
-        if patient_id is None:
-            return js.create_json(data=None, message="Patient Id is not specified", return_code=js.ResponseReturnCode.CODE_400)
+        if patient_id is None and patient_last_name is None:
+            return js.create_json(data=None, message="No patient params specified", return_code=js.ResponseReturnCode.CODE_400)
 
-        result = patient_service.get_patient(patient_id)
+        result = None
+
+        if patient_last_name is not None:
+            result = patient_service.get_patient_by_last_name(patient_last_name)
+        else: 
+            result = patient_service.get_patient(patient_id)
 
         if result is None:
             return js.create_json(data=None, message="Could not retrieve patient", return_code=js.ResponseReturnCode.CODE_500)
+        if result == -3:
+            return js.create_json(data=None, message=f"Patient with last name '{patient_last_name}' does not exist", return_code=js.ResponseReturnCode.CODE_400)
 
         return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
@@ -202,8 +159,8 @@ def update_patient(patient_id):
 
         return js.create_json(data=None, message="Patient record updated", return_code=js.ResponseReturnCode.CODE_201)
 
-@controllers.route('/get_schedule', methods=['POST'])
-def get_schedule():
+@controllers.route('/schedule', methods=['POST'])
+def schedule():
 
     if request.method == 'POST':
 
@@ -228,8 +185,8 @@ def get_schedule():
             return js.create_json(data=daily_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
 
 
-@controllers.route('/make_annual_appointment', methods=['PUT'])
-def make_annual_appointment():
+@controllers.route('/annual-appointment', methods=['PUT'])
+def annual_appointment():
 
     if request.method == 'PUT':
 
@@ -249,8 +206,8 @@ def make_annual_appointment():
             return js.create_json(data=None, message="Patient already has an annual appointment in cart", return_code=js.ResponseReturnCode.CODE_400)
 
 
-@controllers.route('/make_walkin_appointment', methods=['PUT'])
-def make_walkin_appointment():
+@controllers.route('/walkin-appointment', methods=['PUT'])
+def walkin_appointment():
 
     if request.method == 'PUT':
 
@@ -273,6 +230,7 @@ def appointment():
         # example use case: remove appointment
         # params: patient_id (int, required), availability_id (int, required)
         # return: success/failure
+
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 

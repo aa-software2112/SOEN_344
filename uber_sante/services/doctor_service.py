@@ -1,12 +1,15 @@
 from enum import Enum
-from uber_sante.utils.cache import get_from_cache, set_to_cache
+
 from uber_sante.models.doctor import Doctor
 from uber_sante.utils.dbutil import DBUtil
+from uber_sante.utils.cache import get_from_cache, set_to_cache
+
 
 class CreateDoctorStatus(Enum):
-    PHYSICIAN_NUMBER_ALREADY_EXISTS = 1
-    SUCCESS = 2
-
+    SUCCESS = 1
+    PHYSICIAN_NUMBER_ALREADY_EXISTS = 2
+    DOCTOR_ID_DOES_NOT_EXIST = 3
+    DOCTOR_NAME_DOES_NOT_EXIST = 4
 
 class DoctorService:
 
@@ -27,11 +30,15 @@ class DoctorService:
             select_stmt = "SELECT * FROM Doctor WHERE id = ?"
             params = (doctor_id,)
             result = self.db.read_one(select_stmt, params)
-            doctor = Doctor(result['id'], result['first_name'], result['last_name'], result['physician_permit_nb'],
-                            result['specialty'], result['city'])
+            doctor = Doctor(result['id'],
+                            result['first_name'],
+                            result['last_name'],
+                            result['physician_permit_nb'],
+                            result['specialty'],
+                            result['city'],
+                            result['password'])
 
-
-            set_to_cache(doctor_key, doctor)
+        set_to_cache(doctor_key, doctor)
 
     def validate_login_info(self, physician_permit_nb, password):
 
@@ -78,3 +85,51 @@ class DoctorService:
         self.db.write_one(insert_stmt, params)
 
         return CreateDoctorStatus.SUCCESS
+
+
+    def get_doctor(self, doctor_id):
+        """Query the db for a doctor by id and return the created doctor object"""
+
+        select_stmt = '''SELECT * FROM Doctor
+                        WHERE doctor_id = ?'''
+        params = (doctor_id,)
+        result = self.db.read_one(select_stmt, params)
+
+        if result is None:
+            return 3
+        
+        doctor = Doctor(result['id'],
+                        result['first_name'],
+                        result['last_name'],
+                        result['physician_permit_nb'],
+                        result['specialty'],
+                        result['city'],
+                        result['password'])
+
+        return doctor
+
+
+    def get_doctor_by_last_name(self, last_name):
+        """Query the db for a doctor by the doctor's last name and return the created doctor object"""
+
+        select_stmt = f"""SELECT * FROM Doctor
+                        WHERE last_name LIKE '%{last_name}%'"""
+        params = ()
+        results = self.db.read_all(select_stmt, params)
+
+        if len(results) == 0:
+            return 4
+        
+        list_of_doctors = []
+
+        for result in results:
+            list_of_doctors.append(
+                Doctor(result['id'],
+                    result['first_name'],
+                    result['last_name'],
+                    result['physician_permit_nb'],
+                    result['specialty'],
+                    result['city'],
+                    result['password']))
+        
+        return list_of_doctors

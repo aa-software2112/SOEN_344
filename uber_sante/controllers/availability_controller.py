@@ -3,14 +3,14 @@ from flask import request, jsonify
 from . import controllers
 
 from uber_sante.utils import json_helper as js
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService, AvailabilityStatus
 
-from uber_sante.utils.time_interpreter import TimeInterpreter
 
-availability_service = AvailabilityService()
 booking_service = BookingService()
+availability_service = AvailabilityService()
 
 
 @controllers.route('/availability', methods=['GET', 'PUT', 'DELETE'])
@@ -70,7 +70,7 @@ def availability():
         if booking_type is None:
             return js.create_json(data=None, message="No booking type provided", return_code=js.ResponseReturnCode.CODE_400)
 
-        result = AvailabilityService().create_availability(doctor_id, start, room, '1', year, month, day, booking_type)
+        result = availability_service.create_availability(doctor_id, start, room, '1', year, month, day, booking_type)
 
         return js.create_json(data=[result], message="Availability record created", return_code=js.ResponseReturnCode.CODE_201)
 
@@ -84,7 +84,7 @@ def availability():
         if availability_id is None:
             return js.create_json(data=None, message="No availability id provided", return_code=js.ResponseReturnCode.CODE_400)
 
-        availability_result = AvailabilityService().get_availability(availability_id)
+        availability_result = availability_service.get_availability(availability_id)
 
         if availability_result == False:
             return js.create_json(data=None, message="Doctor availability does not exist", return_code=js.ResponseReturnCode.CODE_400)
@@ -93,12 +93,12 @@ def availability():
         result = None
 
         if is_free:
-            result = AvailabilityService().cancel_availability(availability_id)
+            result = availability_service.cancel_availability(availability_id)
         else:
             bookingResult = BookingService().cancel_booking_with_availability(availability_id)
 
             if bookingResult:
-                AvailabilityService().cancel_availability(availability_id)
+                availability_service.cancel_availability(availability_id)
             else:
                 return js.create_json(data=None, message="Could not delete doctor availability", return_code=js.ResponseReturnCode.CODE_500)
 
