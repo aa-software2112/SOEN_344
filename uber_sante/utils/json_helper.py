@@ -90,10 +90,10 @@ def format_data(data):
 
     # List type - do something, return data
     if isinstance(data, list):
-        
+
         new_list = []
         for item in data:
-            new_list.append(item.__dict__())
+            new_list.append(format_data(item))
 
         return new_list
 
