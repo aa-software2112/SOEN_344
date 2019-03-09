@@ -32,19 +32,19 @@
     methods: {
 
       gotoPatientLogin() {
-        this.$router.push({path: '/patientLogin'})
+        this.$router.push({path: '/login/patient'})
       },
 
       gotoNurseLogin() {
-        this.$router.push({path: '/nurseLogin'})
+        this.$router.push({path: '/login/nurse'})
       },
 
       gotoDoctorLogin() {
-        this.$router.push({path: '/doctorLogin'})
+        this.$router.push({path: '/login/doctor'})
       },
 
       gotoAdminLogin() {
-        this.$router.push({path: '/adminLogin'})
+        this.$router.push({path: '/login/admin'})
       }
     }
   }

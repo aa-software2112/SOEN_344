@@ -85,7 +85,7 @@
       processForm: function () {
         var self = this;
         self.submit = 'True';
-        axios.post('http://127.0.0.1:5000/get_schedule', {
+        axios.post('http://127.0.0.1:5000/schedule', {
           request_type: this.request_type,
           appointment_request_type: this.appointment_request_type,
           date: this.date

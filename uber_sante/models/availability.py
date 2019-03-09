@@ -45,18 +45,7 @@ class Availability:
             self.day,
             self.month,
             self.year)
-    
-    def __dict__(self):
-        return {
-            'id': self.id,
-            'doctor_id': self.doctor_id,
-            'start': self.start,
-            'free': self.free,
-            'room': self.room,
-            'month': self.month,
-            'day': self.day,
-            'year': self.year
-        }
+
 
 if __name__ == "__main__":
 
