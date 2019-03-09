@@ -3,11 +3,11 @@ from flask import request, jsonify
 from . import controllers
 
 from uber_sante.utils import json_helper as js
-from uber_sante.utils.time_interpreter import TimeInterpreter
+
+from uber_sante.models.scheduler import AppointmentRequestType
 
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService, AvailabilityStatus
-from uber_sante.models.sheduler import AppointmentRequestType
 
 booking_service = BookingService()
 availability_service = AvailabilityService()
@@ -48,7 +48,7 @@ def availability():
         # return: success/failure
 
         doctor_id = request.get_json().get('doctor_id')
-        start = TimeInterpreter().get_time_to_second(request.get_json().get('start'))
+        start = request.get_json().get('start')
         room = request.get_json().get('room')
         year = request.get_json().get('year')
         month = request.get_json().get('month')
@@ -134,7 +134,6 @@ def modify_availability(availability_id):
         # Make a new availability
         if AppointmentRequestType.WALKIN:
             result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type)
-        
         else:
             result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type)
 
