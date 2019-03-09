@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 from uber_sante.utils.date import Date
 from uber_sante.models.availability import Availability
-from uber_sante.models.scheduler import AppointmentRequestType
+import uber_sante.models.scheduler
 
 
 class Schedule(ABC):
@@ -173,7 +173,7 @@ if __name__ == "__main__":
                         2018,
                         7,
                         day,
-                        AppointmentRequestType.ALL))
+                        uber_sante.models.scheduler.AppointmentRequestType.ALL))
 
     m = MonthlySchedule(avails, Date(2018, 7))
 
