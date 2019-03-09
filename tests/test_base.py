@@ -78,7 +78,7 @@ class BaseTestClass(unittest.TestCase):
             "password": self.password
         }
 
-        response = self.send_post("http://localhost:5000/loginAdmin", valid_admin_login)
+        response = self.send_post("http://localhost:5000/login/admin", valid_admin_login)
         self.assert_status_code(response, 200)
 
     def dict_to_cookie_string(self, dict):

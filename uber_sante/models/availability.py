@@ -45,8 +45,7 @@ class Availability:
             self.day,
             self.month,
             self.year)
-    
-
+      
 if __name__ == "__main__":
 
     a = Availability(5, 6, 12*3600+1380, "GREEN_ROOM", True, 2019, 2, 12)
