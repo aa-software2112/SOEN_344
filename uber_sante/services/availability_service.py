@@ -143,7 +143,7 @@ class AvailabilityService:
         select_stmt = '''SELECT * FROM Availability
                         WHERE id = ?
                         AND free = 1'''
-                        
+
         update_stmt = '''UPDATE Availability
                         SET free = 0
                         WHERE id = ?'''
@@ -200,6 +200,7 @@ class AvailabilityService:
 
     def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type):
         
+        # check the start time, as well as the next 2 slots in the hour
         start_time = convert_time.get_time_to_second(start)
         start_time_plus_20 = convert_time.add_20_minutes(start_time)
         start_time_plus_40 = convert_time.add_20_minutes(start_time_plus_20)
