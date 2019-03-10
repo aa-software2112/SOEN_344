@@ -95,7 +95,6 @@ class AvailabilityService:
             result['day'],
             uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
 
-
     def get_availability_by_doctor_id(self, doctor_id):
         """ Queries the Availability db by availability_id and returns an Availability object """
 
