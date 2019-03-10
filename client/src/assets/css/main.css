@@ -44,11 +44,14 @@ html, body {
 
 .homepage {
   background: linear-gradient(
-    rgba(0, 0, 0, 0.45),
-    rgba(0, 0, 0, 0.45)
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.1),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 1)
   ), url('../homepage_image.jpg');
+  background-size:cover;
   padding: 40px;
-  background-size: 100%;
   width: 100%;
 }
 
@@ -86,6 +89,8 @@ a:hover {
 h1, h2, h3, h4, h5, h6 {
   font-family: "Playfair Display";
   letter-spacing: 5px;
+  color: white;
+  margin: 5px;
 }
 
 
@@ -139,6 +144,7 @@ form {
   padding: 16px;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 5px;
+  color: white;
 }
 
 form h1 {
@@ -168,7 +174,7 @@ form select, form a {
   margin-bottom: 4%;
   border: 1px solid #ccc;
   padding: 3%;
-  color: #555;
+  color: #e5e5e5;
   font: 95% Arial, Helvetica, sans-serif;
 }
 
