@@ -9,6 +9,8 @@ from uber_sante.models.scheduler import AppointmentRequestType
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService, AvailabilityStatus
 
+from uber_sante.miscellaneous.observer import *
+
 booking_service = BookingService()
 availability_service = AvailabilityService()
 
@@ -106,7 +108,12 @@ def availability():
             bookingResult = BookingService().cancel_booking_with_availability(availability_id)
 
             if bookingResult:
-                availability_service.cancel_availability(availability_id)
+                res = availability_service.cancel_availability(availability_id)
+                if res:
+                    #observer pattern hook
+                    patient_id = booking_service.get_patient_id_from_availability_id(availability_id)
+                    notifier.attach({patient_id: availability_result})
+
             else:
                 return js.create_json(data=None, message="Could not delete doctor availability", return_code=js.ResponseReturnCode.CODE_500)
 
