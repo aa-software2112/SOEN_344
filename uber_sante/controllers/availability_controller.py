@@ -91,7 +91,7 @@ def availability():
                                   return_code=js.ResponseReturnCode.CODE_400)
 
         return js.create_json(data=[result], message="Availability record created",
-                              return_code=js.ResponseReturnCode.CODE_200)
+                              return_code=js.ResponseReturnCode.CODE_201)
 
     if request.method == 'DELETE':
         # example use case: delete doctor availability
