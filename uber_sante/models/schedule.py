@@ -71,7 +71,7 @@ class DailySchedule(Schedule):
         dict = {}
 
         for availability in self.availabilities:
-            dict[availability.get_id()] = availability.__dict__
+            dict[availability.get_id()] = availability.__dict__()
 
         return dict
 
