@@ -36,7 +36,7 @@
           <!-- A logged in Doctor -->
           <div v-if="isLoggedDoctor">
             <a class="navbar-brand" href="/createAvailability">Create Availability</a>
-            <a class="navbar-brand" href="/viewAvailability">Update Availability</a>
+            <a class="navbar-brand" href="/viewAvailability">Manage Availability</a>
           </div>
 
           <!-- A logged in Nurse -->
