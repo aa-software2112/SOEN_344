@@ -21,6 +21,8 @@ from uber_sante.utils.cookie_helper import *
 from uber_sante.models.appointment import Appointment
 from uber_sante.models.availability import Availability
 
+from uber_sante.miscellaneous.observable import *
+
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
@@ -67,6 +69,9 @@ def login():
 
         # Set patient in cache
         patient_service.test_and_set_patient_into_cache(patient_id)
+
+        #observer pattern kicking in
+        notifier.notify()
 
         # set the cookie in the response object
         resp = js.create_json(data=None, message="Logged in successfully", return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
