@@ -137,8 +137,8 @@ class Scheduler:
 
 if __name__ == "__main__":
 
-    sr_daily = ScheduleRequest(RequestEnum.DAILY_REQUEST, Date(2018, DateEnum.APRIL, 16))
-    sr_monthly = ScheduleRequest(RequestEnum.MONTHLY_REQUEST, Date(2019, DateEnum.APRIL, 16))
+    sr_daily = ScheduleRequest(RequestEnum.DAILY_REQUEST, AppointmentRequestType.ALL, Date(2018, DateEnum.APRIL, 16))
+    sr_monthly = ScheduleRequest(RequestEnum.MONTHLY_REQUEST, AppointmentRequestType.ALL, Date(2019, DateEnum.APRIL, 16))
 
     monthly_avails = []
 
