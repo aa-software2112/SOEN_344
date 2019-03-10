@@ -9,9 +9,10 @@ convert_time = TimeInterpreter()
 
 
 class AvailabilityStatus(Enum):
-    SUCESS = 1
+    SUCCESS = 1
     NO_AVAILABILITIES_FOR_DOCTOR = 2  # no availabilities for a particular doctor
     NO_AVAILABILITIES_AT_THIS_HOUR = 3
+    NO_ROOMS_AT_THIS_TIME = 4
 
 
 class AvailabilityService:
@@ -144,7 +145,7 @@ class AvailabilityService:
 
         self.db.write_one(update_stmt, params)
 
-        return AvailabilityStatus.SUCESS
+        return AvailabilityStatus.SUCCESS
 
     def validate_availability_and_reserve(self, availability_id):
 
@@ -271,7 +272,7 @@ class AvailabilityService:
         params = (availability_id,)
 
         self.db.write_one(delete_stmt, params)
-        return AvailabilityStatus.SUCESS
+        return AvailabilityStatus.SUCCESS
 
     def room_is_available_at_this_time(self, start, room, year, month, day):
         """ Checks the Availability table to see if the room is already taken at the given time """
@@ -281,20 +282,25 @@ class AvailabilityService:
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
-            return AvailabilityStatus.SUCESS
+            return AvailabilityStatus.SUCCESS
 
         else:
             return False
 
     def modify_room(self, start, room, year, month, day, id):
         """ Checks the Availability table to see if the room is already taken at the given time """
-        select_stmt = '''SELECT * FROM Availability WHERE start = ? AND room = ? AND year = ? AND month = ? AND day = ? AND NOT id = ?'''
+        select_stmt = '''SELECT * FROM Availability
+                        WHERE start = ?
+                        AND room = ?
+                        AND year = ?
+                        AND month = ?
+                        AND day = ?
+                        AND NOT id = ?'''
         params = (start, room, year, month, day, id)
 
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
-            return AvailabilityStatus.SUCESS
-
+            return AvailabilityStatus.SUCCESS
         else:
             return False
