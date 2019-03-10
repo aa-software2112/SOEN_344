@@ -106,14 +106,23 @@ def format_data(data):
         return data
 
     # Check that __dict__ method exists, and don't throw error if it doesn't (3rd param)
-    method = getattr(data, "__dict__", None)
+    method_dict = getattr(data, "__dict__", None)
+    method_as_dict = getattr(data, "as_dict", None)
 
-    # Method exists
-    if not(method is None):
+    # Method - this check must be done first as as_dict()
+    # should have priority over implicit __dict__()
+    if (not method_as_dict is None):
+        data = data.as_dict()
+
+        return data
+
+    if not(method_dict is None):
 
         # Get dictionary-formatted data for json output
         data = data.__dict__()
 
         return data
+
+
 
     return None

@@ -179,13 +179,13 @@ def schedule():
             sr_monthly = ScheduleRequest(request_type, appointment_request_type, Date(year, month))
             monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly)
 
-            return js.create_json(data=monthly_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
+            return js.create_json(data=monthly_schedule, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
         if request_type == RequestEnum.DAILY_REQUEST:
             sr_daily = ScheduleRequest(request_type, appointment_request_type, Date(year, month, day))
             daily_schedule = Scheduler.get_instance().get_schedule(sr_daily)
 
-            return js.create_json(data=daily_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
+            return js.create_json(data=daily_schedule, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
 
 @controllers.route('/annual-appointment', methods=['PUT'])
