@@ -10,15 +10,24 @@
           <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
         </div>
       </form>
-      <tr class="container availability-item" v-for="(item) in results.data">
-        <td>{{item['health_card_nb']}}</td>
-        <td>{{item['first_name']}}</td>
-        <td>{{item['last_name']}}</td>
-        <td>{{item['email']}}</td>
-        <td>
-          <button :id="item['id']"> Choose Patient</button>
-        </td>
-      </tr>
+       <table id="view">
+        
+        <th>Health Card</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th></th>
+
+        <tr class="container patient-item" v-for="(item) in results.data">
+          <td>{{item['health_card_nb']}}</td>
+          <td>{{item['first_name']}}</td>
+          <td>{{item['last_name']}}</td>
+          <td>{{item['email']}}</td>
+          <td>
+            <button :id="item['id']" v-on:click="storePatientId"> Choose Patient</button>
+          </td>
+        </tr>
+      </table>
     </div>
     <form id="form-availability" @submit.prevent="processForm">
       <h1> Search for an Appointment </h1>
@@ -58,7 +67,7 @@
           <td> {{item['room']}}</td>
           <td> {{item['booking_type']}}</td>
           <td>
-            <button :id="item['id']"> Book Appointment</button>
+            <button :id="item['id']" :data-patient="item"> Book Appointment</button>
           </td>
 
         </tr>
@@ -97,7 +106,9 @@
         date: '',
         results: '',
         submit: '',
-        current_type: ''
+        current_type: '',
+        patient_name: '',
+        patient_id:''
       };
     },
     methods: {
@@ -132,17 +143,18 @@
             alert(error);
           });
       },
+      storePatientId: function (e) {
+        self.patient_id = e.currentTarget.getAttribute('id')
+        console.log(patient_id)
+      },
       
     },
     computed:{  
-
-    isLoggedNurse: function()
-    {
-        return this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'nurse'
-    
+      isLoggedNurse: function()
+        {
+            return this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'nurse'
+        }
+      }
     }
-    
-    }
-  }
 
 </script>
