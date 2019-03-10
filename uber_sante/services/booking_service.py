@@ -77,3 +77,10 @@ class BookingService:
         self.db.write_one(delete_stmt, params)
 
         return f_key
+
+    def get_patient_id_from_availability_id(self, availability_id):
+        stmt = '''SELECT patient_id FROM Booking WHERE availability_id = ?'''
+
+        params = (availability_id, )
+
+        self.db.read_one(stmt, params)
