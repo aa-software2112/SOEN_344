@@ -56,5 +56,5 @@ class Availability:
         }
 
 if __name__ == "__main__":
-    a = Availability(5, 6, 12 * 3600 + 1380, "GREEN_ROOM", True, 2019, 2, 12)
-    print(TimeInterpreter.get_start_time_string(a.get_start()))
+        a = Availability(5, 6, 12 * 3600 + 1380, "GREEN_ROOM", True, 2019, 2, 12)
+        print(TimeInterpreter.get_start_time_string(a.get_start()))

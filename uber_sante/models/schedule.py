@@ -150,7 +150,7 @@ class MonthlySchedule(Schedule):
         dict = {}
 
         for day in range(self.min_date_key, self.max_date_key + 1):
-            dict[day] = self.daily_schedules[day].__dict__()
+            dict[day] = self.daily_schedules[day].as_dict()
 
         return dict
 
