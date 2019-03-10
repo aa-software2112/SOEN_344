@@ -41,7 +41,7 @@
           <td> {{item['room']}}</td>
           <td> {{item['booking_type']}}</td>
           <td>
-            <button :id="item['id']" v-on:click="bookAppointment($event)"> Book Appointment</button>
+            <button :id="item['id']" v-on:click="addToCart($event)"> Add to cart </button>
           </td>
 
         </tr>
@@ -57,7 +57,7 @@
               <td> {{item['room']}}</td>
               <td> {{item['booking_type']}}</td>
               <td>
-                <button :id="item['id']" v-on:click="bookAppointment($event)"> Book Appointment</button>
+                <button :id="item['id']" v-on:click="addToCart($event)"> Add to cart </button>
               </td>
             </tr>
           </template>
@@ -104,7 +104,13 @@
           });
       },
 
-      bookAppointment: function(event) {
+      addToCart: function(event) {
+
+      if (this.$cookies.get('user_type') != 'patient') {
+      this.error_message = "Must be a patient to book"
+      return
+      }
+
       this.availability_id = event.currentTarget.id.toString();
       console.log(this.availability_id);
 

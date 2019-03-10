@@ -37,7 +37,7 @@ class Patient:
 
     def make_walkin_appointment(self, availability):
         print(self.cart.get_appointments())
-        if self.cart.get_appointment(availability.get_id()):
+        if self.cart.get_appointment(availability.get_id()) is not None:
             return MakeAnnualStatus.HAS_THIS_APPOINTMENT_IN_CART
         else:
             self.add_walkin_to_cart((Appointment(self.id, availability)))
