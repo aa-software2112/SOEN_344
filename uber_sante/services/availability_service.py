@@ -210,7 +210,7 @@ class AvailabilityService:
                         OR start = ?
                         OR start = ?
                         '''
-        select_params = (start, start_time_plus_20, start_time_plus_40)
+        select_params = (start_time, start_time_plus_20, start_time_plus_40)
         results = self.db.read_all(select_stmt, select_params)
 
         if len(results) > 0:

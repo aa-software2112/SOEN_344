@@ -51,8 +51,9 @@ def availability():
         start = request.get_json().get('start')
         room = request.get_json().get('room')
         year = request.get_json().get('year')
-        month = request.get_json().get('month')
-        day = request.get_json().get('day')
+        month = request.get_json().get('month').lstrip("0")
+        day = request.get_json().get('day').lstrip("0")
+
         booking_type = request.get_json().get('booking_type')
 
         if doctor_id is None:
@@ -81,7 +82,7 @@ def availability():
         if result == AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR:
              return js.create_json(data=None, message="No rooms available at this time slot", return_code=js.ResponseReturnCode.CODE_400)
 
-        return js.create_json(data=[result], message="Availability record created", return_code=js.ResponseReturnCode.CODE_201)
+        return js.create_json(data=[result], message="Availability record created", return_code=js.ResponseReturnCode.CODE_200)
 
     if request.method == 'DELETE':
         # example use case: delete doctor availability
