@@ -87,8 +87,10 @@
     created: function () {
       var self = this;
 
-      axios.put('http://127.0.0.1:5000/viewavailability', {
-        doctor_id: self.doctor_id
+      axios.get('http://127.0.0.1:5000/availability', {
+          params: {
+                doctor_id: self.doctor_id
+          }
       })
         .then(response => {
           self.results = response.data

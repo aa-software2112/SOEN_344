@@ -163,22 +163,3 @@ def modify_availability(availability_id):
         availability_service.cancel_availability(availability_id)
 
         return js.create_json(data=None, message="Availability successfully modified", return_code=js.ResponseReturnCode.CODE_201)
-
-
-@controllers.route('/viewavailability', methods=['PUT'])
-def view_availability():
-    if request.method == 'PUT':
-
-        doctor_id = request.get_json().get('doctor_id')
-
-        if doctor_id is None:
-            return js.create_json(data=None, message="No parameters provided", return_code=js.ResponseReturnCode.CODE_400)
-
-        result = availability_service.get_availability_by_doctor_id(doctor_id)
-
-        if result is None:
-            return js.create_json(data=None, message="Could not retrieve availabilities", return_code=js.ResponseReturnCode.CODE_400)
-        if result == AvailabilityStatus.NO_AVAILABILITIES_FOR_DOCTOR:
-            return js.create_json(data=None, message="Doctor does not have any availabilites", return_code=js.ResponseReturnCode.CODE_200)
-
-        return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
