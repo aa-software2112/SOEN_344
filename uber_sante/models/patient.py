@@ -21,6 +21,15 @@ class Patient:
         self.home_address = address
         self.email = email
         self.cart = Cart()
+        self.login_messages = []
+
+    def update(self, availability):
+        message = "Your booking on " + availability.day + "/" + availability.month + "/" + availability.year
+        + " at " + availability.start + " got canceled. We are sorry for this inconvenient."
+        self.messages.append(message)
+
+    def get_login_messages(self):
+        return self.login_messages
 
     def has_annual_appointment(self):
         return self.cart.contains_annual_appointment()

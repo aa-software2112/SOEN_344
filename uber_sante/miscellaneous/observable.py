@@ -2,8 +2,6 @@ from abc import ABC, abstractmethod
 
 from uber_sante.utils.cache import *
 
-# for my tests
-from uber_sante.models.availability import Availability
 
 class Observable(ABC):
 	"""
@@ -35,7 +33,6 @@ class AvailabilityCanceledObservable(Observable):
 		# corresponding to the canceled booking
 		self.patient_id_availabilities = {}
 
-
 	def attach(self, patient_id_availability_pair):
 		"""
 		Attaches a patient_id_availability_pair to this notifier
@@ -59,18 +56,8 @@ class AvailabilityCanceledObservable(Observable):
 		else:
 			self.patient_id_availabilities.update(patient_id_availability_pair)
 
-
-
-		# in the code
-
-		# get the booking_id on DELETE /booking
-		# from the booking, get the patient and the availability_id
-		pass
-
 	def detach(self, patient_id):
 		self.patient_id_availabilities.pop(patient_id)
-		pass
-
 
 	def notify(self):
 		# when a patient logs in, we verify if he is within the group of
@@ -79,9 +66,11 @@ class AvailabilityCanceledObservable(Observable):
 			if patient_id in cache:
 				# then the user just logged in
 				patient = get_from_cache(patient_id)
-				patient.update()
+				patient.update(self.patient_id_availabilities[patient_id])
 				# we can now detach the patient
 				self.detach(patient_id)
 
+notifier = AvailabilityCanceledObservable()
 
-
+if __name__ == '__main__':
+	print("problem fixed :)")
