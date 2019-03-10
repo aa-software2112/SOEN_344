@@ -1,6 +1,25 @@
 /* eslint-disable */
 <template>
   <div class="container reg-container" id="patient-reg">
+    <div v-if="isLoggedNurse">
+    <form id="form-availability" @submit.prevent="processFormPatientLookup">
+    <h1> Search for a Patient </h1>
+        <div class="form-group">
+          <label for="patient_id">Patient Last Name</label>
+          <input type="text" class="form-control" v-model="patient_name" id="patient_name">
+          <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
+        </div>
+      </form>
+      <tr class="container availability-item" v-for="(item) in results.data">
+        <td>{{item['health_card_nb']}}</td>
+        <td>{{item['first_name']}}</td>
+        <td>{{item['last_name']}}</td>
+        <td>{{item['email']}}</td>
+        <td>
+          <button :id="item['id']"> Choose Patient</button>
+        </td>
+      </tr>
+    </div>
     <form id="form-availability" @submit.prevent="processForm">
       <h1> Search for an Appointment </h1>
       <div class="form-group">
@@ -97,7 +116,32 @@
           .catch(function (error) {
             alert(error);
           });
-      }
+      },
+      processFormPatientLookup: function () {
+        var self = this;
+        self.submit = 'True';
+        axios.get('http://127.0.0.1:5000/patient', {
+            params: {
+              last_name: this.patient_name
+            }
+        })
+          .then(response => {
+            self.results = response.data
+          })
+          .catch(function (error) {
+            alert(error);
+          });
+      },
+      
+    },
+    computed:{  
+
+    isLoggedNurse: function()
+    {
+        return this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'nurse'
+    
+    }
+    
     }
   }
 

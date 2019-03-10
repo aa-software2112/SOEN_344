@@ -40,6 +40,8 @@
             
             <!-- A logged in Nurse -->
             <div v-if="isLoggedNurse">
+                <a class="navbar-brand" href="/cart">Cart</a>
+                <a class="navbar-brand" href="/schedule">Schedule Appointment</a>
                 
             </div>
             

@@ -44,10 +44,10 @@ class PatientService:
     
     def get_patient_by_last_name(self, last_name):
         """Query the db for a patient by the patient's last name and return the created patient object"""
-
+        last_name_formatted = '%' + last_name + '%'
         select_stmt = """SELECT * FROM Patient
-                        WHERE last_name LIKE '%{last_name}%'"""
-        params = ()
+                        WHERE last_name LIKE ?"""
+        params = (last_name_formatted,)
         results = self.db.read_all(select_stmt, params)
 
         if len(results) == 0:
