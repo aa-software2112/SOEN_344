@@ -35,7 +35,7 @@
 
       axios.put('http://127.0.0.1:5000/viewavailability', {
         doctor_id: self.doctor_id
-      },  { useCredentails: true })
+      })
         .then(response => {
           self.results = response.data
           console.log(response)
