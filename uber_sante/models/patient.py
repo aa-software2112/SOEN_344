@@ -1,6 +1,7 @@
 from enum import Enum
 from uber_sante.models.cart import Cart
 from uber_sante.models.appointment import Appointment
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 
 class MakeAnnualStatus(Enum):
@@ -25,8 +26,9 @@ class Patient:
         self.login_messages = []
 
     def update(self, availability):
+        t = TimeInterpreter()
         message = "Your booking on " + availability.day + "/" + availability.month + "/" + availability.year
-        + " at " + availability.start + " got canceled. We are sorry for this inconvenient."
+        + " at " + t.get_start_time_string(availability.start) + " got canceled. We are sorry for this inconvenient."
         self.messages.append(message)
 
     def get_login_messages(self):
@@ -88,5 +90,8 @@ class Patient:
 
 
 if __name__ == "__main__":
-    p = Patient(1, "frank", "smith", "1234 5678 9012", "24121992", "F", "5144435211", "7331", "frank.smith@gmail.ca")
-    print(p.__dict__)
+    # p = Patient(1, "frank", "smith", "1234 5678 9012", "24121992", "F", "5144435211", "7331", "frank.smith@gmail.ca")
+    # print(p.__dict__)
+
+    t = TimeInterpreter()
+    print(t.get_start_time_string(32400))
