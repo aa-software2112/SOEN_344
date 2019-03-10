@@ -14,6 +14,7 @@ import NurseLogin from '@/components/NurseLogin';
 import DoctorLogin from '@/components/DoctorLogin';
 import AdminLogin from '@/components/AdminLogin';
 import AdminRegistrationMenu from '@/components/AdminRegistrationMenu';
+import ViewAvailability from '@/components/ViewAvailability';
 import axios from 'axios';
 import * as Cookies from 'js-cookie';
 axios.defaults.withCredentials = true;
@@ -94,6 +95,11 @@ export default new Router({
       path: '/adminRegistrationMenu',
       name: 'AdminRegistrationMenu',
       component: AdminRegistrationMenu
+    },
+    {
+      path: '/viewAvailability',
+      name: 'ViewAvailability',
+      component: ViewAvailability
     }
   ]
 });
