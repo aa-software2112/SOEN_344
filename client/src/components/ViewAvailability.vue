@@ -29,15 +29,8 @@
             <form id="form-availability" class="form" @submit.prevent="edit(item['id'])">
               <h3 class="error-message">{{message}}</h3>
               <div class="form-group">
-                <label for="booking_type">Availability Type</label>
-                <select v-model="booking_type" name="book_type">
-                  <option value="ANNUAL">Annual</option>
-                  <option value="WALKIN">Walkin</option>
-                </select>
-              </div>
-              <div class="form-group">
                 <label for="start">Appointment Time</label>
-                <input v-if="booking_type === 'WALKIN'" type="time" min="9:00" max="16:00" step="1200"
+                <input v-if="item['booking_type'] === 'WALKIN'" type="time" min="9:00" max="16:00" step="1200"
                        v-model="start">
                 <input v-else type="time" min="9:00" max="16:00" step="3600" v-model="start">
                 <br>
@@ -115,7 +108,6 @@
           year: this.newDate[0],
           month: this.newDate[1],
           day: this.newDate[2],
-          booking_type: this.booking_type,
           doctor_id: this.doctor_id
         })
           .then(function (response) {

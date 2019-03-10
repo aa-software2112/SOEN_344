@@ -140,10 +140,11 @@ def modify_availability(availability_id):
     year = request.get_json().get('year')
     month = request.get_json().get('month')
     day = request.get_json().get('day')
-    booking_type = request.get_json().get('booking_type')
     x_time = True
     id = availability_id
+
     current = availability_service.get_availability(availability_id, convertTime=False)
+    booking_type = current.booking_type
 
     if doctor_id is None:
         doctor_id = current.doctor_id
@@ -158,8 +159,6 @@ def modify_availability(availability_id):
         month = str(current.month)
     if day is None or not day:
         day = str(current.day)
-    if booking_type is None or not booking_type:
-        booking_type = current.booking_type
 
     if not availability_service.modify_room(start, room, year, month, day, doctor_id):
         return js.create_json(data=None, message="Room not available at this time.", return_code=js.ResponseReturnCode.CODE_500)
