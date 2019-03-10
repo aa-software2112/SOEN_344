@@ -189,22 +189,21 @@ def schedule():
             sr_monthly = ScheduleRequest(request_type, appointment_request_type, Date(year, month))
             monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly)
 
-            return js.create_json(data=monthly_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
+            return js.create_json(data=monthly_schedule, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
         if request_type == RequestEnum.DAILY_REQUEST:
             sr_daily = ScheduleRequest(request_type, appointment_request_type, Date(year, month, day))
             daily_schedule = Scheduler.get_instance().get_schedule(sr_daily)
 
-            return js.create_json(data=daily_schedule.as_dict(), message=None, return_code=js.ResponseReturnCode.CODE_200)
+            return js.create_json(data=daily_schedule, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
 
 @controllers.route('/annual-appointment', methods=['PUT'])
 def annual_appointment():
 
     if request.method == 'PUT':
-
-        availability_id = int(request.args.get('availability_id'))
-        patient_id = request.args.get('patient_id')
+        availability_id = int(request.get_json().get('availability_id'))
+        patient_id = request.get_json().get('patient_id')
 
         patient_service.test_and_set_patient_into_cache(patient_id)
         patient = get_from_cache(patient_id)
@@ -216,7 +215,7 @@ def annual_appointment():
             return js.create_json(data=None, message="Successfully added annual appointment", return_code=js.ResponseReturnCode.CODE_200)
 
         elif result == MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT:
-            return js.create_json(data=None, message="Patient already has an annual appointment in cart", return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="You already have an annual appointment in your cart!", return_code=js.ResponseReturnCode.CODE_400)
 
 
 @controllers.route('/walkin-appointment', methods=['PUT'])
@@ -224,16 +223,21 @@ def walkin_appointment():
 
     if request.method == 'PUT':
 
-        availability_id = int(request.args.get('availability_id'))
-        patient_id = request.args.get('patient_id')
+        availability_id = int(request.get_json().get('availability_id'))
+        patient_id = request.get_json().get('patient_id')
 
         patient_service.test_and_set_patient_into_cache(patient_id)
         patient = get_from_cache(patient_id)
         availability = availability_service.get_availability(availability_id)
 
-        patient.make_walkin_appointment(availability)
+        result = patient.make_walkin_appointment(availability)
 
-        return js.create_json(data=None, message="Successfully added walkin appointment", return_code=js.ResponseReturnCode.CODE_200)
+        if result == MakeAnnualStatus.SUCCESS:
+            return js.create_json(data=None, message="Successfully added walkin appointment", return_code=js.ResponseReturnCode.CODE_200)
+
+        elif result == MakeAnnualStatus.HAS_THIS_APPOINTMENT_IN_CART:
+            return js.create_json(data=None, message="This appointment is already in your cart!",
+                              return_code=js.ResponseReturnCode.CODE_400)
 
 
 @controllers.route('/appointment', methods=['DELETE'])
