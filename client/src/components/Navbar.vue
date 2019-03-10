@@ -40,7 +40,7 @@
             
             <!-- A logged in Nurse -->
             <div v-if="isLoggedNurse">
-                
+                <a class="navbar-brand" href="/nurse/viewPatientBooking">Patient Booking System</a>
             </div>
             
             <!-- Unknown -->
