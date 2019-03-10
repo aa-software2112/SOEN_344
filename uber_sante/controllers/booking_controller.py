@@ -9,39 +9,40 @@ from uber_sante.utils.cache import get_from_cache
 from uber_sante.models.scheduler import Scheduler
 from uber_sante.models.appointment import Appointment
 
-from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService
+from uber_sante.services.booking_service import BookingService, BookingStatus
 
 booking_service = BookingService()
 availability_service = AvailabilityService()
+
 
 @controllers.route('/booking', methods=['GET', 'PUT', 'DELETE'])
 def book():
 
     if request.method == 'GET':
         # example use case: get_bookings
-        # params: patient_id (int, semi-required), doctor_id (int, semi-required)
+        # params: booking_id (int, required)
         # return: booking(s) belonging to the patient or doctor
-        # TODO: connect the call to the booking_service (line 28)
 
-        patient_id = request.args.get('patient_id')
-        doctor_id = request.args.get('doctor_id')
+        booking_id = request.args.get('booking_id')
 
-        if patient_id is None and doctor_id is None:
-            return jsonify('No booking parameters specified'), 400
+        results = None
 
-        results = True  # booking_service.get_booking(patient_id, doctor_id)
+        if booking_id is None:
+            results = booking_service.get_all_bookings()
+        else:
+            results = booking_service.get_booking(booking_id)
 
-        return jsonify(results), 200
+        if results == BookingStatus.NO_BOOKINGS:
+            return js.create_json(data=None, message="Booking id does not exist", return_code=js.ResponseReturnCode.CODE_400)
+
+        return js.create_json(data=results, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
 
     if request.method == 'PUT':
         # example use case: checkout_appointment
         # params: appointment_id (int, required, from cookie), patient_id(int, required)
         # return: success/failure
-        # TODO: implement patient cache to retrieve the appointment from the patient cache (line 48, 49)
-        # TODO: connect the call to the scheduler class to try reserving the availability (line 51)
-        # TODO: connect the call to the booking_service to create the booking in the Booking table (line 54)
 
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
@@ -72,7 +73,6 @@ def book():
             else:
                 return js.create_json(data=None, message="Unable to update booking", return_code=js.ResponseReturnCode.CODE_400)
 
-        # TODO: Remove Dummy appointment below and use the implementation 
         patient = get_from_cache(patient_id)  # get the patient from cache
         appointment = patient.cart.get_appointment(availability_id)
 
@@ -108,3 +108,17 @@ def book():
         
         return js.create_json(data=None, message="Booking successfully deleted", return_code=js.ResponseReturnCode.CODE_200)
 
+
+@controllers.route('/booking/<string:patient_id>', methods=['GET'])
+def get_patient_bookings(patient_id):
+
+    if request.method == 'GET':
+        # params: patient_id (int, required)
+        # return: list of bookings belonging to a patient
+
+        if patient_id is None:
+            return js.create_json(data=None, message="No patient id provided", return_code=js.ResponseReturnCode.CODE_400)
+
+        result = booking_service.get_bookings_for_patient(patient_id)
+
+        return js.create_json(data=result, message=f"Found {len(result)} bookings for patient {patient_id}", return_code=js.ResponseReturnCode.CODE_200)
