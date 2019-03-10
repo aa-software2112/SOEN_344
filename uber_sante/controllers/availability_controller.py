@@ -142,7 +142,7 @@ def modify_availability(availability_id):
     day = request.get_json().get('day')
     booking_type = request.get_json().get('booking_type')
     x_time = True
-
+    id = availability_id
     current = availability_service.get_availability(availability_id, convertTime=False)
 
     if doctor_id is None:
@@ -161,19 +161,18 @@ def modify_availability(availability_id):
     if booking_type is None or not booking_type:
         booking_type = current.booking_type
 
-    if not availability_service.room_is_available_at_this_time(start, room, year, month, day):
-        return js.create_json(data=None, message="Room not available at this time.",
-                              return_code=js.ResponseReturnCode.CODE_500)
+    if not availability_service.modify_room(start, room, year, month, day, doctor_id):
+        return js.create_json(data=None, message="Room not available at this time.", return_code=js.ResponseReturnCode.CODE_500)
 
 
     else:
         # Make a new availability
         if booking_type == AppointmentRequestType.WALKIN:
             result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month,
-                                                                               day, booking_type, convertTime=x_time)
+                                                                               day, booking_type, convertTime=x_time, update=True, availability_id=id)
         if booking_type == AppointmentRequestType.ANNUAL:
             result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month,
-                                                                               day, booking_type, convertTime=x_time)
+                                                                               day, booking_type, convertTime=x_time, update=True, availability_id=id)
 
         if result == AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR:
             return js.create_json(data=None, message="No rooms available at this time slot",

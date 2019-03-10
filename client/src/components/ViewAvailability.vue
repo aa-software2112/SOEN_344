@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
   <div id="app">
-    <div class="main-color">
+    <div class="container reg-container" id="patient-reg">
       <h1> View, Edit and Cancel Availabilities</h1>
       <table id="view">
         <th>Date</th>

@@ -177,17 +177,24 @@ class AvailabilityService:
                 uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
 
     def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type,
-                                             convertTime=True):
+                                             convertTime=True, update=False, availability_id=-1):
 
         if convertTime:
             start_time = convert_time.get_time_to_second(start)
         else:
             start_time = start
 
-        select_stmt = '''SELECT * FROM Availability
+        if not availability_id == -1:
+            select_stmt = '''SELECT * FROM Availability
+                        WHERE start = ? AND NOT id = ?
+                        '''
+            select_params = (start_time, availability_id)
+        else:
+            select_stmt = '''SELECT * FROM Availability
                         WHERE start = ?
                         '''
-        select_params = (start_time,)
+            select_params = (start_time,)
+
         results = self.db.read_all(select_stmt, select_params)
 
         if len(results) > 0:
@@ -208,7 +215,8 @@ class AvailabilityService:
         self.db.write_one(insert_stmt, insert_params)
         return insert_params
 
-    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type, convertTime=True):
+    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type,
+                                             convertTime=True, update=False, availability_id=-1):
 
         # check the start time, as well as the next 2 slots in the hour
         if convertTime:
@@ -219,12 +227,23 @@ class AvailabilityService:
         start_time_plus_20 = convert_time.add_20_minutes(start_time)
         start_time_plus_40 = convert_time.add_20_minutes(start_time_plus_20)
 
-        select_stmt = '''SELECT * FROM Availability
+        if not availability_id == -1:
+            select_stmt = '''SELECT * FROM Availability
+                                    WHERE NOT id = ? AND start = ?
+                                    OR start = ?
+                                    OR start = ?
+                                    '''
+
+            select_params = (availability_id, start_time, start_time_plus_20, start_time_plus_40)
+        else:
+            select_stmt = '''SELECT * FROM Availability
                         WHERE start = ?
                         OR start = ?
                         OR start = ?
                         '''
-        select_params = (start_time, start_time_plus_20, start_time_plus_40)
+
+            select_params = (start_time, start_time_plus_20, start_time_plus_40)
+
         results = self.db.read_all(select_stmt, select_params)
 
         if len(results) > 0:
@@ -258,6 +277,19 @@ class AvailabilityService:
         """ Checks the Availability table to see if the room is already taken at the given time """
         select_stmt = '''SELECT * FROM Availability WHERE start = ? AND room = ? AND year = ? AND month = ? AND day = ? AND FREE = 1'''
         params = (start, room, year, month, day)
+
+        result = self.db.read_one(select_stmt, params)
+
+        if result is None:
+            return AvailabilityStatus.SUCESS
+
+        else:
+            return False
+
+    def modify_room(self, start, room, year, month, day, id):
+        """ Checks the Availability table to see if the room is already taken at the given time """
+        select_stmt = '''SELECT * FROM Availability WHERE start = ? AND room = ? AND year = ? AND month = ? AND day = ? AND NOT id = ?'''
+        params = (start, room, year, month, day, id)
 
         result = self.db.read_one(select_stmt, params)
 
