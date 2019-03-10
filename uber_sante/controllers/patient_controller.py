@@ -30,13 +30,12 @@ def view_cookie():
 @controllers.route('/patient', methods=['POST','GET', 'PUT'])
 def patient():
 
-    if request.method == 'POST':
+    if request.method == 'GET':
         # params: patient_id (int, semi-required), last_name (text, semi-required)
         # return: patient object
-        print(request.get_json())
-        patient_id = request.get_json().get('patient_id') # Get patient by id only
-        patient_last_name = request.get_json().get('last_name') # Get patient by last name only
-        patient_info = request.get_json().get('patient_info') # Get patient by either last name or health card NB
+        patient_id = request.args.get('patient_id') # Get patient by id only
+        patient_last_name = request.args.get('last_name') # Get patient by last name only
+        patient_info = request.args.get('patient_info') # Get patient by either last name or health card NB
 
         if patient_id is None and patient_last_name is None and patient_info is None:
             return js.create_json(data=None, message="No patient params specified", return_code=js.ResponseReturnCode.CODE_400)
