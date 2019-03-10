@@ -98,7 +98,7 @@ def availability():
         # params: appointment_id (int, required)
         # return: success/failure message
 
-        availability_id = request.args.get('id')
+        availability_id = request.get_json().get('id')
 
         if availability_id is None:
             return js.create_json(data=None, message="No availability id provided",

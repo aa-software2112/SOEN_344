@@ -71,7 +71,7 @@ class DailySchedule(Schedule):
         dict = {}
 
         for availability in self.availabilities:
-            dict[availability.get_id()] = availability.__dict__
+            dict[availability.get_id()] = availability.__dict__()
 
         return dict
 
@@ -150,7 +150,7 @@ class MonthlySchedule(Schedule):
         dict = {}
 
         for day in range(self.min_date_key, self.max_date_key + 1):
-            dict[day] = self.daily_schedules[day].as_dict()
+            dict[day] = self.daily_schedules[day].__dict__()
 
         return dict
 

@@ -115,7 +115,7 @@ class AvailabilityService:
                 Availability(
                     result['id'],
                     result['doctor_id'],
-                    result['start'],
+                    convert_time.get_start_time_string(result['start']),
                     result['room'],
                     result['free'],
                     result['year'],
