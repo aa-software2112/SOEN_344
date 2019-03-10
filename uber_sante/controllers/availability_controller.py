@@ -7,6 +7,8 @@ from uber_sante.utils import json_helper as js
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService
 
+from uber_sante.miscellaneous.observable import *
+
 @controllers.route('/availability', methods=['GET', 'PUT', 'DELETE'])
 def availability():
 
@@ -64,10 +66,15 @@ def availability():
         if is_free:
             result = AvailabilityService().cancel_availability(availability_id)
         else:
+            patient_id = BookingService().get_patient_id_from_availability_id(availability_id)
             bookingResult = BookingService().cancel_booking_with_availability(availability_id)
 
             if bookingResult:
-                AvailabilityService().cancel_availability(availability_id)
+                res = AvailabilityService().cancel_availability(availability_id)
+                if res:
+                    # observer design pattern hook #
+                    notifier.attach({patient_id: availability_result})
+
             else:
                 return js.create_json(data=None, message="Could not delete doctor availability",  return_code=js.ResponseReturnCode.CODE_500)
     
