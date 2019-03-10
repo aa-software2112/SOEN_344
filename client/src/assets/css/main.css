@@ -40,6 +40,7 @@ html, body {
 
 .error-message {
   color: red;
+  font-size: 16px;
 }
 
 .success-message {
@@ -116,7 +117,7 @@ form {
   max-width: 400px;
   margin: 10px auto;
   padding: 16px;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0, 0, 0, 0.25);
   border-radius: 5px;
 }
 
@@ -159,7 +160,7 @@ form select:focus {
   border: 1px solid #26619C;
 }
 
-form input{
+form input {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

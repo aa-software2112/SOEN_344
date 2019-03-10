@@ -12,5 +12,7 @@ class TimeInterpreter:
                                  "AM" if start / (TimeInterpreter.SECONDS_IN_HOUR) < 12 else "PM")
     def get_time_to_second(self, value):
         x = time.strptime(value.split(',')[0], '%H:%M')
-
         return datetime.timedelta(hours=x.tm_hour,minutes=x.tm_min,seconds=x.tm_sec).total_seconds()
+
+    def add_20_minutes(self, value):
+        return value + 20 * 60
