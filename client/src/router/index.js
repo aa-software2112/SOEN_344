@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '@/components/Home'
 import Navbar from '@/components/Navbar';
 import RegisterPatient from '@/components/RegisterPatient';
 import Cart from '@/components/Cart'
@@ -26,11 +25,6 @@ Vue.prototype.$cookies = Cookies;
 export default new Router({
   mode: 'history',
   routes: [
-    {
-      path: '/',
-      name: 'Home',
-      component: Home
-    },
     {
       path: '/nav',
       name: 'Navbar',

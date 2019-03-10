@@ -1,7 +1,7 @@
 /* eslint-disable */
 <template>
-  <div id="app">
-    <div class="container reg-container" id="patient-reg">
+  <div class="container reg-container">
+    <div id="main-content-area" class="container-fluid">
       <h1> View, Edit and Cancel Availabilities</h1>
       <table id="view">
         <th>Date</th>
