@@ -26,7 +26,7 @@
 
           <!-- Modal Component -->
           <b-modal :id="'modal' + item['id']" hide-footer centered title="Edit Availability">
-            <form id="form-availability" class="form" @submit.prevent="edit">
+            <form id="form-availability" class="form" @submit.prevent="edit(item['id'])">
               <h3 class="error-message">{{message}}</h3>
               <div class="form-group">
                 <label for="booking_type">Availability Type</label>
@@ -107,9 +107,9 @@
     },
 
     methods: {
-      edit: function () {
+      edit: function (identifer) {
         this.newDate = this.date.split('-');
-        axios.put('http://127.0.0.1:5000/availability', {
+        axios.put('http://127.0.0.1:5000/availability/' + identifer, {
           start: this.start,
           room: this.room,
           year: this.newDate[0],

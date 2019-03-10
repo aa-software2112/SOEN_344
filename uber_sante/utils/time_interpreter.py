@@ -15,4 +15,4 @@ class TimeInterpreter:
         return datetime.timedelta(hours=x.tm_hour,minutes=x.tm_min,seconds=x.tm_sec).total_seconds()
 
     def add_20_minutes(self, value):
-        return value + 20 * 60
+        return int(value) + 20 * 60

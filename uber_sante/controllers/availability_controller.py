@@ -3,6 +3,7 @@ from flask import request, jsonify
 from . import controllers
 
 from uber_sante.utils import json_helper as js
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 from uber_sante.models.scheduler import AppointmentRequestType
 
@@ -133,32 +134,56 @@ def modify_availability(availability_id):
     """ Makes a new availability and deletes the old one, which is used to generate a new availability_id
     This is so that a patient who tries to book the previous availability_id won't be able to """
 
-    doctor_id = request.args.get('doctor_id')
-    start = request.args.get('start')
-    room = request.args.get('room')
-    year = request.args.get('year')
-    month = request.args.get('month')
-    day = request.args.get('day')
-    booking_type = request.args.get('booking_type')
+    doctor_id = request.get_json().get('doctor_id')
+    start = request.get_json().get('start')
+    room = request.get_json().get('room')
+    year = request.get_json().get('year')
+    month = request.get_json().get('month')
+    day = request.get_json().get('day')
+    booking_type = request.get_json().get('booking_type')
+    x_time = True
+
+    current = availability_service.get_availability(availability_id, convertTime=False)
+
+    if doctor_id is None:
+        doctor_id = current.doctor_id
+    if start is None or not start:
+        start = str(current.start)
+        x_time = False
+    if room is None or not room:
+        room = current.room
+    if year is None or not year:
+        year = str(current.year)
+    if month is None or not month:
+        month = str(current.month)
+    if day is None or not day:
+        day = str(current.day)
+    if booking_type is None or not booking_type:
+        booking_type = current.booking_type
 
     if not availability_service.room_is_available_at_this_time(start, room, year, month, day):
         return js.create_json(data=None, message="Room not available at this time.",
                               return_code=js.ResponseReturnCode.CODE_500)
 
+
     else:
         # Make a new availability
-        if AppointmentRequestType.WALKIN:
+        if booking_type == AppointmentRequestType.WALKIN:
             result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month,
-                                                                               day, booking_type)
-        else:
+                                                                               day, booking_type, convertTime=x_time)
+        if booking_type == AppointmentRequestType.ANNUAL:
             result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month,
-                                                                               day, booking_type)
+                                                                               day, booking_type, convertTime=x_time)
+
+        if result == AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR:
+            return js.create_json(data=None, message="No rooms available at this time slot",
+                                  return_code=js.ResponseReturnCode.CODE_400)
 
         # Delete the old availability and booking at this availability if there is one
         booking_service.cancel_booking_with_availability(availability_id)
         availability_service.cancel_availability(availability_id)
 
-        return js.create_json(data=[result], message="Availability successfully modified",
+        return js.create_json(data=None, message="Availability successfully modified",
                               return_code=js.ResponseReturnCode.CODE_201)
 
 
