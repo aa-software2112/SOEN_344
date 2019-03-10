@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from uber_sante.utils.cache import *
+
 # for my tests
 from uber_sante.models.availability import Availability
 
@@ -33,7 +35,7 @@ class AvailabilityCanceledObservable(Observable):
 		# corresponding to the canceled booking
 		self.patient_id_availabilities = {}
 
-	# 1. ready to test
+
 	def attach(self, patient_id_availability_pair):
 		"""
 		Attaches a patient_id_availability_pair to this notifier
@@ -69,12 +71,17 @@ class AvailabilityCanceledObservable(Observable):
 		self.patient_id_availabilities.pop(patient_id)
 		pass
 
-	# 2
-	def notify(self):
-		# on /login, as soon as patient is set to cache notify all
-		# because the patient that just logged-in and that is set to cache might be an observer
-		# on the response login add the message to tell the user about the canceled booking
 
-		pass
+	def notify(self):
+		# when a patient logs in, we verify if he is within the group of
+		# patients that we need to notify
+		for patient_id in self.patient_id_availabilities:
+			if patient_id in cache:
+				# then the user just logged in
+				patient = get_from_cache(patient_id)
+				patient.update()
+				# we can now detach the patient
+				self.detach(patient_id)
+
 
 
