@@ -1,6 +1,6 @@
 /* eslint-disable */
 <template>
-  <div id="app">
+  <div id="app" class="homepage">
 
     <navbar></navbar>
     <router-view/>

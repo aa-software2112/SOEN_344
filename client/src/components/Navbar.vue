@@ -4,6 +4,9 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="logo">
       </div>
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">Home</a>
+      </div>
 
       <div class="container justify-content-end navbar-right">
 
@@ -129,6 +132,8 @@
   .navbar {
     background-color: #333 !important;
     overflow: hidden;
+    border-radius: 5px;
+
   }
 
   .navbar-right {
