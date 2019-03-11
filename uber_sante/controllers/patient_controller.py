@@ -289,3 +289,23 @@ def cart():
 
         return js.create_json(data=data_to_send, message="List of appointments with patient id",
                               return_code=js.ResponseReturnCode.CODE_200)
+
+@controllers.route('/my-update', methods=['GET'])
+def my_update():
+    """ endpoint that returns the info concerning the canceled booking(s)
+    of the patient to the front end"""
+    # getting patient_id from cookie
+    patient_id = request.cookies.get(CookieKeys.ID.value)
+    # get patient from cache
+    patient = get_from_cache(patient_id)
+
+    messages = patient.get_login_messages()
+
+    if len(messages) > 0:
+        patient.login_messages.clear()
+        return js.create_json(data=messages, message="canceled bookings notification",
+                              return_code=js.ResponseReturnCode.CODE_200)
+    else:
+        return js.create_json(data=None, messages="nothing to notify", return_code=js.ResponseReturnCode.CODE_200)
+
+
