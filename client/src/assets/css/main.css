@@ -73,26 +73,26 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 5px;
 }
 
-#view {
+#view, .table-view {
   border-collapse: collapse;
   width: 100%;
   margin: 10px;
 }
 
-#view td, #view th {
+#view td, #view th, .table-view td, .table-view th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#view tr:nth-child(even) {
+#view tr:nth-child(even) , .table-view tr:nth-child(even)  {
   background-color: #f2f2f2;
 }
 
-#view tr:hover {
+#view tr:hover, .table-view tr:hover {
   background-color: #ddd;
 }
 
-#view th {
+#view th, .table-view th{
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
@@ -100,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
 }
 
-#view button {
+#view button, .table-view button {
   margin: 10px;
 }
 
@@ -216,4 +216,35 @@ form button:hover {
 
 #update-booking-modal #view{
     width: 650px;
+}
+
+.update-avail-title {
+    padding-left: 25px;
+    font-size: 24px;
+    background-color: rgb(155,155,155);
+    color: white;
+    
+}
+
+.update-avail-container {
+    padding-top: 15px;
+    padding-left: 30px;
+    
+    
+}
+
+#update-schedule-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 400px;
+}
+
+.mbutton {
+    margin-left: 15px;
+}
+
+.refresh-div {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
 }

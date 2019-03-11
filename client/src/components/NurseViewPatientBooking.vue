@@ -13,6 +13,7 @@
                     </div>
                     <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
                 </form>
+                </br>
                 <table id="view">
                     <th>First Name</th>
                     <th>Last Name</th>
