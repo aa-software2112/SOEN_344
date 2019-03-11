@@ -1,34 +1,29 @@
 <template>
-  <div id="app-container">
-    <div id="main-content-area">
-      <h1 id="checkout" align="left">Checkout Cart</h1>
-      <div class="container reg-container" id="my-appointments">
-        <table align="center">
-          <thead>
-              <tr>
-                <th colspan="6">Appointments not booked yet</th>
-              </tr>
-              <tr>
-                <th colspan="1">type</th>
-                <th colspan="1">day</th>
-                <th colspan="1">month</th>
-                <th colspan="1">year</th>
-                <th colspan="2">actions</th>
-              </tr>
-          </thead>
-          <tbody>
-            <tr v-for="appointment in appointment_list">
-              <td>{{appointment.availability.booking_type}}</td>
-              <td>{{appointment.availability.day}}</td>
-              <td>{{appointment.availability.month}}</td>
-              <td>{{appointment.availability.year}}</td>
-              <td><button @click="remove_from_cart(appointment.availability.id)">remove</button></td>
-              <td><button @click="checkout(appointment.availability.id)">checkout</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div class="container reg-container" id="patient-reg">
+
+    <h1> My Cart </h1>
+    <table id="view">
+      <th>Type</th>
+      <th>Day</th>
+      <th>Month</th>
+      <th>Year</th>
+      <th>Actions</th>
+
+      <template>
+        <tr class="container availability-item" v-for="appointment in appointment_list">
+          <td> {{appointment.availability.booking_type}}</td>
+          <td> {{appointment.availability.day}} </td>
+          <td> {{appointment.availability.month}} </td>
+          <td> {{appointment.availability.year}}</td>
+          <td>
+           <button @click="remove_from_cart(appointment.availability.id)">remove</button>
+            <button @click="checkout(appointment.availability.id)">checkout</button>
+          </td>
+
+        </tr>
+      </template>
+
+    </table>
   </div>
 </template>
 
