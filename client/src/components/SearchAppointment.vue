@@ -18,7 +18,7 @@
         <th>Email</th>
         <th></th>
 
-        <tr class="container patient-item" v-for="(item) in results.data">
+        <tr class="container patient-item" v-for="(item) in results_patient.data">
           <td>{{item['health_card_nb']}}</td>
           <td>{{item['first_name']}}</td>
           <td>{{item['last_name']}}</td>
@@ -107,6 +107,7 @@
         appointment_request_type: '',
         date: '',
         results: '',
+        results_patient: '',
         submit: '',
         current_type: '',
         patient_name: '',
@@ -142,7 +143,7 @@
             }
         })
           .then(response => {
-            self.results = response.data
+            self.results_patient = response.data
           })
           .catch(function (error) {
             alert(error);
