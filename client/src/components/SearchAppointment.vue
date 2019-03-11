@@ -52,6 +52,8 @@
       <button type="submit" class="btn btn-default submit">Submit</button>
     </form>
 
+    <h3 class="success_message">{{success_message}}</h3>
+    <h3 class="error_message">{{error_message}}</h3>
 
     <table id="view">
       <th>Date</th>
@@ -67,7 +69,7 @@
           <td> {{item['room']}}</td>
           <td> {{item['booking_type']}}</td>
           <td>
-            <button :id="item['id']" :data-patient="item"> Book Appointment</button>
+            <button :id="item['id']" v-on:click="addToCart($event)"> Add to cart </button>
           </td>
 
         </tr>
@@ -83,7 +85,7 @@
               <td> {{item['room']}}</td>
               <td> {{item['booking_type']}}</td>
               <td>
-                <button :id="item['id']"> Book Appointment</button>
+                <button :id="item['id']" v-on:click="addToCart($event)"> Add to cart </button>
               </td>
             </tr>
           </template>
@@ -108,7 +110,10 @@
         submit: '',
         current_type: '',
         patient_name: '',
-        patient_id:''
+        patient_id:'',
+        availability_id: '',
+        success_message: '',
+        error_message: ''
       };
     },
     methods: {
@@ -147,6 +152,40 @@
         self.patient_id = e.currentTarget.getAttribute('id')
         console.log(patient_id)
       },
+      addToCart: function(event) {
+
+      if (this.$cookies.get('user_type') != 'patient' && this.$cookies.get('user_type') != 'nurse' ) {
+      this.error_message = "Must be a patient or a nurse to book"
+      return
+      }
+
+      this.availability_id = event.currentTarget.id.toString();
+      console.log(this.availability_id);
+
+      if (this.appointment_request_type == "ANNUAL") {
+        var p = 'http://127.0.0.1:5000/annual-appointment';
+       } else {
+       var p = 'http://127.0.0.1:5000/walkin-appointment'
+      };
+
+      if (this.$cookies.get('user_type') == 'patient'){
+        self.patient_id = this.$cookies.get('id')
+      }
+
+        axios.put(p, {
+          availability_id: this.availability_id,
+          patient_id: self.patient_id
+        }).then(response => {
+        this.success_message = 'Successfully added appointment to cart';
+        this.error_message = '';
+        console.log(response);
+        })
+        .catch(error => {
+        console.log(error)
+        this.error_message = error.response.data.error.message;
+        this.success_message = '';
+        })
+      }
       
     },
     computed:{  
@@ -154,7 +193,7 @@
         {
             return this.$cookies.get('logged') == 'True' && this.$cookies.get('user_type') == 'nurse'
         }
-      }
     }
+  }
 
 </script>

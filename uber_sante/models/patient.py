@@ -6,6 +6,7 @@ from uber_sante.models.appointment import Appointment
 class MakeAnnualStatus(Enum):
     SUCCESS = 1
     HAS_ANNUAL_APPOINTMENT = 2
+    HAS_THIS_APPOINTMENT_IN_CART = 3
 
 
 class Patient:
@@ -26,7 +27,7 @@ class Patient:
         return self.cart.contains_annual_appointment()
 
     def make_annual_appointment(self, availability):
-
+        print(self.cart.get_appointments())
         if self.has_annual_appointment():
             return MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT
 
@@ -35,7 +36,12 @@ class Patient:
             return MakeAnnualStatus.SUCCESS
 
     def make_walkin_appointment(self, availability):
-        self.add_walkin_to_cart((Appointment(self.id, availability)))
+        print(self.cart.get_appointments())
+        if self.cart.get_appointment(availability.get_id()) is not None:
+            return MakeAnnualStatus.HAS_THIS_APPOINTMENT_IN_CART
+        else:
+            self.add_walkin_to_cart((Appointment(self.id, availability)))
+            return MakeAnnualStatus.SUCCESS
 
     def add_walkin_to_cart(self, walkin):
         self.cart.add_appointment(walkin)
