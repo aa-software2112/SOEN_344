@@ -162,15 +162,21 @@
       this.availability_id = event.currentTarget.id.toString();
       console.log(this.availability_id);
 
-      if (this.appointment_request_type == "ANNUAL") {
-        var p = 'http://127.0.0.1:5000/annual-appointment';
-       } else {
-       var p = 'http://127.0.0.1:5000/walkin-appointment'
-      };
-
       if (this.$cookies.get('user_type') == 'patient'){
         self.patient_id = this.$cookies.get('id')
-      }
+        if (this.appointment_request_type == "ANNUAL") {
+          var p = 'http://127.0.0.1:5000/annual-appointment';
+        } else {
+          var p = 'http://127.0.0.1:5000/walkin-appointment'
+        }
+      } else if(this.$cookies.get('user_type') == 'nurse') {
+        if (this.appointment_request_type == "ANNUAL") {
+          var p = 'http://127.0.0.1:5000/annual-appointment-nurse';
+        } else {
+          var p = 'http://127.0.0.1:5000/walkin-appointment-nurse'
+        }
+      };
+
 
         axios.put(p, {
           availability_id: this.availability_id,
