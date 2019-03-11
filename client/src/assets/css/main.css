@@ -175,3 +175,45 @@ form input {
 form button:hover {
   background: #26619C;
 }
+
+.update-header {
+    background-color: #333;
+    
+    
+}
+
+.modal-title {
+    
+    font-family: Arial;
+    letter-spacing: 0px;
+    
+}
+
+.modal-body {
+    
+    //background:rgb(0,0,0,0);
+    padding: 0;
+}
+
+.modal-content {
+    //background:rgb(0,0,0,0);
+    border:none;
+    
+}
+
+.modal-body form {
+    width: 500px;
+    background: rgb(155, 155, 155);
+    max-width: 650px;
+    
+}
+
+.modal-dialog {
+    
+    max-width: 720px;
+    
+}
+
+#update-booking-modal #view{
+    width: 650px;
+}

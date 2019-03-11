@@ -7,8 +7,9 @@ class TimeInterpreter:
     SECONDS_IN_MINUTE = 60
 
     def get_start_time_string(self, start):
-        return "{}:{}0 {}".format(int(start / (TimeInterpreter.SECONDS_IN_HOUR)),
-                                 int((start % TimeInterpreter.SECONDS_IN_HOUR) / TimeInterpreter.SECONDS_IN_MINUTE),
+        minutes = int((start % TimeInterpreter.SECONDS_IN_HOUR) / TimeInterpreter.SECONDS_IN_MINUTE)
+        return "{}:{} {}".format(int(start / (TimeInterpreter.SECONDS_IN_HOUR)),
+                                 "00" if minutes == 0 else minutes,
                                  "AM" if start / (TimeInterpreter.SECONDS_IN_HOUR) < 12 else "PM")
     def get_time_to_second(self, value):
         x = time.strptime(value.split(',')[0], '%H:%M')

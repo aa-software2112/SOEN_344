@@ -91,7 +91,7 @@ class DoctorService:
         """Query the db for a doctor by id and return the created doctor object"""
 
         select_stmt = '''SELECT * FROM Doctor
-                        WHERE doctor_id = ?'''
+                        WHERE id = ?'''
         params = (doctor_id,)
         result = self.db.read_one(select_stmt, params)
 

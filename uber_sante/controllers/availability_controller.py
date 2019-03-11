@@ -131,16 +131,17 @@ def modify_availability(availability_id):
 
     else:
         # Make a new availability
-        if AppointmentRequestType.WALKIN:
+        if booking_type == AppointmentRequestType.WALKIN.value:
             result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type)
-        else:
+        elif booking_type == AppointmentRequestType.ANNUAL.value:
             result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type)
-
+        else:
+            return js.create_json(data=None, message="Booking type incorrect", return_code=js.ResponseReturnCode.Code_500)
         # Delete the old availability and booking at this availability if there is one
         booking_service.cancel_booking_with_availability(availability_id)
         availability_service.cancel_availability(availability_id)
 
-        return js.create_json(data=[result], message="Availability successfully modified", return_code=js.ResponseReturnCode.CODE_201)
+        return js.create_json(data=result, message="Availability successfully modified", return_code=js.ResponseReturnCode.CODE_201)
 
 
 @controllers.route('/viewavailability', methods=['PUT'])
