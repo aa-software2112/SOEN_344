@@ -104,7 +104,7 @@ class BookingService:
 
     def cancel_booking_with_availability(self, availability_id):
         
-        select_stmt = '''SELECT * FROM Booking
+        select_stmt = '''SELECT * FROM Booking WHERE 
                         availability_id = ?'''
         params = (availability_id,)
         result = self.db.read_one(select_stmt, params)
