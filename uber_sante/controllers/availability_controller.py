@@ -3,13 +3,14 @@ from flask import request, jsonify
 from . import controllers
 
 from uber_sante.utils import json_helper as js
-from uber_sante.utils.time_interpreter import TimeInterpreter
+from uber_sante.utils.room_formatter import FormatRoom
 
 from uber_sante.models.scheduler import AppointmentRequestType
 
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService, AvailabilityStatus
 
+format_room = FormatRoom()
 booking_service = BookingService()
 availability_service = AvailabilityService()
 
@@ -41,7 +42,7 @@ def availability():
 
         if result is None:
             return js.create_json(data=None, message="Could not retrieve availabilities", return_code=js.ResponseReturnCode.CODE_500)
-        if result == AvailabilityStatus.NO_AVAILABILITIES_FOR_DOCTOR:
+        if result == AvailabilityStatus.NO_AVAILABILITIES:
             return js.create_json(data=None, message="Doctor does not have any availabilites", return_code=js.ResponseReturnCode.CODE_200)
 
         return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
@@ -83,7 +84,7 @@ def availability():
         if booking_type == AppointmentRequestType.ANNUAL:
             result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type)
 
-        if result == AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR:
+        if result == AvailabilityStatus.NO_AVAILABILITIES:
             return js.create_json(data=None, message="No rooms available at this time slot", return_code=js.ResponseReturnCode.CODE_400)
         if result == AvailabilityStatus.AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME:
             return js.create_json(data=None, message="Doctor already has a room booked at this time slot", return_code=js.ResponseReturnCode.CODE_400)
@@ -169,7 +170,7 @@ def modify_availability(availability_id):
             return js.create_json(data=None, message="Availability successfully modified", return_code=js.ResponseReturnCode.CODE_201)
 
 @controllers.route('/availability/room-availability', methods=['GET'])
-def get_available_rooms(room):
+def get_available_rooms():
 
     if request.method == 'GET':
 
@@ -191,7 +192,9 @@ def get_available_rooms(room):
 
         if result is None:
             return js.create_json(data=None, message="Could not retrieve availabilities", return_code=js.ResponseReturnCode.CODE_500)
-        if result == AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR:
-            return js.create_json(data=None, message="All rooms available at this time", return_code=js.ResponseReturnCode.CODE200)
-        
-        return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
+        if result == AvailabilityStatus.ALL_ROOMS_OPEN:
+            return js.create_json(data=format_room.all_rooms, message=None, return_code=js.ResponseReturnCode.CODE_200)
+        if result == AvailabilityStatus.NO_ROOMS_AT_THIS_TIME:
+            return js.create_json(data={}, message="No rooms available at this time", return_code=js.ResponseReturnCode.CODE_200)
+        9
+        return js.create_json(data=format_room.negate_rooms(result), message=None, return_code=js.ResponseReturnCode.CODE_200)
