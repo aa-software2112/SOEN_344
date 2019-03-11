@@ -222,6 +222,7 @@ def walkin_appointment():
 
         result = patient.make_walkin_appointment(availability)
 
+
         if result == MakeAnnualStatus.SUCCESS:
             return js.create_json(data=None, message="Successfully added walkin appointment", return_code=js.ResponseReturnCode.CODE_200)
 
@@ -273,6 +274,7 @@ def cart():
         patient = get_from_cache(patient_id)
 
         cart = patient.get_cart()
+        print(cart)
 
         # list of Appointment objects
         appointment_list = cart.get_appointments()
@@ -281,7 +283,7 @@ def cart():
 
         # object parsing going on here to be able to send it with json format
         for appointment in appointment_list:
-            new_availability = appointment.availability.__dict__
+            new_availability = appointment.availability.__dict__()
             new_appointment = Appointment(patient_id, new_availability).__dict__
             new_appointment_list.append(new_appointment)
 

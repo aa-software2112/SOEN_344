@@ -54,8 +54,8 @@
       
       remove_from_cart: function(availability_id) {
         console.log("removing " + availability_id + " from cart");
-        const this_page = "http://localhost:5000/cart";
-        const backend_url = "http://localhost:5000/appointment";
+        const this_page = "http://127.0.0.1:5000/cart";
+        const backend_url = "http://127.0.0.1:5000/appointment";
         console.log("sending delete request to " + backend_url);
         axios.delete(backend_url, {
           params: {
@@ -75,8 +75,8 @@
 
       checkout: function (availability_id) {
         console.log("checking out " + availability_id + " from cart");
-        const this_page = "http://localhost:5000/cart";
-        const url = "http://localhost:5000/booking";
+        const this_page = "http://127.0.0.1:5000/cart";
+        const url = "http://127.0.0.1:5000/booking";
         console.log("sending put request to " + url);
         axios.put(url, {
           params: {
@@ -102,7 +102,7 @@
     created() {
       console.log("in created(), from Cart.vue");
       axios
-        .get('http://localhost:5000/cart')
+        .get('http://127.0.0.1:5000/cart')
         .then(res => {
           console.log(res);
           this.appointment_list = res.data.data.appointment_list;
@@ -113,7 +113,7 @@
           console.log(this.patient_id);
         })
         .catch(error => {
-          console.log("On created(), couldn't GET http://localhost:5000/cart " + error)
+          console.log("On created(), couldn't GET http://127.0.0.1:5000/cart " + error)
         });
 
     }
