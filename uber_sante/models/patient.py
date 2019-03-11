@@ -25,11 +25,16 @@ class Patient:
         self.cart = Cart()
         self.login_messages = []
 
-    def update(self, availability):
+    def update(self, availabilities):
         t = TimeInterpreter()
-        message = "Your booking on " + availability.day + "/" + availability.month + "/" + availability.year
-        + " at " + t.get_start_time_string(availability.start) + " got canceled. We are sorry for this inconvenient."
-        self.messages.append(message)
+        for availability in availabilities:
+            day = str(availability.day)
+            month = str(availability.month)
+            year = str(availability.year)
+
+            message = "Your booking on " + day + "/" + month + "/" + year + " at " + t.get_start_time_string(availability.start) + " got canceled. We are sorry for this inconvenient."
+            print(message)
+            self.login_messages.append(message)
 
     def get_login_messages(self):
         return self.login_messages

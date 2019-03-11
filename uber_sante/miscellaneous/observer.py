@@ -37,11 +37,14 @@ class AvailabilityCanceledObservable(Observable):
 		"""
 		Attaches a patient_id_availability_pair to this notifier
 		:param patient_id_availability_pair: { 'patient_id' : availability_obj }
+		patient_id is an integer
 		:return: void
 		"""
 
 		# getting the patient id from the dictionary
 		key = next(iter(patient_id_availability_pair))
+
+		print(key)
 
 		# verifying if the patient is already set to be notified
 		# of a canceled booking
@@ -66,9 +69,10 @@ class AvailabilityCanceledObservable(Observable):
 			if patient_id in cache:
 				# then the user just logged in
 				patient = get_from_cache(patient_id)
-				patient.update(self.patient_id_availabilities[patient_id])
-				# we can now detach the patient
-				self.detach(patient_id)
+				if not(isinstance(self.patient_id_availabilities[patient_id], list)):
+					patient.update([self.patient_id_availabilities[patient_id]])
+				else:
+					patient.update(self.patient_id_availabilities[patient_id])
 
 notifier = AvailabilityCanceledObservable()
 
