@@ -3,31 +3,54 @@
   <div class="container reg-container" id="patient-reg">
     <div v-if="isLoggedNurse">
     <form id="form-availability" @submit.prevent="processFormPatientLookup">
-    <h1> Search for a Patient </h1>
+      <h1> Search for a Patient </h1>
         <div class="form-group">
           <label for="patient_id">Patient Last Name</label>
           <input type="text" class="form-control" v-model="patient_name" id="patient_name">
           <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
         </div>
-      </form>
-       <table id="view">
-        
-        <th>Health Card</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th></th>
+    </form>
+    <table id="view"> 
+      <th>Health Card</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th></th>
+      <tr class="container patient-item" v-for="(item) in results_patient.data">
+        <td>{{item['health_card_nb']}}</td>
+        <td>{{item['first_name']}}</td>
+        <td>{{item['last_name']}}</td>
+        <td>{{item['email']}}</td>
+        <td>
+          <button :id="item['id']" v-on:click="storePatientId"> Choose Patient</button>
+        </td>
+      </tr>
+    </table>
+        <form id="form-doctor" @submit.prevent="processFormDoctorLookup">
+      <h1> Choose a Doctor (Optional) </h1>
+        <div class="form-group">
+          <label for="doctor_id">Doctor Last Name</label>
+          <input type="text" class="form-control" v-model="doctor_name" id="doctor_name">
+          <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
+        </div>
+    </form>
+    <table id="view"> 
+      <th>Health Card</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th></th>
+      <tr class="container patient-item" v-for="(item) in results_doctor.data">
+        <td>{{item['physician_permit_nb']}}</td>
+        <td>{{item['first_name']}}</td>
+        <td>{{item['last_name']}}</td>
+        <td>{{item['specialty']}}</td>
+        <td>
+          <button :id="item['id']" v-on:click="storePatientId"> Choose Doctor</button>
+        </td>
+      </tr>
+    </table>
 
-        <tr class="container patient-item" v-for="(item) in results_patient.data">
-          <td>{{item['health_card_nb']}}</td>
-          <td>{{item['first_name']}}</td>
-          <td>{{item['last_name']}}</td>
-          <td>{{item['email']}}</td>
-          <td>
-            <button :id="item['id']" v-on:click="storePatientId"> Choose Patient</button>
-          </td>
-        </tr>
-      </table>
     </div>
     <form id="form-availability" @submit.prevent="processForm">
       <h1> Search for an Appointment </h1>
@@ -108,6 +131,7 @@
         date: '',
         results: '',
         results_patient: '',
+        results_doctor: '',
         submit: '',
         current_type: '',
         patient_name: '',
@@ -144,6 +168,21 @@
         })
           .then(response => {
             self.results_patient = response.data
+          })
+          .catch(function (error) {
+            alert(error);
+          });
+      },
+      processFormDoctorLookup: function () {
+        var self = this;
+        self.submit = 'True';
+        axios.get('http://127.0.0.1:5000/doctor', {
+            params: {
+              last_name: this.doctor_name
+            }
+        })
+          .then(response => {
+            self.results_doctor = response.data
           })
           .catch(function (error) {
             alert(error);
