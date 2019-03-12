@@ -161,7 +161,7 @@ class AvailabilityService:
         results = self.db.read_all(select_stmt, params)
 
         if len(results) == 0:
-            return AvailabilityStatus.NO_AVAILABILITIES_FOR_DOCTOR
+            return AvailabilityStatus.NO_AVAILABILITIES
 
         list_of_availabilities = []
 
