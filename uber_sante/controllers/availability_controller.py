@@ -169,6 +169,27 @@ def modify_availability(availability_id):
 
             return js.create_json(data=None, message="Availability successfully modified", return_code=js.ResponseReturnCode.CODE_201)
 
+
+@controllers.route('/viewavailability', methods=['PUT'])
+def view_availability():
+    if request.method == 'PUT':
+
+        doctor_id = request.get_json().get('doctor_id')
+
+        if doctor_id is None:
+            return js.create_json(data=None, message="No parameters provided", return_code=js.ResponseReturnCode.CODE_400)
+
+        result = None
+
+        result = availability_service.get_availability_by_doctor_id(doctor_id)
+
+        if result is None:
+            return js.create_json(data=None, message="Could not retrieve availabilities", return_code=js.ResponseReturnCode.CODE_400)
+        if result == AvailabilityStatus.NO_AVAILABILITIES_FOR_DOCTOR:
+            return js.create_json(data=None, message="Doctor does not have any availabilites", return_code=js.ResponseReturnCode.CODE_200)
+
+        return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)           
+
 @controllers.route('/availability/room-availability', methods=['GET'])
 def get_available_rooms():
 
@@ -196,5 +217,5 @@ def get_available_rooms():
             return js.create_json(data=format_room.all_rooms, message=None, return_code=js.ResponseReturnCode.CODE_200)
         if result == AvailabilityStatus.NO_ROOMS_AT_THIS_TIME:
             return js.create_json(data={}, message="No rooms available at this time", return_code=js.ResponseReturnCode.CODE_200)
-        9
+        
         return js.create_json(data=format_room.negate_rooms(result), message=None, return_code=js.ResponseReturnCode.CODE_200)
