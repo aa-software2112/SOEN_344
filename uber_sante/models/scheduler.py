@@ -4,7 +4,7 @@ from uber_sante.models.schedule import *
 from uber_sante.models.availability import Availability
 
 from uber_sante.services.availability_service import AvailabilityService
-
+import copy
 
 class RequestEnum(Enum):
     DAILY_REQUEST = "DAILY"
@@ -16,10 +16,13 @@ class AppointmentRequestType(str, Enum):
     WALKIN = "WALKIN"
     ALL = "ALL"
 
+"""
+Base prototype class - allows for cloning and 
+setting of attributes
+"""
+class ScheduleRequestProto(object):
 
-class ScheduleRequest:
-
-    def __init__(self, request_type, appointment_request_type, date):
+    def __init__(self, request_type, appointment_request_type, date = None):
         """
 
         :param request_type: This request should take a request type that
@@ -56,6 +59,66 @@ class ScheduleRequest:
 
     def get_appointment_request_type_value(self):
         return self.appointment_request_type.value
+
+    def set_date(self, date):
+        self.date_request = date
+        return self
+
+    def clone(self):
+        return copy.deepcopy(self)
+
+"""
+All the prototypes of ScheduleRequest
+"""
+class MonthlyAnnualRequest(ScheduleRequestProto):
+    
+    def __init__(self):
+        super(MonthlyAnnualRequest, self).__init__(RequestEnum.MONTHLY_REQUEST,
+                                                AppointmentRequestType.ANNUAL)
+
+class MonthlyWalkinRequest(ScheduleRequestProto):
+    def __init__(self):
+        super(MonthlyWalkinRequest, self).__init__(RequestEnum.MONTHLY_REQUEST,
+                                                   AppointmentRequestType.WALKIN)
+class MonthlyRequest(ScheduleRequestProto):
+    def __init__(self):
+        super(MonthlyRequest, self).__init__(RequestEnum.MONTHLY_REQUEST,
+                                                   AppointmentRequestType.ALL)
+
+
+class DailyAnnualRequest(ScheduleRequestProto):
+    def __init__(self):
+        super(DailyAnnualRequest, self).__init__(RequestEnum.DAILY_REQUEST,
+                                                   AppointmentRequestType.ANNUAL)
+
+class DailyWalkinRequest(ScheduleRequestProto):
+    def __init__(self):
+        super(DailyWalkinRequest, self).__init__(RequestEnum.DAILY_REQUEST,
+                                                   AppointmentRequestType.WALKIN)
+
+
+class DailyRequest(ScheduleRequestProto):
+    def __init__(self):
+        super(DailyRequest, self).__init__(RequestEnum.DAILY_REQUEST,
+                                             AppointmentRequestType.ALL)
+
+class ScheduleRequestRegister(object):
+
+    def __init__(self):
+        self.register = dict()
+
+        self.register = {"monthly-annual": MonthlyAnnualRequest(),
+                         "monthly-walkin": MonthlyWalkinRequest(),
+                         "monthly-all": MonthlyRequest(),
+                         "daily-annual": DailyAnnualRequest(),
+                         "daily-walkin": DailyWalkinRequest(),
+                         "daily-all": DailyRequest()}
+
+    def get_request(self, request_name):
+        request_name = request_name.lower()
+        if (request_name in self.register) == True:
+            return self.register[request_name].clone()
+        return None
 
 
 class Scheduler:
@@ -137,48 +200,55 @@ class Scheduler:
 
 if __name__ == "__main__":
 
-    sr_daily = ScheduleRequest(RequestEnum.DAILY_REQUEST, AppointmentRequestType.ALL, Date(2018, DateEnum.APRIL, 16))
-    sr_monthly = ScheduleRequest(RequestEnum.MONTHLY_REQUEST, AppointmentRequestType.ALL, Date(2019, DateEnum.APRIL, 16))
+    test_scheduler = False
 
-    monthly_avails = []
+    if test_scheduler:
+        sr_daily = ScheduleRequest(RequestEnum.DAILY_REQUEST, AppointmentRequestType.ALL, Date(2018, DateEnum.APRIL, 16))
+        sr_monthly = ScheduleRequest(RequestEnum.MONTHLY_REQUEST, AppointmentRequestType.ALL, Date(2019, DateEnum.APRIL, 16))
 
-    # Get availabilities for a single month
-    for repetitions in range(1, 12 + 1):
+        monthly_avails = []
 
-        for day in range(1, 27 + 1):
+        # Get availabilities for a single month
+        for repetitions in range(1, 12 + 1):
 
-            for num_avails in range(1, 15 + 1):
-                monthly_avails.append(
-                    Availability(
-                        -1,
-                        -1,
-                        num_avails * 3600 + (num_avails + repetitions) * 20,
-                        "RM",
-                        True,
-                        2018,
-                        7,
-                        day,
-                        AppointmentRequestType.ALL))
+            for day in range(1, 27 + 1):
 
-    # Get availabilities for a single day
-    daily_avails = []
-    for num_avails in range(1, 15 + 1):
-        daily_avails.append(
-            Availability(
-                -1,
-                -1,
-                num_avails * 3600 + (num_avails + repetitions) * 20,
-                "RM",
-                True,
-                2019,
-                DateEnum.APRIL.value, 16,
-                AppointmentRequestType.ALL))
+                for num_avails in range(1, 15 + 1):
+                    monthly_avails.append(
+                        Availability(
+                            -1,
+                            -1,
+                            num_avails * 3600 + (num_avails + repetitions) * 20,
+                            "RM",
+                            True,
+                            2018,
+                            7,
+                            day,
+                            AppointmentRequestType.ALL))
 
-    # create a monthly schedule
-    monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly, monthly_avails)
-    monthly_schedule.display_monthly_schedule()
-    print(monthly_schedule.get_schedule_date_string())
+        # Get availabilities for a single day
+        daily_avails = []
+        for num_avails in range(1, 15 + 1):
+            daily_avails.append(
+                Availability(
+                    -1,
+                    -1,
+                    num_avails * 3600 + (num_avails + repetitions) * 20,
+                    "RM",
+                    True,
+                    2019,
+                    DateEnum.APRIL.value, 16,
+                    AppointmentRequestType.ALL))
 
-    # create a daily schedule
-    daily_schedule = Scheduler.get_instance().get_schedule(sr_daily, daily_avails)
-    daily_schedule.display_daily_schedule()
+        # create a monthly schedule
+        monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly, monthly_avails)
+        monthly_schedule.display_monthly_schedule()
+        print(monthly_schedule.get_schedule_date_string())
+
+        # create a daily schedule
+        daily_schedule = Scheduler.get_instance().get_schedule(sr_daily, daily_avails)
+        daily_schedule.display_daily_schedule()
+    else:
+        sched_reg = ScheduleRequestRegister()
+        s = sched_reg.get_request("monthly-walkin").set_date(Date(2019, 5))
+        print(s)
