@@ -232,6 +232,7 @@ def walkin_appointment():
 
         result = patient.make_walkin_appointment(availability)
 
+
         if result == MakeAnnualStatus.SUCCESS:
             return js.create_json(data=None, message="Successfully added walkin appointment", return_code=js.ResponseReturnCode.CODE_200)
 
@@ -252,7 +253,7 @@ def appointment():
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
         patient_id = request.args.get('patient_id')
-        availability_id = request.args.get('availability_id')
+        availability_id = int(request.args.get('availability_id'))
 
         if availability_id is None:
             return js.create_json(data=None, message="No appointment specified", return_code=js.ResponseReturnCode.CODE_400)
@@ -291,7 +292,7 @@ def cart():
 
         # object parsing going on here to be able to send it with json format
         for appointment in appointment_list:
-            new_availability = appointment.availability.__dict__
+            new_availability = appointment.availability.__dict__()
             new_appointment = Appointment(patient_id, new_availability).__dict__
             new_appointment_list.append(new_appointment)
 

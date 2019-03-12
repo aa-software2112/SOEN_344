@@ -42,6 +42,7 @@ class AvailabilityService:
                             WHERE year = ?
                             AND month = ?
                             AND day = ?
+                            AND free = 1
                             AND (? = "ALL" OR booking_type = ?)'''
             params = (year, month, day, appointment_request_type, appointment_request_type)
 
@@ -51,6 +52,7 @@ class AvailabilityService:
             select_stmt = '''SELECT * FROM Availability
                           WHERE year = ?
                           AND month = ?
+                          AND free = 1
                           AND (? = "ALL" OR booking_type = ?)'''
             params = (year, month, appointment_request_type, appointment_request_type)
 
@@ -203,6 +205,7 @@ class AvailabilityService:
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
+            print("Cannot validate availability.")
             return None
 
         else:

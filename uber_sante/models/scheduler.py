@@ -121,7 +121,7 @@ class Scheduler:
         :return: True if successfully booked, False otherwise
         """
         # Method call returns a boolean that describe whether the availability was successfully reserved
-        return self.availability_service.validate_availability_and_reserve(appointment.availability.id)
+        return self.availability_service.validate_availability_and_reserve(appointment.get_availability_id())
 
 
     def free_availability(self, availability_key):
