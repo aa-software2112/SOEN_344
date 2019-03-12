@@ -102,31 +102,30 @@ h1, h2, h3, h4, h5, h6 {
 
 }
 
-
-#view {
+#view, .table-view {
   border-collapse: collapse;
   width: 100%;
   margin: 10px;
 }
 
-#view td, #view th {
+#view td, #view th, .table-view td, .table-view th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#view tr:nth-child(even) {
+#view tr:nth-child(even) , .table-view tr:nth-child(even)  {
   background-color: rgba(255, 255, 255, 0.85);
 }
 
-#view tr:nth-child(odd) {
+#view tr:nth-child(odd), .table-view tr:nth-child(odd) {
   background-color: rgba(255, 255, 255, 0.85);
 }
 
-#view tr:hover {
+#view tr:hover, .table-view tr:hover {
   background-color: #ddd;
 }
 
-#view th {
+#view th, .table-view th{
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
@@ -134,7 +133,7 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
 }
 
-#view button {
+#view button, .table-view button {
   margin: 10px;
 }
 
@@ -216,4 +215,77 @@ form input {
 
 form button:hover {
   background: #26619C;
+}
+
+.update-header {
+    background-color: #333;
+    
+    
+}
+
+.modal-title {
+    
+    font-family: Arial;
+    letter-spacing: 0px;
+    
+}
+
+.modal-body {
+    
+    //background:rgb(0,0,0,0);
+    padding: 0;
+}
+
+.modal-content {
+    //background:rgb(0,0,0,0);
+    border:none;
+    
+}
+
+.modal-body form {
+    width: 500px;
+    background: rgb(155, 155, 155);
+    max-width: 650px;
+    
+}
+
+.modal-dialog {
+    
+    max-width: 720px;
+    
+}
+
+#update-booking-modal #view{
+    width: 650px;
+}
+
+.update-avail-title {
+    padding-left: 25px;
+    font-size: 24px;
+    background-color: rgb(155,155,155);
+    color: white;
+    
+}
+
+.update-avail-container {
+    padding-top: 15px;
+    padding-left: 30px;
+    
+    
+}
+
+#update-schedule-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 400px;
+}
+
+.mbutton {
+    margin-left: 15px;
+}
+
+.refresh-div {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
 }

@@ -91,7 +91,7 @@ class DoctorService:
         """Query the db for a doctor by id and return the created doctor object"""
 
         select_stmt = '''SELECT * FROM Doctor
-                        WHERE doctor_id = ?'''
+                        WHERE id = ?'''
         params = (doctor_id,)
         result = self.db.read_one(select_stmt, params)
 
@@ -112,9 +112,9 @@ class DoctorService:
     def get_doctor_by_last_name(self, last_name):
         """Query the db for a doctor by the doctor's last name and return the created doctor object"""
 
-        select_stmt = f"""SELECT * FROM Doctor
-                        WHERE last_name LIKE '%{last_name}%'"""
-        params = ()
+        select_stmt = """SELECT * FROM Doctor
+                        WHERE last_name = ?"""
+        params = (last_name, )
         results = self.db.read_all(select_stmt, params)
 
         if len(results) == 0:
