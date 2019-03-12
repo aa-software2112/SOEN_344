@@ -62,19 +62,26 @@ class ObserverTest(BaseTestClass):
 		patient = Patient(1, "Samuel", "Gosselin", "bla", "2000", 'male', "21", "21", "222")
 		set_to_cache(1, patient)
 
+		patient2 = Patient(2, "Samuel", "Gosselin", "bla", "2000", 'male', "21", "21", "222")
+		set_to_cache(2, patient2)
 		observable = AvailabilityCanceledObservable()
 
 		availability1 = Availability(2, 2, 32400, 53, 0, 2019, 3, 31, AppointmentRequestType.ANNUAL.value)
 
 		patient_availability_pair = {1: availability1}
 
+		patient_availability_pair2 = {2: availability1}
+
 		observable.attach(patient_availability_pair)
+		observable.attach(patient_availability_pair2)
 
 		observable.notify()
 
 		patient = get_from_cache(1)
+		patient2 = get_from_cache(2)
 
 		assert(len(patient.get_login_messages()) == 1)
+		assert(len(patient2.get_login_messages()) == 1)
 
 	def test_detach(self):
 		observable = AvailabilityCanceledObservable()
