@@ -5,6 +5,8 @@ html, body {
 
 #app {
   margin: 0;
+  background-color: #2c3e50 !important;
+
 }
 
 #app-container, #app {
@@ -19,6 +21,8 @@ html, body {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  border-radius: 5px;
+
 }
 
 #main-content-area {
@@ -27,8 +31,10 @@ html, body {
 }
 
 .submit, button {
-  border-color: #2c3e50 !important;
+  color: white;
   border-radius: 50px;
+  font-weight: 900;
+  background-color: #333;
 }
 
 
@@ -38,9 +44,28 @@ html, body {
   background-size: contain;
 }
 
+.homepage {
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.1),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 1)
+  ), url('../homepage_image.jpg');
+  background-size: cover;
+  padding: 40px;
+  width: 100%;
+}
+
 .error-message {
   color: red;
+  text-shadow:
+  -0.3px -0.3px 0 black,
+  0.3px -0.3px 0 black,
+  -0.3px 0.3px 0 black,
+  0.3px 0.3px 0 black;  
   font-size: 16px;
+  font-weight: 900;
 }
 
 .success-message {
@@ -48,7 +73,7 @@ html, body {
 }
 
 .login-button, .register-menu-button {
-  background-color: #26619C;
+  background-color: #333;
   color: white;
   font-size: 30px;
   width: 250px;
@@ -64,35 +89,43 @@ a:hover {
   margin-top: 20px;
 }
 
-body {
-  font-family: "Times New Roman", Georgia, Serif;
+.home h1 {
+  font-size: 80px;
+  color: white;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  color: white;
   font-family: "Playfair Display";
   letter-spacing: 5px;
+  margin: 5px;
+
 }
 
-#view {
+#view, .table-view {
   border-collapse: collapse;
   width: 100%;
   margin: 10px;
 }
 
-#view td, #view th {
+#view td, #view th, .table-view td, .table-view th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#view tr:nth-child(even) {
-  background-color: #f2f2f2;
+#view tr:nth-child(even) , .table-view tr:nth-child(even)  {
+  background-color: rgba(255, 255, 255, 0.85);
 }
 
-#view tr:hover {
+#view tr:nth-child(odd), .table-view tr:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+#view tr:hover, .table-view tr:hover {
   background-color: #ddd;
 }
 
-#view th {
+#view th, .table-view th{
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
@@ -100,7 +133,7 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
 }
 
-#view button {
+#view button, .table-view button {
   margin: 10px;
 }
 
@@ -108,8 +141,14 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: #737373;
-  font-size: 12px;
+  color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;  
+    font-size: 16px;
+    font-weight: 900;
 }
 
 form {
@@ -119,6 +158,8 @@ form {
   padding: 16px;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 5px;
+  color: white;
+  font-weight: 900;
 }
 
 form h1 {
@@ -148,7 +189,7 @@ form select, form a {
   margin-bottom: 4%;
   border: 1px solid #ccc;
   padding: 3%;
-  color: #555;
+  color: black;
   font: 95% Arial, Helvetica, sans-serif;
 }
 
@@ -174,4 +215,77 @@ form input {
 
 form button:hover {
   background: #26619C;
+}
+
+.update-header {
+    background-color: #333;
+    
+    
+}
+
+.modal-title {
+    
+    font-family: Arial;
+    letter-spacing: 0px;
+    
+}
+
+.modal-body {
+    
+    //background:rgb(0,0,0,0);
+    padding: 0;
+}
+
+.modal-content {
+    //background:rgb(0,0,0,0);
+    border:none;
+    
+}
+
+.modal-body form {
+    width: 500px;
+    background: rgb(155, 155, 155);
+    max-width: 650px;
+    
+}
+
+.modal-dialog {
+    
+    max-width: 720px;
+    
+}
+
+#update-booking-modal #view{
+    width: 650px;
+}
+
+.update-avail-title {
+    padding-left: 25px;
+    font-size: 24px;
+    background-color: rgb(155,155,155);
+    color: white;
+    
+}
+
+.update-avail-container {
+    padding-top: 15px;
+    padding-left: 30px;
+    
+    
+}
+
+#update-schedule-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 400px;
+}
+
+.mbutton {
+    margin-left: 15px;
+}
+
+.refresh-div {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
 }

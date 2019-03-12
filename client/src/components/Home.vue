@@ -1,17 +1,19 @@
 /* eslint-disable */
 <template>
-  <div class="main">
-    <div class='page-main'>
-       <h1>
-         {{ msg }}
-       </h1>
+  <div class="container reg-container home">
+    <div id="main-content-area" class="container-fluid ">
+      <h1>
+        Welcome to UberSante
+      </h1>
       <p v-for="loginMsg in loginMsgList">{{ loginMsg }}</p>
+
     </div>
-    
+
   </div>
 </template>
 
 <script>
+
 import axios from "axios";
 export default {
   name: 'Home',
@@ -49,24 +51,6 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1,
-h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style>
 
-.page-main {
-  padding: 10px;
-}
 </style>
