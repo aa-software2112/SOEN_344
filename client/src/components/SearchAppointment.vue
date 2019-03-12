@@ -22,18 +22,20 @@
         <td>{{item['last_name']}}</td>
         <td>{{item['email']}}</td>
         <td>
-          <button :id="item['id']" v-on:click="storePatientId"> Choose Patient</button>
+          <button class="searchappt-unclicked" :id="item['id']" v-on:click="storePatientId"> Choose Patient</button>
         </td>
       </tr>
     </table>
         <form id="form-doctor" @submit.prevent="processFormDoctorLookup">
-      <h1> Choose a Doctor (Optional) </h1>
+      <h1> Search for a Doctor (Optional) </h1>
         <div class="form-group">
           <label for="doctor_id">Doctor Last Name</label>
           <input type="text" class="form-control" v-model="doctor_name" id="doctor_name">
           <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
         </div>
     </form>
+    <div id="patient-id" value=""></div>
+    <div id="doctor-id" value=""></div>
     <table id="view"> 
       <th>Physician Permit</th>
       <th>First Name</th>
@@ -46,7 +48,7 @@
         <td>{{item['last_name']}}</td>
         <td>{{item['specialty']}}</td>
         <td>
-          <button :id="item['id']" v-on:click="storeDoctorId"> Choose Doctor</button>
+          <button class="searchappt-unclicked" :id="item['id']" v-on:click="storeDoctorId"> Choose Doctor</button>
         </td>
       </tr>
     </table>
@@ -75,10 +77,11 @@
       <button type="submit" class="btn btn-default submit">Submit</button>
     </form>
 
-    <h3 class="success_message">{{success_message}}</h3>
-    <h3 class="error_message">{{error_message}}</h3>
+    <h3 class="success-message">{{success_message}}</h3>
+    <h3 class="error-message">{{error_message}}</h3>
 
     <table id="view">
+      <th v-if="doctor_id != 0">Doctor Name</th>
       <th>Date</th>
       <th>Start</th>
       <th>Room</th>
@@ -87,6 +90,7 @@
 
       <template v-if="current_type === 'DAILY'">
         <tr class="container availability-item" v-for="(item) in results.data" v-if="item['doctor_id'] == doctor_id || doctor_id == 0">
+          <td v-if="doctor_id != 0">{{doctor_name}}</td>
           <td> {{item['year']}}-{{item['month']}}-{{item['day']}}</td>
           <td> {{item['start']}}</td>
           <td> {{item['room']}}</td>
@@ -102,6 +106,7 @@
         <template v-for="(notUsed, index) in results.data">
           <template class="container availability-item" v-for="(item) in results.data[index]">
               <tr v-if="item['doctor_id'] == doctor_id || doctor_id == 0">
+                <td v-if="doctor_id != 0">{{doctor_name}}</td>
                 <td> {{item['year']}}-{{item['month']}}-{{item['day']}}</td>
                 <td> {{item['start']}}</td>
                 <td> {{item['room']}}</td>
@@ -146,6 +151,15 @@
       processForm: function () {
         var self = this;
         self.submit = 'True';
+        try {
+          if (this.$cookies.get('user_type') == 'nurse' && patient_id == 0){
+            this.error_message = "Please choose a patient"
+            return
+          } 
+        } catch (e){
+            this.error_message = "Please choose a patient"
+            return
+        }
         axios.post('http://127.0.0.1:5000/schedule', {
           request_type: this.request_type,
           appointment_request_type: this.appointment_request_type,
@@ -154,7 +168,12 @@
           .then(response => {
             self.results = response.data
             self.current_type = this.request_type
-            self.doctor_id = doctor_id
+            try {
+              self.doctor_id = doctor_id
+            } catch (e) {
+              self.doctor_id = 0
+              console.log(self.doctor_id)
+            }
           })
           .catch(function (error) {
             alert(error);
@@ -195,7 +214,6 @@
       },
       storeDoctorId: function (e) {
         self.doctor_id = e.currentTarget.getAttribute('id')
-        console.log(doctor_id)
       },
       addToCart: function(event) {
 
