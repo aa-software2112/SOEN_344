@@ -8,11 +8,13 @@ from uber_sante.utils.cache import get_from_cache
 
 from uber_sante.models.scheduler import Scheduler
 from uber_sante.models.appointment import Appointment
+from uber_sante.models.payment_processing import ProcessPayment
 
 from uber_sante.services.availability_service import AvailabilityService
 from uber_sante.services.booking_service import BookingService, BookingStatus
 
 booking_service = BookingService()
+payment_processing = ProcessPayment()
 availability_service = AvailabilityService()
 
 
@@ -77,7 +79,13 @@ def book():
         patient = get_from_cache(patient_id)  # get the patient from cache
         appointment = patient.cart.get_appointment(availability_id)
 
-        result = Scheduler.get_instance().reserve_appointment(appointment)
+        process_payment = payment_processing.checkout(patient_id)
+        result = None
+
+        if process_payment == True:
+            result = Scheduler.get_instance().reserve_appointment(appointment)
+        else:
+            return js.create_json(data=None, message="Could not process payment with your credit card information", return_code=js.ResponseReturnCode.CODE_500)
 
         if result:
             removed = patient.cart.remove_appointment(availability_id)
