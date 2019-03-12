@@ -22,7 +22,7 @@
         <td>{{item['last_name']}}</td>
         <td>{{item['email']}}</td>
         <td>
-          <button class="searchappt-unclicked" :id="item['id']" v-on:click="storePatientId"> Choose Patient</button>
+          <button :id="item['id']" v-on:click="storePatientId" @click="$event.target.classList.toggle('searchappt')"> Choose Patient</button>
         </td>
       </tr>
     </table>
@@ -48,7 +48,7 @@
         <td>{{item['last_name']}}</td>
         <td>{{item['specialty']}}</td>
         <td>
-          <button class="searchappt-unclicked" :id="item['id']" v-on:click="storeDoctorId"> Choose Doctor</button>
+          <button :id="item['id']" v-on:click="storeDoctorId" @click="$event.target.classList.toggle('searchappt')"> Choose Doctor</button>
         </td>
       </tr>
     </table>
@@ -95,8 +95,11 @@
           <td> {{item['start']}}</td>
           <td> {{item['room']}}</td>
           <td> {{item['booking_type']}}</td>
-          <td>
+          <td v-if="!isLoggedNurse">
             <button :id="item['id']" v-on:click="addToCart($event)"> Add to cart </button>
+          </td>
+          <td v-else>
+            <button :id="item['id']" v-on:click="addToCart($event)"> Create Appointment </button>
           </td>
 
         </tr>
@@ -111,8 +114,11 @@
                 <td> {{item['start']}}</td>
                 <td> {{item['room']}}</td>
                 <td> {{item['booking_type']}}</td>
-                <td>
+                <td v-if="!isLoggedNurse">
                   <button :id="item['id']" v-on:click="addToCart($event)"> Add to cart </button>
+                </td>
+                <td v-else>
+                  <button :id="item['id']" v-on:click="addToCart($event)"> Create Appointment </button>
                 </td>
               </tr>
           </template>
