@@ -158,13 +158,15 @@
         var self = this;
         self.submit = 'True';
         try {
-          if (this.$cookies.get('user_type') == 'nurse' && patient_id == 0){
-            this.error_message = "Please choose a patient"
-            return
-          } 
+          self.patient_id = patient_id
         } catch (e){
             this.error_message = "Please choose a patient"
             return
+        }
+        try {
+          var useable_doctor_id = doctor_id
+        } catch (e) {
+          var useable_doctor_id = 0
         }
         axios.post('http://127.0.0.1:5000/schedule', {
           request_type: this.request_type,
@@ -174,12 +176,7 @@
           .then(response => {
             self.results = response.data
             self.current_type = this.request_type
-            try {
-              self.doctor_id = doctor_id
-            } catch (e) {
-              self.doctor_id = 0
-              console.log(self.doctor_id)
-            }
+            self.doctor_id = useable_doctor_id
           })
           .catch(function (error) {
             alert(error);
@@ -216,10 +213,18 @@
           });
       },
       storePatientId: function (e) {
-        self.patient_id = e.currentTarget.getAttribute('id')
+        if (self.doctor_id == e.currentTarget.getAttribute('id')){
+          self.patient_id = 0
+        } else {
+          self.patient_id = e.currentTarget.getAttribute('id')
+        }
       },
       storeDoctorId: function (e) {
-        self.doctor_id = e.currentTarget.getAttribute('id')
+        if (self.doctor_id == e.currentTarget.getAttribute('id')){
+          self.doctor_id = 0
+        } else {
+          self.doctor_id = e.currentTarget.getAttribute('id')
+        }
       },
       addToCart: function(event) {
 
