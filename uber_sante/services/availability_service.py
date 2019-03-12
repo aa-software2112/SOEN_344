@@ -117,7 +117,7 @@ class AvailabilityService:
         results = self.db.read_all(select_stmt, params)
 
         if len(results) == 0:
-            return AvailabilityStatus.NO_AVAILABILITIES
+            return AvailabilityStatus.NO_AVAILABILITIES_FOR_DOCTOR
 
         list_of_availabilities = []
 
@@ -161,6 +161,7 @@ class AvailabilityService:
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
+            print("Cannot validate availability.")
             return None
 
         else:

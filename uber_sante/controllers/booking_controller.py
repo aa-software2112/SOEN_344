@@ -47,8 +47,8 @@ def book():
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
-        availability_id = request.args.get('availability_id')
-        patient_id = request.args.get('patient_id')
+        availability_id = request.get_json().get('availability_id')
+        patient_id = request.get_json().get('patient_id')
         booking_id = request.args.get('booking_id')
 
         if availability_id is None:

@@ -11,10 +11,10 @@
 
       <template>
         <tr class="container availability-item" v-for="appointment in appointment_list">
-          <td> {{appointment.availability.booking_type}}</td>
+          <td> {{appointment.availability.booking_type}} </td>
           <td> {{appointment.availability.day}} </td>
           <td> {{appointment.availability.month}} </td>
-          <td> {{appointment.availability.year}}</td>
+          <td> {{appointment.availability.year}} </td>
           <td>
            <button @click="remove_from_cart(appointment.availability.id)">remove</button>
             <button @click="checkout(appointment.availability.id)">checkout</button>
@@ -52,6 +52,8 @@
         const this_page = "http://127.0.0.1:5000/cart";
         const backend_url = "http://127.0.0.1:5000/appointment";
         console.log("sending delete request to " + backend_url);
+        console.log(this.patient_id)
+        console.log(availability_id)
         axios.delete(backend_url, {
           params: {
             patient_id: this.patient_id,
@@ -62,7 +64,7 @@
             // if no error is thrown
             console.log(response);
             // refresh page to show changes
-            axios.get(this_page);
+            location.reload();
           })
           .catch(error =>
           console.log("An error occurred: " + error));
@@ -70,23 +72,22 @@
 
       checkout: function (availability_id) {
         console.log("checking out " + availability_id + " from cart");
-        const this_page = "http://127.0.0.1:5000/cart";
         const url = "http://127.0.0.1:5000/booking";
         console.log("sending put request to " + url);
         axios.put(url, {
-          params: {
             patient_id: this.patient_id,
             availability_id:  availability_id
-          }
         })
         .then(response => {
             // if no error is thrown
             console.log(response);
             // refresh the page to show cart update
-            axios.get(this_page);
+            location.reload();
+            alert(response.data.message);
           })
           .catch(error => {
             console.log("An error occurred: " + error)
+            alert(error.response.data.error.message);
           });
 
       }
