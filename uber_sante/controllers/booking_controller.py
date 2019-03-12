@@ -67,6 +67,7 @@ def book():
                 if f_key:
                     Scheduler.get_instance().free_availability(f_key)
                     booking_service.write_booking(appointment)
+                    Scheduler.get_instance().reserve_appointment(appointment)
                     return js.create_json(data={appointment}, message="Appointment successfully updated", return_code=js.ResponseReturnCode.CODE_200)
                 else:
                     return js.create_json(data=None, message="Appointment not updated", return_code=js.ResponseReturnCode.CODE_400)
@@ -122,3 +123,20 @@ def get_patient_bookings(patient_id):
         result = booking_service.get_bookings_for_patient(patient_id)
 
         return js.create_json(data=result, message=f"Found {len(result)} bookings for patient {patient_id}", return_code=js.ResponseReturnCode.CODE_200)
+
+
+@controllers.route('/booking/doctor/<string:doctor_id>', methods=['GET'])
+def get_doctor_bookings(doctor_id):
+
+    if request.method == 'GET':
+        # params: doctor_id (int, required)
+        # return: list of bookings belonging to a doctor
+
+        if doctor_id is None:
+            return js.create_json(data=None, message="No doctor_id id provided", return_code=js.ResponseReturnCode.CODE_400)
+
+        result = booking_service.get_bookings_for_doctor(doctor_id)
+        print(result)
+
+        return js.create_json(data=result, message=f"Found {len(result)} bookings for doctor {doctor_id}", return_code=js.ResponseReturnCode.CODE_200)
+

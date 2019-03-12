@@ -4,7 +4,7 @@
     
         <!-- Modal Component -->
         <b-modal id="update-booking-modal" ref="updateCancelModal" centered title="Update Booking">
-            <div class="refresh-div">
+            <div v-if="!is_for_doctor" class="refresh-div">
                 <label for="date">Select a new booking date</label>
                 </br>
                 <input type="Date" class="input" name="date" v-model="date" required>
@@ -33,7 +33,7 @@
                     <th>App. Type</th>
                     <template v-for="(avail_dict, day_key) in schedules">
                         
-                        <tr v-on:click="selectForUpdating" class="container" v-for="(avail, doctor_id) in avail_dict" :id="avail.id">
+                        <tr v-on:click="selectForUpdating" v-if="avail.free == 1" class="container" v-for="(avail, doctor_id) in avail_dict" :id="avail.id">
                          
                           <td> {{avail.start}} </td>
                           <td> {{getDoctor(avail) ? avail.doctor_name: avail.doctor_name}} </td>
@@ -62,7 +62,7 @@
             <div slot="modal-footer" class="w-100">
                 <b-button size="sm" class="float-right mbutton" variant="secondary" @click="show=false">Close</b-button>
                 <b-button size="sm" class="float-right mbutton" variant="danger" @click="cancelBooking">Cancel Selected Booking</b-button>
-                <b-button size="sm" class="float-right mbutton" variant="primary" @click="updateBooking">Update Booking</b-button>
+                <b-button v-if="!is_for_doctor" size="sm" class="float-right mbutton" variant="primary" @click="updateBooking">Update Booking</b-button>
             </div>
             
         </b-modal>
@@ -98,7 +98,6 @@ import axios from 'axios';
 import Vue from 'vue';
 
 export default {
-    
     name: 'BookingsViewer',
     
     data() {
@@ -111,6 +110,7 @@ export default {
         date: '',
         result: '',
         message: '',
+        is_for_doctor: '',
         update_cancel_message: ''
       }
     },
@@ -125,8 +125,21 @@ export default {
       
       getBookings()
       {
-        const self = this;
-        const p = 'http://127.0.0.1:5000/booking/' + this.$route.params.id;
+        const self = this;        
+        var p ="";
+        if(this.$route.path.includes("doctor"))
+        {
+            p = 'http://127.0.0.1:5000/booking/doctor/' + this.$route.params.id;
+            this.is_for_doctor = true;
+        }
+        else if(this.$route.path.includes("bookingsViewer/"))
+        {
+            p = 'http://127.0.0.1:5000/booking/' + this.$route.params.id;
+        }
+        else
+        {
+            p = 'http://127.0.0.1:5000/booking/' + this.$cookies.get('id');
+        }
         axios.get(p)
         .then(response => {
             self.bookings = response.data.data

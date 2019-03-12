@@ -15,8 +15,10 @@ import DoctorLogin from '@/components/DoctorLogin';
 import AdminLogin from '@/components/AdminLogin';
 import AdminRegistrationMenu from '@/components/AdminRegistrationMenu';
 import ViewAvailability from '@/components/ViewAvailability';
-import NurseViewPatientBooking from '@/components/NurseViewPatientBooking';
+import NurseViewBooking from '@/components/NurseViewBooking';
 import BookingsViewer from '@/components/BookingsViewer';
+import PatientSearch from '@/components/PatientSearch';
+import DoctorSearch from '@/components/DoctorSearch';
 import axios from 'axios';
 import * as Cookies from 'js-cookie';
 axios.defaults.withCredentials = true;
@@ -103,14 +105,26 @@ export default new Router({
       component: ViewAvailability
     },
     {
-      path: '/nurse/viewPatientBooking',
-      name: 'NurseViewPatientBooking',
-      component: NurseViewPatientBooking
+      path: '/nurse/viewBooking',
+      name: 'NurseViewBooking',
+      component: NurseViewBooking
     },
     {
         path: '/bookingsViewer/:id',
         name: 'BookingsViewer',
         component: BookingsViewer
+    },
+    {
+        path: '/bookingsViewer/doctor/:id',
+        name: 'BookingsViewer',
+        component: BookingsViewer
+    },
+    {
+        path: '/bookingsViewer',
+        name: 'BookingsViewer',
+        component: BookingsViewer
+        
     }
+    
   ]
 });

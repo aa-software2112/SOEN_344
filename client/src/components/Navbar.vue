@@ -24,6 +24,7 @@
             
             <!-- A logged in Patient -->
             <div v-if="loggedPatient">
+                <a class="navbar-brand" href="/bookingsViewer">My Bookings</a>
                 <a class="navbar-brand" href="/cart">Cart</a>
                 <a class="navbar-brand" href="/schedule">Schedule Appointment</a>
             </div>
@@ -40,7 +41,7 @@
             
             <!-- A logged in Nurse -->
             <div v-if="isLoggedNurse">
-                <a class="navbar-brand" href="/nurse/viewPatientBooking">Patient Booking System</a>
+                <a class="navbar-brand" href="/nurse/viewBooking">Booking System</a>
             </div>
             
             <!-- Unknown -->
