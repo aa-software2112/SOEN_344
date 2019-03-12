@@ -5,7 +5,7 @@
        <h1>
          {{ msg }}
        </h1>
-      <p v-for="msg in loginMsgList">{{msg.toString()}}</p>
+      <p v-for="loginMsg in loginMsgList">{{ loginMsg }}</p>
     </div>
     
   </div>
@@ -28,7 +28,8 @@ export default {
         axios
         .get(path)
         .then(res => {
-          this.loginMsgList = res.data;
+          this.loginMsgList = res.data.data;
+          console.log(res)
         })
         .catch(error => {
           // eslint-disable-next-line

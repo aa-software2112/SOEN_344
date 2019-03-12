@@ -296,6 +296,8 @@ def my_update():
     of the patient to the front end"""
     # getting patient_id from cookie
     patient_id = request.cookies.get(CookieKeys.ID.value)
+
+    patient_id = int(patient_id)
     # get patient from cache
     patient = get_from_cache(patient_id)
 
@@ -306,6 +308,6 @@ def my_update():
         return js.create_json(data=messages, message="canceled bookings notification",
                               return_code=js.ResponseReturnCode.CODE_200)
     else:
-        return js.create_json(data=None, messages="nothing to notify", return_code=js.ResponseReturnCode.CODE_200)
+        return js.create_json(data=None, message="nothing to notify", return_code=js.ResponseReturnCode.CODE_200)
 
 

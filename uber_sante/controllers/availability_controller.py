@@ -112,6 +112,7 @@ def availability():
                 if res:
                     #observer pattern hook
                     patient_id = booking_service.get_patient_id_from_availability_id(availability_id)
+                    patient_id = int(patient_id)
                     notifier.attach({patient_id: availability_result})
 
             else:
