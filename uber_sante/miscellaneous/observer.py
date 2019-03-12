@@ -65,14 +65,21 @@ class AvailabilityCanceledObservable(Observable):
 	def notify(self):
 		# when a patient logs in, we verify if he is within the group of
 		# patients that we need to notify
+
+		to_pop = []
+
 		for patient_id in self.patient_id_availabilities:
 			if patient_id in cache:
-				# then the user just logged in
+				to_pop.append(patient_id)
 				patient = get_from_cache(patient_id)
 				if not(isinstance(self.patient_id_availabilities[patient_id], list)):
 					patient.update([self.patient_id_availabilities[patient_id]])
 				else:
 					patient.update(self.patient_id_availabilities[patient_id])
+
+		# the patients that were updated can be popped
+		for patient_id in to_pop:
+			self.detach(patient_id)
 
 notifier = AvailabilityCanceledObservable()
 

@@ -82,6 +82,8 @@ class ObserverTest(BaseTestClass):
 
 		assert(len(patient.get_login_messages()) == 1)
 		assert(len(patient2.get_login_messages()) == 1)
+		assert(False, observable.patient_id_availabilities.__contains__(1))
+		assert (False, observable.patient_id_availabilities.__contains__(2))
 
 	def test_detach(self):
 		observable = AvailabilityCanceledObservable()
