@@ -35,10 +35,10 @@
         </div>
     </form>
     <table id="view"> 
-      <th>Health Card</th>
+      <th>Physician Permit</th>
       <th>First Name</th>
       <th>Last Name</th>
-      <th>Email</th>
+      <th>Specialty</th>
       <th></th>
       <tr class="container patient-item" v-for="(item) in results_doctor.data">
         <td>{{item['physician_permit_nb']}}</td>
@@ -46,7 +46,7 @@
         <td>{{item['last_name']}}</td>
         <td>{{item['specialty']}}</td>
         <td>
-          <button :id="item['id']" v-on:click="storePatientId"> Choose Doctor</button>
+          <button :id="item['id']" v-on:click="storeDoctorId"> Choose Doctor</button>
         </td>
       </tr>
     </table>
@@ -86,7 +86,7 @@
       <th>Book</th>
 
       <template v-if="current_type === 'DAILY'">
-        <tr class="container availability-item" v-for="(item) in results.data">
+        <tr class="container availability-item" v-for="(item) in results.data" v-if="item['doctor_id'] == doctor_id || doctor_id == 0">
           <td> {{item['year']}}-{{item['month']}}-{{item['day']}}</td>
           <td> {{item['start']}}</td>
           <td> {{item['room']}}</td>
@@ -101,16 +101,15 @@
       <template v-else>
         <template v-for="(notUsed, index) in results.data">
           <template class="container availability-item" v-for="(item) in results.data[index]">
-
-            <tr>
-              <td> {{item['year']}}-{{item['month']}}-{{item['day']}}</td>
-              <td> {{item['start']}}</td>
-              <td> {{item['room']}}</td>
-              <td> {{item['booking_type']}}</td>
-              <td>
-                <button :id="item['id']" v-on:click="addToCart($event)"> Add to cart </button>
-              </td>
-            </tr>
+              <tr v-if="item['doctor_id'] == doctor_id || doctor_id == 0">
+                <td> {{item['year']}}-{{item['month']}}-{{item['day']}}</td>
+                <td> {{item['start']}}</td>
+                <td> {{item['room']}}</td>
+                <td> {{item['booking_type']}}</td>
+                <td>
+                  <button :id="item['id']" v-on:click="addToCart($event)"> Add to cart </button>
+                </td>
+              </tr>
           </template>
         </template>
       </template>
@@ -136,6 +135,8 @@
         current_type: '',
         patient_name: '',
         patient_id:'',
+        doctor_id:'',
+        doctor_name:'',
         availability_id: '',
         success_message: '',
         error_message: ''
@@ -153,6 +154,7 @@
           .then(response => {
             self.results = response.data
             self.current_type = this.request_type
+            self.doctor_id = doctor_id
           })
           .catch(function (error) {
             alert(error);
@@ -190,7 +192,10 @@
       },
       storePatientId: function (e) {
         self.patient_id = e.currentTarget.getAttribute('id')
-        console.log(patient_id)
+      },
+      storeDoctorId: function (e) {
+        self.doctor_id = e.currentTarget.getAttribute('id')
+        console.log(doctor_id)
       },
       addToCart: function(event) {
 
