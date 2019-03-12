@@ -3,6 +3,7 @@ from flask import request, jsonify
 from . import controllers
 
 from uber_sante.utils import json_helper as js
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 from uber_sante.models.scheduler import AppointmentRequestType
 
@@ -87,7 +88,7 @@ def availability():
         # params: appointment_id (int, required)
         # return: success/failure message
 
-        availability_id = request.args.get('id')
+        availability_id = request.get_json().get('id')
 
         if availability_id is None:
             return js.create_json(data=None, message="No availability id provided", return_code=js.ResponseReturnCode.CODE_400)
@@ -118,25 +119,46 @@ def modify_availability(availability_id):
     """ Makes a new availability and deletes the old one, which is used to generate a new availability_id
     This is so that a patient who tries to book the previous availability_id won't be able to """
 
-    doctor_id = request.args.get('doctor_id')
-    start = request.args.get('start')
-    room = request.args.get('room')
-    year = request.args.get('year')
-    month = request.args.get('month')
-    day = request.args.get('day')
-    booking_type = request.args.get('booking_type')
+    doctor_id = request.get_json().get('doctor_id')
+    start = request.get_json().get('start')
+    room = request.get_json().get('room')
+    year = request.get_json().get('year')
+    month = request.get_json().get('month')
+    day = request.get_json().get('day')
+    x_time = True
+    id = availability_id
 
-    if not availability_service.room_is_available_at_this_time(start, room, year, month, day):
+    current = availability_service.get_availability(availability_id, convertTime=False)
+    booking_type = current.booking_type
+
+    if doctor_id is None:
+        doctor_id = current.doctor_id
+    if start is None or not start:
+        start = str(current.start)
+        x_time = False
+    if room is None or not room:
+        room = current.room
+    if year is None or not year:
+        year = str(current.year)
+    if month is None or not month:
+        month = str(current.month)
+    if day is None or not day:
+        day = str(current.day)
+
+    if availability_service.modify_room(start, room, year, month, day, doctor_id) == AvailabilityStatus.NO_ROOMS_AT_THIS_TIME:
         return js.create_json(data=None, message="Room not available at this time.", return_code=js.ResponseReturnCode.CODE_500)
 
     else:
         # Make a new availability
-        if booking_type == AppointmentRequestType.WALKIN.value:
-            result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type)
-        elif booking_type == AppointmentRequestType.ANNUAL.value:
-            result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type)
-        else:
-            return js.create_json(data=None, message="Booking type incorrect", return_code=js.ResponseReturnCode.Code_500)
+
+        if booking_type == AppointmentRequestType.WALKIN:
+            result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type, convertTime=x_time, update=True, availability_id=id)
+        if booking_type == AppointmentRequestType.ANNUAL:
+            result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type, convertTime=x_time, update=True, availability_id=id)
+
+        if result == AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR:
+            return js.create_json(data=None, message="No rooms available at this time slot", return_code=js.ResponseReturnCode.CODE_400)
+
         # Delete the old availability and booking at this availability if there is one
         booking_service.cancel_booking_with_availability(availability_id)
         availability_service.cancel_availability(availability_id)
@@ -163,3 +185,4 @@ def view_availability():
             return js.create_json(data=None, message="Doctor does not have any availabilites", return_code=js.ResponseReturnCode.CODE_200)
 
         return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
+
