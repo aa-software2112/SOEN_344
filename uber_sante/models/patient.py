@@ -27,7 +27,6 @@ class Patient:
         return self.cart.contains_annual_appointment()
 
     def make_annual_appointment(self, availability):
-        print(self.cart.get_appointments())
         if self.has_annual_appointment():
             return MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT
 
@@ -36,7 +35,6 @@ class Patient:
             return MakeAnnualStatus.SUCCESS
 
     def make_walkin_appointment(self, availability):
-        print(self.cart.get_appointments())
         if self.cart.get_appointment(availability.get_id()) is not None:
             return MakeAnnualStatus.HAS_THIS_APPOINTMENT_IN_CART
         else:

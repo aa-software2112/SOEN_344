@@ -84,6 +84,25 @@ class BookingService:
         
         return list_of_bookings
 
+    def get_bookings_for_doctor(self, doctor_id):
+
+        select_stmt = '''SELECT * FROM Booking
+                        WHERE doctor_id = ?'''
+        params = (doctor_id,)
+        results = self.db.read_all(select_stmt, params)
+
+        list_of_bookings = []
+
+        for result in results:
+            list_of_bookings.append(
+                Booking(
+                    result['id'],
+                    result['availability_id'],
+                    result['doctor_id'],
+                    result['patient_id']))
+
+        return list_of_bookings
+
 
     def cancel_booking(self, booking_id):
 
@@ -105,7 +124,7 @@ class BookingService:
     def cancel_booking_with_availability(self, availability_id):
         
         select_stmt = '''SELECT * FROM Booking
-                        availability_id = ?'''
+                        WHERE availability_id = ?'''
         params = (availability_id,)
         result = self.db.read_one(select_stmt, params)
         

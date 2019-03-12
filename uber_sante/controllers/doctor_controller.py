@@ -17,7 +17,6 @@ def doctor():
     if request.method == 'GET':
         # params: id (int, semi-required), doctor_name (text, semi-required)
         # return: doctor object
-
         doctor_id = request.args.get('id')
         doctor_last_name = request.args.get('last_name')
 

@@ -11,10 +11,9 @@ convert_time = TimeInterpreter()
 class AvailabilityStatus(Enum):
     SUCCESS = 1
     NO_AVAILABILITIES = 2
-    NO_AVAILABILITIES_FOR_DOCTOR = 3  # no availabilities for a particular doctor
-    NO_AVAILABILITIES_AT_THIS_HOUR = 4
-    NO_ROOMS_AT_THIS_TIME = 5
-    AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME = 6 # doctor has already booked an availability at this time slot
+    NO_ROOMS_AT_THIS_TIME = 3
+    AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME = 4 # doctor has already booked an availability at this time slot
+    ALL_ROOMS_OPEN = 5
 
 
 class AvailabilityService:
@@ -43,6 +42,7 @@ class AvailabilityService:
                             WHERE year = ?
                             AND month = ?
                             AND day = ?
+                            AND free = 1
                             AND (? = "ALL" OR booking_type = ?)'''
             params = (year, month, day, appointment_request_type, appointment_request_type)
 
@@ -52,6 +52,7 @@ class AvailabilityService:
             select_stmt = '''SELECT * FROM Availability
                           WHERE year = ?
                           AND month = ?
+                          AND free = 1
                           AND (? = "ALL" OR booking_type = ?)'''
             params = (year, month, appointment_request_type, appointment_request_type)
 
@@ -131,30 +132,22 @@ class AvailabilityService:
 
         select_stmt = '''SELECT * FROM Availability
                         WHERE start = ?
-                        WHERE year = ?
-                        WHERE month = ?
-                        WHERE day = ?'''
+                        AND year = ?
+                        AND month = ?
+                        AND day = ?'''
         params = (start_time, year, month, day)
 
         results = self.db.read_all(select_stmt, params)
 
         if len(results) == 0:
-            return AvailabilityStatus.NO_AVAILABILITIES
+            return AvailabilityStatus.ALL_ROOMS_OPEN
+        if len(results) == 5:
+            return AvailabilityStatus.NO_ROOMS_AT_THIS_TIME
 
         list_of_availabilities = []
 
         for result in results:
-            list_of_availabilities.append(
-                Availability(
-                    result['id'],
-                    result['doctor_id'],
-                    convert_time.get_start_time_string(result['start']),
-                    result['room'],
-                    result['free'],
-                    result['year'],
-                    result['month'],
-                    result['day'],
-                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type'])))
+            list_of_availabilities.append({'room': result['room']})
 
         return list_of_availabilities
 
@@ -212,6 +205,7 @@ class AvailabilityService:
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
+            print("Cannot validate availability.")
             return None
 
         else:
@@ -251,7 +245,7 @@ class AvailabilityService:
         results = self.db.read_all(select_stmt, select_params)
 
         if len(results) > 0:
-            return AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR
+            return AvailabilityStatus.NO_ROOMS_AT_THIS_TIME
 
         insert_stmt = '''INSERT INTO Availability(
                             doctor_id,
@@ -293,7 +287,7 @@ class AvailabilityService:
         results = self.db.read_all(select_stmt, select_params)
 
         if len(results) > 0:
-            return AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR
+            return AvailabilityStatus.NO_ROOMS_AT_THIS_TIME
 
         insert_stmt = '''INSERT INTO Availability(
                             doctor_id,

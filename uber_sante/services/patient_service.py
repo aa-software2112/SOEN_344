@@ -70,6 +70,23 @@ class PatientService:
         
         return list_of_patient
 
+    def get_patient_by_health_card_nb(self, health_card_nb):
+        """Query the db for a patient by the patient's health card nb and return the created patient object"""
+
+        select_stmt = '''SELECT *
+                        FROM Patient
+                        WHERE health_card_nb = ?'''
+        params = (health_card_nb, )
+        result = self.db.read_one(select_stmt, params)
+
+        if len(result) == 0:
+            return -3
+
+        self.test_and_set_patient_into_cache(result['id'])
+        patient = get_from_cache(result['id'])
+
+        return patient
+
     def validate_login_info(self, health_card_nb, password):
 
         select_stmt = '''SELECT

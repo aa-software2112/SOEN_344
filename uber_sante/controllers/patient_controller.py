@@ -27,30 +27,40 @@ def view_cookie():
     return js.create_json(data=request.cookies, message="Here is your cookie", return_code=js.ResponseReturnCode.CODE_200)
 
 
-@controllers.route('/patient', methods=['GET', 'PUT'])
+@controllers.route('/patient', methods=['POST','GET', 'PUT'])
 def patient():
 
     if request.method == 'GET':
         # params: patient_id (int, semi-required), last_name (text, semi-required)
         # return: patient object
+        patient_id = request.args.get('patient_id') # Get patient by id only
+        patient_last_name = request.args.get('last_name') # Get patient by last name only
+        patient_info = request.args.get('patient_info') # Get patient by either last name or health card NB
 
-        patient_id = request.args.get('patient_id')
-        patient_last_name = request.args.get('last_name')
-
-        if patient_id is None and patient_last_name is None:
+        if patient_id is None and patient_last_name is None and patient_info is None:
             return js.create_json(data=None, message="No patient params specified", return_code=js.ResponseReturnCode.CODE_400)
 
         result = None
 
         if patient_last_name is not None:
             result = patient_service.get_patient_by_last_name(patient_last_name)
-        else: 
+        elif patient_info is not None:
+            # Returns a list of patient objects
+            result = patient_service.get_patient_by_last_name(patient_info)
+            print(result)
+            if result is -3:
+                # Returns a single patient object
+                result = patient_service.get_patient_by_health_card_nb(patient_info)
+                print(result)
+
+
+        else:
             result = patient_service.get_patient(patient_id)
 
         if result is None:
             return js.create_json(data=None, message="Could not retrieve patient", return_code=js.ResponseReturnCode.CODE_500)
         if result == -3:
-            return js.create_json(data=None, message=f"Patient with last name '{patient_last_name}' does not exist", return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="Patient does not exist", return_code=js.ResponseReturnCode.CODE_400)
 
         return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
@@ -222,6 +232,7 @@ def walkin_appointment():
 
         result = patient.make_walkin_appointment(availability)
 
+
         if result == MakeAnnualStatus.SUCCESS:
             return js.create_json(data=None, message="Successfully added walkin appointment", return_code=js.ResponseReturnCode.CODE_200)
 
@@ -242,7 +253,7 @@ def appointment():
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
         patient_id = request.args.get('patient_id')
-        availability_id = request.args.get('availability_id')
+        availability_id = int(request.args.get('availability_id'))
 
         if availability_id is None:
             return js.create_json(data=None, message="No appointment specified", return_code=js.ResponseReturnCode.CODE_400)
@@ -281,7 +292,7 @@ def cart():
 
         # object parsing going on here to be able to send it with json format
         for appointment in appointment_list:
-            new_availability = appointment.availability.__dict__
+            new_availability = appointment.availability.__dict__()
             new_appointment = Appointment(patient_id, new_availability).__dict__
             new_appointment_list.append(new_appointment)
 

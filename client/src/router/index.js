@@ -15,13 +15,16 @@ import DoctorLogin from '@/components/DoctorLogin';
 import AdminLogin from '@/components/AdminLogin';
 import AdminRegistrationMenu from '@/components/AdminRegistrationMenu';
 import ViewAvailability from '@/components/ViewAvailability';
+import NurseViewBooking from '@/components/NurseViewBooking';
+import BookingsViewer from '@/components/BookingsViewer';
+import PatientSearch from '@/components/PatientSearch';
+import DoctorSearch from '@/components/DoctorSearch';
 import axios from 'axios';
 import * as Cookies from 'js-cookie';
 axios.defaults.withCredentials = true;
 Vue.use(Router);
 
 Vue.prototype.$cookies = Cookies;
-
 
 export default new Router({
   mode: 'history',
@@ -100,6 +103,28 @@ export default new Router({
       path: '/viewAvailability',
       name: 'ViewAvailability',
       component: ViewAvailability
+    },
+    {
+      path: '/nurse/viewBooking',
+      name: 'NurseViewBooking',
+      component: NurseViewBooking
+    },
+    {
+        path: '/bookingsViewer/:id',
+        name: 'BookingsViewer',
+        component: BookingsViewer
+    },
+    {
+        path: '/bookingsViewer/doctor/:id',
+        name: 'BookingsViewer',
+        component: BookingsViewer
+    },
+    {
+        path: '/bookingsViewer',
+        name: 'BookingsViewer',
+        component: BookingsViewer
+        
     }
+    
   ]
 });
