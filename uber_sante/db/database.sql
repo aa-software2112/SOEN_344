@@ -277,11 +277,11 @@ values (50, 'JSWA 8200 1562', '1971-04-20', 'F', '514-957-0686', '67 Moland Hill
 
 /* Availability */
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (1, 1, 32400, '103', 1, 2019, 2, 26, "ANNUAL");
+values (1, 1, 32400, '103', 0, 2019, 2, 26, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (2, 2, 32400, '104', 1, 2019, 3, 31, "ANNUAL");
+values (2, 2, 32400, '104', 0, 2019, 3, 31, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
-values (3, 3, 32400, '105', 1, 2019,2,16, "ANNUAL");
+values (3, 3, 32400, '105', 0, 2019,2,16, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
 values (4, 4, 32400, '101', 1, 2019,2,18, "ANNUAL");
 insert into Availability (id, doctor_id, start, room, free, year, month, day, booking_type)
@@ -321,17 +321,3 @@ values (20, 20, 32400, '101', 1, 2019, 4, 8, "WALKIN");
 insert into Booking (id, availability_id, doctor_id, patient_id) values (1, 1, 1, 19);
 insert into Booking (id, availability_id, doctor_id, patient_id) values (2, 2, 2, 4);
 insert into Booking (id, availability_id, doctor_id, patient_id) values (3, 3, 3, 31);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (4, 4, 4, 13);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (5, 5, 5, 23);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (6, 6, 6, 28);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (7, 7, 7, 2);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (8, 8, 8, 17);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (9, 9, 9, 40);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (10, 10, 10, 36);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (11, 11, 11, 35);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (12, 12, 12, 15);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (13, 13, 13, 20);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (14, 14, 14, 2);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (15, 15, 15, 41);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (16, 16, 16, 36);
-insert into Booking (id, availability_id, doctor_id, patient_id) values (17, 17, 17, 20);
