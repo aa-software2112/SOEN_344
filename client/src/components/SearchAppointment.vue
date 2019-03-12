@@ -2,57 +2,57 @@
 <template>
   <div class="container reg-container" id="patient-reg">
     <div v-if="isLoggedNurse">
-    <form id="form-availability" @submit.prevent="processFormPatientLookup">
-      <h1> Search for a Patient </h1>
+      <form id="form-availability" @submit.prevent="processFormPatientLookup">
+        <h1> Search for a Patient </h1>
         <div class="form-group">
           <label for="patient_id">Patient Last Name</label>
           <input type="text" class="form-control" v-model="patient_name" id="patient_name">
           <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
         </div>
-    </form>
-    <table id="view"> 
-      <th>Health Card</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
-      <th></th>
-      <tr class="container patient-item" v-for="(item) in results_patient.data">
-        <td>{{item['health_card_nb']}}</td>
-        <td>{{item['first_name']}}</td>
-        <td>{{item['last_name']}}</td>
-        <td>{{item['email']}}</td>
-        <td>
-          <button :id="item['id']" v-on:click="storePatientId" @click="$event.target.classList.toggle('searchappt')"> Choose Patient</button>
-        </td>
-      </tr>
-    </table>
-        <form id="form-doctor" @submit.prevent="processFormDoctorLookup">
-      <h1> Search for a Doctor (Optional) </h1>
+      </form>
+
+      <table id="view"> 
+        <th>Health Card</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th></th>
+        <tr class="container patient-item" v-for="(item) in results_patient.data">
+          <td>{{item['health_card_nb']}}</td>
+          <td>{{item['first_name']}}</td>
+          <td>{{item['last_name']}}</td>
+          <td>{{item['email']}}</td>
+          <td>
+            <button :id="item['id']" v-on:click="storePatientId" @click="$event.target.classList.toggle('searchappt')"> Choose Patient</button>
+          </td>
+        </tr>
+      </table>
+
+      <form id="form-doctor" @submit.prevent="processFormDoctorLookup">
+        <h1> Search for a Doctor (Optional) </h1>
         <div class="form-group">
           <label for="doctor_id">Doctor Last Name</label>
           <input type="text" class="form-control" v-model="doctor_name" id="doctor_name">
           <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
         </div>
-    </form>
-    <div id="patient-id" value=""></div>
-    <div id="doctor-id" value=""></div>
-    <table id="view"> 
-      <th>Physician Permit</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Specialty</th>
-      <th></th>
-      <tr class="container patient-item" v-for="(item) in results_doctor.data">
-        <td>{{item['physician_permit_nb']}}</td>
-        <td>{{item['first_name']}}</td>
-        <td>{{item['last_name']}}</td>
-        <td>{{item['specialty']}}</td>
-        <td>
-          <button :id="item['id']" v-on:click="storeDoctorId" @click="$event.target.classList.toggle('searchappt')"> Choose Doctor</button>
-        </td>
-      </tr>
-    </table>
+      </form>
 
+      <table id="view"> 
+        <th>Physician Permit</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Specialty</th>
+        <th></th>
+        <tr class="container patient-item" v-for="(item) in results_doctor.data">
+          <td>{{item['physician_permit_nb']}}</td>
+          <td>{{item['first_name']}}</td>
+          <td>{{item['last_name']}}</td>
+          <td>{{item['specialty']}}</td>
+          <td>
+            <button :id="item['id']" v-on:click="storeDoctorId" @click="$event.target.classList.toggle('searchappt')"> Choose Doctor</button>
+          </td>
+        </tr>
+      </table>
     </div>
     <form id="form-availability" @submit.prevent="processForm">
       <h1> Search for an Appointment </h1>
@@ -101,7 +101,6 @@
           <td v-else>
             <button :id="item['id']" v-on:click="addToCart($event)"> Create Appointment </button>
           </td>
-
         </tr>
       </template>
 
