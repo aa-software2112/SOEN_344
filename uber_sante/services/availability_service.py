@@ -10,9 +10,11 @@ convert_time = TimeInterpreter()
 
 class AvailabilityStatus(Enum):
     SUCCESS = 1
-    NO_AVAILABILITIES_FOR_DOCTOR = 2  # no availabilities for a particular doctor
-    NO_AVAILABILITIES_AT_THIS_HOUR = 3
-    NO_ROOMS_AT_THIS_TIME = 4
+    NO_AVAILABILITIES = 2
+    NO_AVAILABILITIES_FOR_DOCTOR = 3  # no availabilities for a particular doctor
+    NO_AVAILABILITIES_AT_THIS_HOUR = 4
+    NO_ROOMS_AT_THIS_TIME = 5
+    AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME = 6 # doctor has already booked an availability at this time slot
 
 
 class AvailabilityService:
@@ -72,7 +74,7 @@ class AvailabilityService:
 
         return list_of_availabilities
 
-    def get_availability(self, availability_id, convertTime=True):
+    def get_availability(self, availability_id):
         """ Queries the Availability db by availability_id and returns an Availability object """
 
         select_stmt = '''SELECT * FROM Availability
@@ -84,28 +86,77 @@ class AvailabilityService:
         if result is None:
             return False
 
-        if convertTime:
-            return Availability(
-                result['id'],
-                result['doctor_id'],
-                convert_time.get_start_time_string(result['start']),
-                result['room'],
-                result['free'],
-                result['year'],
-                result['month'],
-                result['day'],
-                uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
-        else:
-            return Availability(
-                result['id'],
-                result['doctor_id'],
-                result['start'],
-                result['room'],
-                result['free'],
-                result['year'],
-                result['month'],
-                result['day'],
-                uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
+        return Availability(
+            result['id'],
+            result['doctor_id'],
+            convert_time.get_start_time_string(result['start']),
+            result['room'],
+            result['free'],
+            result['year'],
+            result['month'],
+            result['day'],
+            uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
+    
+
+    def get_all_availabilities(self):
+
+        select_stmt = '''SELECT * FROM Availability'''
+        params = ()
+        results = self.db.read_all(select_stmt, params)
+
+        if len(results) == 0:
+            return AvailabilityStatus.NO_AVAILABILITIES
+
+        list_of_availabilities = []
+
+        for result in results:
+            list_of_availabilities.append(
+                Availability(
+                    result['id'],
+                    result['doctor_id'],
+                    convert_time.get_start_time_string(result['start']),
+                    result['room'],
+                    result['free'],
+                    result['year'],
+                    result['month'],
+                    result['day'],
+                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type'])))
+        
+        return list_of_availabilities
+
+
+    def get_available_rooms(self, start, year, month, day):
+        
+        start_time = convert_time.get_time_to_second(start)
+
+        select_stmt = '''SELECT * FROM Availability
+                        WHERE start = ?
+                        WHERE year = ?
+                        WHERE month = ?
+                        WHERE day = ?'''
+        params = (start_time, year, month, day)
+
+        results = self.db.read_all(select_stmt, params)
+
+        if len(results) == 0:
+            return AvailabilityStatus.NO_AVAILABILITIES
+
+        list_of_availabilities = []
+
+        for result in results:
+            list_of_availabilities.append(
+                Availability(
+                    result['id'],
+                    result['doctor_id'],
+                    convert_time.get_start_time_string(result['start']),
+                    result['room'],
+                    result['free'],
+                    result['year'],
+                    result['month'],
+                    result['day'],
+                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type'])))
+
+        return list_of_availabilities
 
     def get_availability_by_doctor_id(self, doctor_id):
         """ Queries the Availability db by availability_id and returns an Availability object """
@@ -177,24 +228,25 @@ class AvailabilityService:
                 result['day'],
                 uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
 
-    def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type,
-                                             convertTime=True, update=False, availability_id=-1):
+    def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type, availability_id=-1):
+        
+        if self.check_doctor_time_slot(doctor_id, start, year, month, day) == AvailabilityStatus.AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME:
+            return AvailabilityStatus.AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME
+        
+        start_time = convert_time.get_time_to_second(start)
+        select_stmt = None
 
-        if convertTime:
-            start_time = convert_time.get_time_to_second(start)
-        else:
-            start_time = start
-
-        if not availability_id == -1:
+        if availability_id != -1:
             select_stmt = '''SELECT * FROM Availability
-                        WHERE start = ? AND NOT id = ?
-                        '''
-            select_params = (start_time, availability_id)
+                            WHERE start = ?
+                            AND room = ?
+                            AND NOT id = ?'''
+            select_params = (start_time, room, availability_id)
         else:
             select_stmt = '''SELECT * FROM Availability
-                        WHERE start = ?
-                        '''
-            select_params = (start_time,)
+                            WHERE start = ?
+                            AND room = ?'''
+            select_params = (start_time, room)
 
         results = self.db.read_all(select_stmt, select_params)
 
@@ -216,34 +268,27 @@ class AvailabilityService:
         self.db.write_one(insert_stmt, insert_params)
         return insert_params
 
-    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type,
-                                             convertTime=True, update=False, availability_id=-1):
+    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type, availability_id=-1):
 
         # check the start time, as well as the next 2 slots in the hour
-        if convertTime:
-            start_time = convert_time.get_time_to_second(start)
-        else:
-            start_time = start
+        start_time = convert_time.get_time_to_second(start)
 
         start_time_plus_20 = convert_time.add_20_minutes(start_time)
         start_time_plus_40 = convert_time.add_20_minutes(start_time_plus_20)
 
-        if not availability_id == -1:
-            select_stmt = '''SELECT * FROM Availability
-                                    WHERE NOT id = ? AND start = ?
-                                    OR start = ?
-                                    OR start = ?
-                                    '''
+        select_stmt = None
 
-            select_params = (availability_id, start_time, start_time_plus_20, start_time_plus_40)
+        if availability_id != -1:
+            select_stmt = '''SELECT * FROM Availability
+                            WHERE NOT id = ?
+                            AND room = ?
+                            AND (start = ? OR start = ? OR start = ?)'''
+            select_params = (availability_id, room, start_time, start_time_plus_20, start_time_plus_40)
         else:
             select_stmt = '''SELECT * FROM Availability
-                        WHERE start = ?
-                        OR start = ?
-                        OR start = ?
-                        '''
-
-            select_params = (start_time, start_time_plus_20, start_time_plus_40)
+                            WHERE room = ?
+                            AND (start = ? OR start = ? OR start = ?)'''
+            select_params = (room, start_time, start_time_plus_20, start_time_plus_40)
 
         results = self.db.read_all(select_stmt, select_params)
 
@@ -274,20 +319,7 @@ class AvailabilityService:
         self.db.write_one(delete_stmt, params)
         return AvailabilityStatus.SUCCESS
 
-    def room_is_available_at_this_time(self, start, room, year, month, day):
-        """ Checks the Availability table to see if the room is already taken at the given time """
-        select_stmt = '''SELECT * FROM Availability WHERE start = ? AND room = ? AND year = ? AND month = ? AND day = ? AND FREE = 1'''
-        params = (start, room, year, month, day)
-
-        result = self.db.read_one(select_stmt, params)
-
-        if result is None:
-            return AvailabilityStatus.SUCCESS
-
-        else:
-            return False
-
-    def modify_room(self, start, room, year, month, day, id):
+    def room_is_available_at_this_time(self, availability_id, start, room, year, month, day):
         """ Checks the Availability table to see if the room is already taken at the given time """
         select_stmt = '''SELECT * FROM Availability
                         WHERE start = ?
@@ -296,11 +328,30 @@ class AvailabilityService:
                         AND month = ?
                         AND day = ?
                         AND NOT id = ?'''
-        params = (start, room, year, month, day, id)
+        params = (start, room, year, month, day, availability_id)
+        result = self.db.read_one(select_stmt, params)
+
+        if result is None:
+            return AvailabilityStatus.SUCCESS
+
+        else:
+            return AvailabilityStatus.NO_ROOMS_AT_THIS_TIME
+    
+    def check_doctor_time_slot(self, doctor_id, start, year, month, day):
+        """Checks if the doctor is about to book 2 availabilities at the same time slot in different rooms"""
+        start_time = convert_time.get_time_to_second(start)
+
+        select_stmt = '''SELECT * FROM Availability
+                        WHERE doctor_id = ?
+                        AND start = ?
+                        AND year = ?
+                        AND month = ?
+                        AND day = ?'''
+        params = (doctor_id, start_time, year, month, day)
 
         result = self.db.read_one(select_stmt, params)
 
         if result is None:
             return AvailabilityStatus.SUCCESS
         else:
-            return False
+            return AvailabilityStatus.AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME
