@@ -2,12 +2,13 @@ from enum import Enum
 from uber_sante.models.cart import Cart
 from uber_sante.models.appointment import Appointment
 from uber_sante.utils.time_interpreter import TimeInterpreter
-
+from uber_sante.services.patient_service import PatientService
 
 class MakeAnnualStatus(Enum):
     SUCCESS = 1
     HAS_ANNUAL_APPOINTMENT = 2
     HAS_THIS_APPOINTMENT_IN_CART = 3
+    HAS_ANNUAL_BOOKING = 4
 
 
 class Patient:
@@ -42,8 +43,14 @@ class Patient:
     def has_annual_appointment(self):
         return self.cart.contains_annual_appointment()
 
+    def has_annual_booking(self):
+        return PatientService().has_annual_booking(self.id)
+
     def make_annual_appointment(self, availability):
-        if self.has_annual_appointment():
+        if self.has_annual_booking():
+            return MakeAnnualStatus.HAS_ANNUAL_BOOKING
+
+        elif self.has_annual_appointment():
             return MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT
 
         else:

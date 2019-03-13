@@ -41,7 +41,7 @@ class PatientService:
             result['email'])
 
         return patient
-    
+
     def get_patient_by_last_name(self, last_name):
         """Query the db for a patient by the patient's last name and return the created patient object"""
         last_name_formatted = '%' + last_name + '%'
@@ -67,7 +67,7 @@ class PatientService:
                     result['phone_nb'],
                     result['home_address'],
                     result['email']))
-        
+
         return list_of_patient
 
     def get_patient_by_health_card_nb(self, health_card_nb):
@@ -76,7 +76,7 @@ class PatientService:
         select_stmt = '''SELECT *
                         FROM Patient
                         WHERE health_card_nb = ?'''
-        params = (health_card_nb, )
+        params = (health_card_nb,)
         result = self.db.read_one(select_stmt, params)
 
         if len(result) == 0:
@@ -136,7 +136,8 @@ class PatientService:
 
             set_to_cache(patient_id, patient)
 
-    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password):
+    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,
+                       last_name, password):
 
         # Check if health card already exists in db
         select_stmt = '''SELECT
@@ -168,14 +169,15 @@ class PatientService:
                                 last_name,
                                 password)
                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
+            params = (
+            health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
 
             self.db.write_one(insert_stmt, params)
 
             return CreatePatientStatus.SUCCESS
 
-
-    def update_patient(self, patient_id, date_of_birth, gender, phone_nb, home_address, first_name,last_name, password):
+    def update_patient(self, patient_id, date_of_birth, gender, phone_nb, home_address, first_name, last_name,
+                       password):
 
         insert_stmt = '''UPDATE Patient
                         SET date_of_birth = ?,
@@ -188,7 +190,21 @@ class PatientService:
                         WHERE id = ?
                         '''
         params = (date_of_birth, gender, phone_nb, home_address, first_name, last_name, password, patient_id)
-        
+
         self.db.write_one(insert_stmt, params)
 
         return CreatePatientStatus.SUCCESS
+
+    def has_annual_booking(self, patient_id):
+
+        select_stmt = '''SELECT * FROM Availability, Booking WHERE patient_id = ? AND Availability.patient_id = Booking.patient_id AND Availability.booking_type = "ANNUAL"'''
+
+        params = (patient_id,)
+
+        result = self.db.read_one(select_stmt, params)
+
+        if result is None:
+            return False
+
+        else:
+            return True
