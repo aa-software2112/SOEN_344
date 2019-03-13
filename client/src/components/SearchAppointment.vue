@@ -156,11 +156,13 @@
       processForm: function () {
         var self = this;
         self.submit = 'True';
-        try {
-          self.patient_id = patient_id
-        } catch (e){
-            this.error_message = "Please choose a patient"
-            return
+        if (this.$cookies.get('user_type') == 'nurse'){
+          try {
+            self.patient_id = patient_id
+          } catch (e){
+              this.error_message = "Please choose a patient"
+              return
+          }
         }
         try {
           var useable_doctor_id = doctor_id
@@ -168,9 +170,9 @@
           var useable_doctor_id = 0
         }
         axios.post('http://127.0.0.1:5000/schedule', {
-          request_type: this.request_type,
-          appointment_request_type: this.appointment_request_type,
-          date: this.date
+        request_type: this.request_type,
+        appointment_request_type: this.appointment_request_type,
+        date: this.date
         })
           .then(response => {
             self.results = response.data
