@@ -137,6 +137,10 @@ h1, h2, h3, h4, h5, h6 {
   margin: 10px;
 }
 
+.searchappt {
+  background-color: #26619C;
+}
+
 .help-text {
   display: block;
   margin-top: 5px;

@@ -42,6 +42,7 @@
             
             <!-- A logged in Nurse -->
             <div v-if="isLoggedNurse">
+                <a class="navbar-brand" href="/schedule">Schedule Appointment</a>
                 <a class="navbar-brand" href="/nurse/viewBooking">Booking System</a>
             </div>
             
