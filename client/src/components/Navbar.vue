@@ -45,9 +45,9 @@
                 <a class="navbar-brand" href="/schedule">Schedule Appointment</a>
                 <a class="navbar-brand" href="/nurse/viewBooking">Booking System</a>
             </div>
-            
+
             <!-- Unknown -->
-            <a class="navbar-brand" href="/appointment">Appointment</a>
+            <!--<a class="navbar-brand" href="/appointment">Appointment</a>-->
         </div>
       </div>
 
