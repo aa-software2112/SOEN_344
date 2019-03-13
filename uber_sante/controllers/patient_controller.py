@@ -11,7 +11,7 @@ from uber_sante.utils.cache import get_from_cache, set_to_cache
 from uber_sante.models.appointment import Appointment
 from uber_sante.models.availability import Availability
 from uber_sante.models.patient import Patient, MakeAnnualStatus
-from uber_sante.models.scheduler import ScheduleRequest, Scheduler, RequestEnum, AppointmentRequestType
+from uber_sante.models.scheduler import ScheduleRequestRegister, Scheduler, RequestEnum, AppointmentRequestType
 
 from uber_sante.services.patient_service import PatientService
 from uber_sante.services.patient_service import CreatePatientStatus
@@ -19,7 +19,7 @@ from uber_sante.services.availability_service import AvailabilityService
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
-
+sched_register = ScheduleRequestRegister()
 
 @controllers.route('/viewmycookie', methods=['GET'])
 def view_cookie():
@@ -177,22 +177,24 @@ def schedule():
 
     if request.method == 'POST':
 
-        request_type = RequestEnum(request.get_json().get('request_type'))
-        appointment_request_type = AppointmentRequestType(request.get_json().get('appointment_request_type'))
+        request_type = request.get_json().get('request_type')
+        appointment_request_type = request.get_json().get('appointment_request_type')
 
         date = datetime.strptime(request.get_json().get('date'), '%Y-%m-%d').date()
         year = int(date.year)
         month = int(date.month)
         day = int(date.day)
 
-        if request_type == RequestEnum.MONTHLY_REQUEST:
-            sr_monthly = ScheduleRequest(request_type, appointment_request_type, Date(year, month))
+        proto_str = request_type + "-" + appointment_request_type
+
+        if request_type == RequestEnum.MONTHLY_REQUEST.value:
+            sr_monthly = sched_register.get_request(proto_str).set_date(Date(year, month))
             monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly)
 
             return js.create_json(data=monthly_schedule, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
-        if request_type == RequestEnum.DAILY_REQUEST:
-            sr_daily = ScheduleRequest(request_type, appointment_request_type, Date(year, month, day))
+        if request_type == RequestEnum.DAILY_REQUEST.value:
+            sr_daily = sched_register.get_request(proto_str).set_date(Date(year, month, day))
             daily_schedule = Scheduler.get_instance().get_schedule(sr_daily)
 
             return js.create_json(data=daily_schedule, message=None, return_code=js.ResponseReturnCode.CODE_200)
@@ -232,6 +234,7 @@ def walkin_appointment():
 
         result = patient.make_walkin_appointment(availability)
 
+
         if result == MakeAnnualStatus.SUCCESS:
             return js.create_json(data=None, message="Successfully added walkin appointment", return_code=js.ResponseReturnCode.CODE_200)
 
@@ -252,7 +255,7 @@ def appointment():
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
         patient_id = request.args.get('patient_id')
-        availability_id = request.args.get('availability_id')
+        availability_id = int(request.args.get('availability_id'))
 
         if availability_id is None:
             return js.create_json(data=None, message="No appointment specified", return_code=js.ResponseReturnCode.CODE_400)
@@ -291,7 +294,7 @@ def cart():
 
         # object parsing going on here to be able to send it with json format
         for appointment in appointment_list:
-            new_availability = appointment.availability.__dict__
+            new_availability = appointment.availability.__dict__()
             new_appointment = Appointment(patient_id, new_availability).__dict__
             new_appointment_list.append(new_appointment)
 
