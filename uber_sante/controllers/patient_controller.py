@@ -211,10 +211,11 @@ def annual_appointment():
         patient = get_from_cache(patient_id)
         availability = availability_service.get_availability(availability_id)
 
-        result = patient.make_annual_appointment(availability)
 
         if patient_service.has_annual_booking(patient_id):
             return js.create_json(data=None, message="You have an annual booking!", return_code=js.ResponseReturnCode.CODE_400)
+
+        result = patient.make_annual_appointment(availability)
 
         if result == MakeAnnualStatus.SUCCESS:
             return js.create_json(data=None, message="Successfully added annual appointment", return_code=js.ResponseReturnCode.CODE_200)

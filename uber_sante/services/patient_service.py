@@ -194,7 +194,8 @@ class PatientService:
 
     def has_annual_booking(self, patient_id):
 
-        select_stmt = '''SELECT * FROM Availability, Booking WHERE patient_id = ? AND Availability.patient_id = Booking.patient_id AND Availability.booking_type = "ANNUAL"'''
+        select_stmt = '''SELECT * FROM Availability INNER JOIN Booking on Availability.id = Booking.availability_id 
+        WHERE patient_id = ? AND Availability.booking_type = "ANNUAL"'''
 
         params = (patient_id, )
 
