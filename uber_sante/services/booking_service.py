@@ -123,8 +123,10 @@ class BookingService:
 
     def cancel_booking_with_availability(self, availability_id):
         
+
         select_stmt = '''SELECT * FROM Booking
                         WHERE availability_id = ?'''
+        
         params = (availability_id,)
         result = self.db.read_one(select_stmt, params)
         
@@ -158,3 +160,10 @@ class BookingService:
         self.db.write_one(delete_stmt, params)
 
         return f_key
+
+    def get_patient_id_from_availability_id(self, availability_id):
+        stmt = '''SELECT patient_id FROM Booking WHERE availability_id = ?'''
+
+        params = (availability_id,)
+
+        self.db.read_one(stmt, params)

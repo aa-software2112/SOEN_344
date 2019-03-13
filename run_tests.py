@@ -6,6 +6,7 @@ import tests.test_admin as test_admin
 import tests.test_patient as test_patient
 import tests.test_booking as test_booking
 import tests.test_availability as test_availability
+import tests.test_observer as test_observer
 
 loader = unittest.TestLoader()
 
@@ -16,6 +17,7 @@ suite.addTest(loader.loadTestsFromModule(test_admin))
 suite.addTest(loader.loadTestsFromModule(test_booking))
 suite.addTest(loader.loadTestsFromModule(test_patient))
 suite.addTest(loader.loadTestsFromModule(test_availability))
+suite.addTest(loader.loadTestsFromModule(test_observer))
 
 runner = unittest.TextTestRunner(verbosity=3)
 

@@ -12,6 +12,8 @@ from uber_sante.services.admin_service import AdminService
 from uber_sante.services.nurse_service import NurseService
 from uber_sante.services.patient_service import PatientService
 
+from uber_sante.miscellaneous.observer import *
+
 admin_service = AdminService()
 nurse_service = NurseService()
 doctor_service = DoctorService()
@@ -83,6 +85,9 @@ def login_patient():
 
         # Set patient in cache
         patient_service.test_and_set_patient_into_cache(patient_id)
+
+        # observer pattern hook
+        notifier.notify()
 
         # set the cookie in the response object
         resp = js.create_json(data=None, message="Logged in successfully", return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
