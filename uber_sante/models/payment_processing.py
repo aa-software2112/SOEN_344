@@ -50,11 +50,16 @@ class OtherPaymentStrategy(PaymentStrategy):
 
 class ProcessPayment:
 
-    def __init__(self):
+    def __init__(self, as_stub=True):
         self.strategy = None
+        self.as_stub = as_stub
+        self.stub_cc = "3234567890123456"
         pass
 
     def checkout(self, credit_card):
+
+        if self.as_stub:
+            credit_card = self.stub_cc
 
         if not(isinstance(credit_card, str) and len(credit_card)==16):
             return False
@@ -90,7 +95,7 @@ if __name__ == "__main__":
     credit_card_visa = "4234567890123456"
     credit_card_master_card = "5234567890123456"
     credit_card_other = "6234567890123456"
-    ProcessPayment().checkout(credit_card_american_express)
-    ProcessPayment().checkout(credit_card_visa)
-    ProcessPayment().checkout(credit_card_master_card)
-    ProcessPayment().checkout(credit_card_other)
+    ProcessPayment(as_stub=False).checkout(credit_card_american_express)
+    ProcessPayment(as_stub=False).checkout(credit_card_visa)
+    ProcessPayment(as_stub=False).checkout(credit_card_master_card)
+    ProcessPayment(as_stub=False).checkout(credit_card_other)
