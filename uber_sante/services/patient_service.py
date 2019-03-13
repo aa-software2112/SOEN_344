@@ -5,7 +5,6 @@ from uber_sante.utils.cache import get_from_cache, set_to_cache
 
 from uber_sante.models.patient import Patient
 
-
 class CreatePatientStatus(Enum):
     SUCCESS = 1
     HEALTH_CARD_ALREADY_EXISTS = -1
@@ -76,7 +75,7 @@ class PatientService:
         select_stmt = '''SELECT *
                         FROM Patient
                         WHERE health_card_nb = ?'''
-        params = (health_card_nb,)
+        params = (health_card_nb, )
         result = self.db.read_one(select_stmt, params)
 
         if len(result) == 0:
@@ -136,8 +135,7 @@ class PatientService:
 
             set_to_cache(patient_id, patient)
 
-    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,
-                       last_name, password):
+    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password):
 
         # Check if health card already exists in db
         select_stmt = '''SELECT
@@ -169,15 +167,14 @@ class PatientService:
                                 last_name,
                                 password)
                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-            params = (
-            health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
+            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
 
             self.db.write_one(insert_stmt, params)
 
             return CreatePatientStatus.SUCCESS
 
-    def update_patient(self, patient_id, date_of_birth, gender, phone_nb, home_address, first_name, last_name,
-                       password):
+
+    def update_patient(self, patient_id, date_of_birth, gender, phone_nb, home_address, first_name,last_name, password):
 
         insert_stmt = '''UPDATE Patient
                         SET date_of_birth = ?,
@@ -199,7 +196,7 @@ class PatientService:
 
         select_stmt = '''SELECT * FROM Availability, Booking WHERE patient_id = ? AND Availability.patient_id = Booking.patient_id AND Availability.booking_type = "ANNUAL"'''
 
-        params = (patient_id,)
+        params = (patient_id, )
 
         result = self.db.read_one(select_stmt, params)
 

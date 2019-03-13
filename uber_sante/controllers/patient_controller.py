@@ -213,14 +213,14 @@ def annual_appointment():
 
         result = patient.make_annual_appointment(availability)
 
+        if patient_service.has_annual_booking(patient_id):
+            return js.create_json(data=None, message="You have an annual booking!", return_code=js.ResponseReturnCode.CODE_400)
+
         if result == MakeAnnualStatus.SUCCESS:
             return js.create_json(data=None, message="Successfully added annual appointment", return_code=js.ResponseReturnCode.CODE_200)
 
         if result == MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT:
             return js.create_json(data=None, message="You already have an annual appointment in your cart!", return_code=js.ResponseReturnCode.CODE_400)
-
-        if result == MakeAnnualStatus.HAS_ANNUAL_BOOKING:
-            return js.create_json(data=None, message="You have an annual booking!", return_code=js.ResponseReturnCode.CODE_400)
 
 
 @controllers.route('/walkin-appointment', methods=['PUT'])
