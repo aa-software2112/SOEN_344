@@ -88,7 +88,7 @@ def availability():
         if booking_type == AppointmentRequestType.ANNUAL:
             result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type)
 
-        if result == AvailabilityStatus.NO_AVAILABILITIES:
+        if result == AvailabilityStatus.NO_ROOMS_AT_THIS_TIME:
             return js.create_json(data=None, message="No rooms available at this time slot", return_code=js.ResponseReturnCode.CODE_400)
         if result == AvailabilityStatus.AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME:
             return js.create_json(data=None, message="Doctor already has a room booked at this time slot", return_code=js.ResponseReturnCode.CODE_400)
@@ -170,7 +170,7 @@ def modify_availability(availability_id):
             if booking_type == AppointmentRequestType.ANNUAL:
                 result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type, availability_id)
 
-            if result == AvailabilityStatus.NO_AVAILABILITIES_AT_THIS_HOUR:
+            if result == AvailabilityStatus.NO_ROOMS_AT_THIS_TIME:
                 return js.create_json(data=None, message="No rooms available at this time slot", return_code=js.ResponseReturnCode.CODE_400)
 
             # Delete the old availability and booking at this availability if there is one
@@ -195,7 +195,7 @@ def view_availability():
 
         if result is None:
             return js.create_json(data=None, message="Could not retrieve availabilities", return_code=js.ResponseReturnCode.CODE_400)
-        if result == AvailabilityStatus.NO_AVAILABILITIES_FOR_DOCTOR:
+        if result == AvailabilityStatus.NO_AVAILABILITIES:
             return js.create_json(data=None, message="Doctor does not have any availabilites", return_code=js.ResponseReturnCode.CODE_200)
 
         return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)           
