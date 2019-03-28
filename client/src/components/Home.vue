@@ -5,7 +5,7 @@
       <h1>
         Welcome to UberSante
       </h1>
-      <p v-for="loginMsg in loginMsgList">{{ loginMsg }}</p>
+      <p class="notifications" v-for="loginMsg in loginMsgList">{{ loginMsg }}</p>
 
     </div>
 
@@ -44,13 +44,20 @@ export default {
     }
   },
 
-  created() {
-    this.getLoginMessage();
+  mounted() {
+    console.log("in mounted");
+    // hack to prevent double requests
+    window.setTimeout(this.getLoginMessage, 1000);
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+  .notifications {
+    color: #000000;
+    font-size: 20px;
+    background-color: yellow;
+  }
 
 </style>

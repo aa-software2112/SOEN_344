@@ -166,4 +166,5 @@ class BookingService:
 
         params = (availability_id,)
 
-        self.db.read_one(stmt, params)
+        result = self.db.read_one(stmt, params)
+        return result['patient_id']

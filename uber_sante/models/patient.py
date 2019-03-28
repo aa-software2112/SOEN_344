@@ -32,7 +32,7 @@ class Patient:
             month = str(availability.month)
             year = str(availability.year)
 
-            message = "Your booking on " + day + "/" + month + "/" + year + " at " + t.get_start_time_string(availability.start) + " got canceled. We are sorry for this inconvenient."
+            message = "Your booking on " + day + "/" + month + "/" + year + " at " + availability.start + " got canceled. We are sorry for this inconvenience."
             print(message)
             self.login_messages.append(message)
 

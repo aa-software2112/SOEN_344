@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import *
 from flask import Flask, request, jsonify, make_response
 
@@ -307,6 +308,7 @@ def cart():
         return js.create_json(data=data_to_send, message="List of appointments with patient id",
                               return_code=js.ResponseReturnCode.CODE_200)
 
+
 @controllers.route('/my-update', methods=['GET'])
 def my_update():
     """ endpoint that returns the info concerning the canceled booking(s)
@@ -318,13 +320,14 @@ def my_update():
     # get patient from cache
     patient = get_from_cache(patient_id)
 
-    messages = patient.get_login_messages()
+    messages = deepcopy(patient.get_login_messages())
 
     if len(messages) > 0:
         patient.login_messages.clear()
         return js.create_json(data=messages, message="canceled bookings notification",
-                              return_code=js.ResponseReturnCode.CODE_200)
+                              return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
     else:
-        return js.create_json(data=None, message="nothing to notify", return_code=js.ResponseReturnCode.CODE_200)
+        return js.create_json(data=None, message="nothing to notify", return_code=js.ResponseReturnCode.CODE_200,
+                              as_tuple=False)
 
 
