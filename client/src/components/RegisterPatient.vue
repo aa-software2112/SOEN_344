@@ -92,7 +92,7 @@ export default {
       
     watch: {
         gender: function(query) {
-            this.getClinics();
+            this.getClinics();       
         },
     },
 

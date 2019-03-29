@@ -85,9 +85,13 @@ export default {
   methods: {
     checkForm: function(e) {
         e.preventDefault();
-        if (!this.physician_permit_nb || !this.first_name ||
-                !this.last_name || !this.city || !this.specialty ||
-                !this.password)
+        if (!this.physician_permit_nb ||
+            !this.first_name ||
+            !this.last_name ||
+            !this.city ||
+            !this.specialty ||
+            !this.password ||
+            !this.clinic_id)
         {
             this.message = "Data missing";
             return false;
@@ -98,14 +102,15 @@ export default {
   
     submitForm()
     {   
-        axios.put('http://127.0.0.1:5000/doctor', 
+        axios.put('http://127.0.0.1:5000/admin/register/doctor', 
         {
             physician_permit_nb: this.physician_permit_nb,
             first_name: this.first_name,
             last_name: this.last_name,
             city: this.city,
             specialty: this.specialty,
-            password: this.password
+            password: this.password,
+            clinic_id: this.clinic_id
         })
         .then(response => {
         this.doctor_created = true

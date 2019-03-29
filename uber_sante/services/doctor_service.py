@@ -60,7 +60,7 @@ class DoctorService:
 
         return result['id']
 
-    def create_doctor(self, physician_permit_nb, first_name, last_name, specialty, city, password):
+    def create_doctor(self, physician_permit_nb, first_name, last_name, specialty, city, password, clinic_id):
 
         # Check if physician permit number already exists
         select_stmt = '''SELECT 
@@ -78,9 +78,10 @@ class DoctorService:
                             last_name,
                             specialty,
                             city,
-                            password)
-                        VALUES (?, ?, ?, ?, ?, ?)'''
-        params = (physician_permit_nb, first_name, last_name, specialty, city, password)
+                            password,
+                            clinic_id)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)'''
+        params = (physician_permit_nb, first_name, last_name, specialty, city, password, clinic_id)
 
         self.db.write_one(insert_stmt, params)
 

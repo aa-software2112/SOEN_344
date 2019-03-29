@@ -2,10 +2,12 @@
 CREATE TABLE IF NOT EXISTS Nurse
 (
   id                  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  access_id           TEXT NOT NULL,
+  access_id           TEXT    NOT NULL,
   first_name          TEXT    NOT NULL,
   last_name           TEXT    NOT NULL,
-  password TEXT NOT NULL
+  password            TEXT    NOT NULL,
+  clinic_id           INTEGER,
+  FOREIGN KEY (clinic_id) REFERENCES Clinic (id)
 );
 
 
@@ -14,7 +16,6 @@ CREATE TABLE IF NOT EXISTS Admin
     id          INTEGER    NOT NULL PRIMARY KEY AUTOINCREMENT,
     email       TEXT        NOT NULL,
     password    TEXT        NOT NULL
-
 );
 
 CREATE TABLE IF NOT EXISTS Doctor
@@ -25,7 +26,9 @@ CREATE TABLE IF NOT EXISTS Doctor
   last_name           TEXT    NOT NULL,
   specialty           TEXT    NOT NULL,
   city                TEXT    NOT NULL,
-  password TEXT NOT NULL
+  password            TEXT    NOT NULL,
+  clinic_id           INTEGER,
+  FOREIGN KEY (clinic_id) REFERENCES Clinic (id)
 );
 
 CREATE TABLE IF NOT EXISTS Patient

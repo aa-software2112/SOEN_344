@@ -52,7 +52,7 @@ class NurseService:
 
         return result['id']
 
-    def create_nurse(self, access_id, first_name, last_name, password):
+    def create_nurse(self, access_id, first_name, last_name, password, clinic_id):
 
         # Check if physician permit number already exists
         select_stmt = '''SELECT
@@ -68,9 +68,10 @@ class NurseService:
                             access_id,
                             first_name,
                             last_name,
-                            password)
-                      VALUES (?, ?, ?, ?)'''
-        params = (access_id, first_name, last_name, password)
+                            password,
+                            clinic_id)
+                      VALUES (?, ?, ?, ?, ?)'''
+        params = (access_id, first_name, last_name, password, clinic_id)
 
         self.db.write_one(insert_stmt, params)
 

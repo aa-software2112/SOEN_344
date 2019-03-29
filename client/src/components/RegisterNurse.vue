@@ -74,8 +74,11 @@ export default {
   methods: {
     checkForm: function(e) {
         e.preventDefault();
-        if (!this.access_id || !this.first_name ||
-                !this.last_name || !this.password)
+        if (!this.access_id||
+            !this.first_name ||
+            !this.last_name ||
+            !this.password ||
+            !this.clinic_id)
         {
             this.message = "Data missing";
             return false;
@@ -86,12 +89,13 @@ export default {
   
     submitForm()
     {   
-        axios.put('http://127.0.0.1:5000/nurse', 
+        axios.put('http://127.0.0.1:5000/admin/register/nurse', 
         {
             access_id: this.access_id,
             first_name: this.first_name,
             last_name: this.last_name,
-            password: this.password
+            password: this.password,
+            clinic_id: this.clinic_id
         })
         .then(response => {
         this.nurse_created = true
