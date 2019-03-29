@@ -333,3 +333,11 @@ values (20, 20, 32400, '101', 1, 2019, 4, 8, "WALKIN");
 insert into Booking (id, availability_id, doctor_id, patient_id) values (1, 1, 1, 19);
 insert into Booking (id, availability_id, doctor_id, patient_id) values (2, 2, 2, 4);
 insert into Booking (id, availability_id, doctor_id, patient_id) values (3, 3, 3, 31);
+
+/* Clinic */
+insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time)
+values(1, 'Westmount', 'Montreal', 5, 7, 10, 28800, 72000);
+insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time)
+values(2, 'Centre-ville', 'Granby', 8, 10, 12, 21600, 61200);
+insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time)
+values(3, 'Sud-Ouest', 'Montreal', 10, 12, 15, 21600, 72000); 

@@ -1,9 +1,10 @@
-from enum import Enum
 import uber_sante
-from uber_sante.utils.dbutil import DBUtil
-from uber_sante.utils.time_interpreter import TimeInterpreter
+from enum import Enum
 
 from uber_sante.models.availability import Availability
+
+from uber_sante.utils.dbutil import DBUtil
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 convert_time = TimeInterpreter()
 
