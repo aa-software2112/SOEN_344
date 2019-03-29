@@ -31,6 +31,13 @@
                     <input type="text" class="form-control" v-model="specialty" name="specialty" id="specialty">
                 </div>
                 <div class="form-group">
+                    <label for="clinic">Clinic</label>
+                    <select v-model="clinic_id" name=clinic_id class="form-control" required>
+                        <option value="">Select a Clinic</option>
+                        <option value v-for="clinic in clinics":value="clinic.id">{{ clinic.name + ", " + clinic.location }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" v-model="password" name="password" id="password">
                 </div>
@@ -63,11 +70,18 @@ export default {
         password: '',
         doctor_created: false,
         fail_message: '',
-        success_message: ''
-    
+        success_message: '',
+        clinic_id: '',
+        clinics: []
     }
   },
-  
+      
+  watch: {
+        physician_permit_nb: function(query) {
+            this.getClinics();
+        },
+  },
+
   methods: {
     checkForm: function(e) {
         e.preventDefault();
@@ -103,8 +117,18 @@ export default {
         console.log(error)
         this.fail_message = error.response.data.error.message;
         })
-    
-    }
+    },
+
+    getClinics: function() {
+        axios.get('http://127.0.0.1:5000/clinic', {
+        }).then(response => {
+                this.clinics = response.data.data
+            })
+            .catch(error => {
+                console.log(error)
+                this.message = error.response.data.error.message;
+            })
+    },
   },
   
   computed: 

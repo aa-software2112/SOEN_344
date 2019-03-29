@@ -11,7 +11,7 @@
             <form v-if="canRegisterNurse" @submit="checkForm" class="reg-form" action="">
                 
                 <div class="form-group">
-                    <label for="access_id">Physician Permit Number</label>
+                    <label for="access_id">Access ID</label>
                     <input type="text" class="form-control" v-model="access_id" name="access_id" id="access_id">
                 </div> 
                 <div class="form-group">
@@ -26,7 +26,13 @@
                     <label for="password">Password</label>
                     <input type="password" class="form-control" v-model="password" name="password" id="password">
                 </div>
-                
+                <div class="form-group">
+                    <label for="clinic">Clinic</label>
+                    <select v-model="clinic_id" name=clinic_id class="form-control" required>
+                        <option value="">Select a Clinic</option>
+                        <option value v-for="clinic in clinics":value="clinic.id">{{ clinic.name + ", " + clinic.location }}</option>
+                    </select>
+                </div>
                 <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
             </form>
             <h3 v-else-if="notIsAdmin" class="error-message">Must be an Administrator to register a Nurse</h3>
@@ -53,11 +59,18 @@ export default {
         password: '',
         nurse_created: false,
         fail_message: '',
-        success_message: ''
-    
+        success_message: '',
+        clinic_id: '',
+        clinics: []
     }
   },
-  
+    
+    watch: {
+        access_id: function(query) {
+            this.getClinics();
+        },
+    },
+
   methods: {
     checkForm: function(e) {
         e.preventDefault();
@@ -90,8 +103,19 @@ export default {
         console.log(error)
         this.fail_message = error.response.data.error.message;
         })
-    
-    }
+    },
+
+    getClinics: function() {
+        axios.get('http://127.0.0.1:5000/clinic', {
+        }).then(response => {
+                this.clinics = response.data.data
+            })
+            .catch(error => {
+                console.log(error)
+                this.message = error.response.data.error.message;
+            })
+    },
+
   },
   
   computed: 
