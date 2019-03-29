@@ -27,7 +27,7 @@
         </div>
         <div class="form-group">
           <label for="room">Room</label>
-          <select v-model="room" name="book_type" required>
+          <select v-model="room" name="room" required>
             <option v-if="response.lenth == 0">No rooms available</option>
             <option value="">Select a Room</option>
             <option value v-for="(key, value) in response":value="key">{{ key }}</option>

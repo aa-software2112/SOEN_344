@@ -14,12 +14,21 @@
                     <input minlength="12" maxlength="12" type="text" class="form-control" v-model="health_card_nb" id="health_card_nb">
                 </div> 
                 <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" class="form-control" v-model="first_name" id="first_name">
+                </div> 
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" class="form-control" v-model="last_name" id="last_name">
+                </div>
+                <div class="form-group">
                     <label for="date_of_birth">Date of Birth</label>
                     <input type="date" class="form-control" v-model="date_of_birth" id="date_of_birth">
                 </div>
                 <div class="form-group">
                     <label for="gender">Gender</label>
-                    <select id="gender" v-model="gender">
+                    <select id="gender" v-model="gender" class="form-control" required>
+                        <option value="">Select Gender</option>
                         <option value="M">Male</option>
                         <option value="F">Female</option>
                     </select>
@@ -37,12 +46,11 @@
                     <input type="email" class="form-control" v-model="email" id="email">
                 </div>
                 <div class="form-group">
-                    <label for="first_name">First Name</label>
-                    <input type="text" class="form-control" v-model="first_name" id="first_name">
-                </div> 
-                <div class="form-group">
-                    <label for="last_name">Last Name</label>
-                    <input type="text" class="form-control" v-model="last_name" id="last_name">
+                    <label for="clinic">Clinic</label>
+                    <select v-model="clinic_id" name=clinic_id class="form-control" required>
+                        <option value="">Select a Clinic</option>
+                        <option value v-for="clinic in clinics":value="clinic.id">{{ clinic.name + ", " + clinic.location }}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -69,27 +77,33 @@ export default {
   return {
     health_card_nb : '',
     date_of_birth : 'yyyy-mm-dd',
-    gender : 'M',
+    gender : '',
     phone_nb : '',
     home_address : '',
     email : '',
     first_name : '',
     last_name : '',
     password : '',
-    message : ''
+    message : '',
+    clinic_id : '',
+    clinics : [],
     }
   },
-  
-  
+      
+    watch: {
+        gender: function(query) {
+            this.getClinics();
+        },
+    },
+
   methods: {
     checkForm: function(e) {
         e.preventDefault();
         if (!this.health_card_nb || !this.date_of_birth ||
                 !this.gender || !this.phone_nb || !this.home_address ||
                 !this.email || !this.first_name || !this.last_name || 
-                !this.password)
+                !this.password || !this.clinic_id)
         {
-            
             this.message = "Data missing";
             return false;
         }
@@ -109,7 +123,8 @@ export default {
             email : this.email,
             first_name : this.first_name,
             last_name : this.last_name,
-            password : this.password
+            password : this.password,
+            clinic_id: this.clinic_id
         })
         .then(response => {
         this.$router.push({path:"/login"});
@@ -119,8 +134,19 @@ export default {
         console.log(error)
         this.message = error.response.data.error.message;
         })
-    
-    }
+    },
+
+    getClinics: function() {
+        axios.get('http://127.0.0.1:5000/clinic', {
+        }).then(response => {
+                this.clinics = response.data.data
+            })
+            .catch(error => {
+                console.log(error)
+                this.message = error.response.data.error.message;
+            })
+      },
+
   }
 }
 </script>
