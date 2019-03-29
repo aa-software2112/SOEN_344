@@ -51,7 +51,7 @@ def book():
 
         availability_id = request.get_json().get('availability_id')
         patient_id = request.get_json().get('patient_id')
-        booking_id = request.args.get('booking_id')
+        booking_id = request.get_json().get('booking_id')
 
         if availability_id is None:
             return js.create_json(data=None, message="No appointment specified", return_code=js.ResponseReturnCode.CODE_400)

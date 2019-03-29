@@ -47,13 +47,9 @@ def patient():
         elif patient_info is not None:
             # Returns a list of patient objects
             result = patient_service.get_patient_by_last_name(patient_info)
-            print(result)
             if result is -3:
                 # Returns a single patient object
                 result = patient_service.get_patient_by_health_card_nb(patient_info)
-                print(result)
-
-
         else:
             result = patient_service.get_patient(patient_id)
 
