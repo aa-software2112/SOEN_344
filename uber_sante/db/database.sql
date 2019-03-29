@@ -67,6 +67,18 @@ CREATE TABLE IF NOT EXISTS Booking
   FOREIGN KEY (patient_id) REFERENCES Patient (id)
 );
 
+CREATE TABLE IF NOT EXISTS Clinic
+(
+  id            INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name          TEXT NOT NULL,
+  location      TEXT NOT NULL,
+  nb_rooms      INTEGER NOT NULL,
+  nb_doctors    INTEGER NOT NULL,
+  nb_nurses     INTEGER NOT NULL,
+  open_time     INTEGER NOT NULL,
+  close_time    INTEGER NOT NULL
+);
+
 /* Fake tuple insertion using Mockaroo */
 /* Nurse */
 insert into Nurse (id, access_id, first_name, last_name, password)
