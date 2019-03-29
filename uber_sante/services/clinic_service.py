@@ -36,7 +36,8 @@ class ClinicService:
                     result['nb_nurses'],
                     convert_time.get_start_time_string(result['open_time']),
                     convert_time.get_start_time_string(result['close_time'])))
-
+                    
+        list_of_clinics.sort(key=lambda x: x.location, reverse=False)
         return list_of_clinics
     
     def modify_clinic(self, id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time):

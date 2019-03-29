@@ -135,7 +135,7 @@ class PatientService:
 
             set_to_cache(patient_id, patient)
 
-    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password):
+    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password, clinic_id):
 
         # Check if health card already exists in db
         select_stmt = '''SELECT
@@ -165,9 +165,10 @@ class PatientService:
                                 email,
                                 first_name,
                                 last_name,
-                                password)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
+                                password, 
+                                clinic_id)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password, clinic_id)
 
             self.db.write_one(insert_stmt, params)
 
