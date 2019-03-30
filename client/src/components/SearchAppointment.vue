@@ -2,14 +2,25 @@
 <template>
   <div class="container reg-container" id="patient-reg">
     <div v-if="isLoggedNurse">
-      <form id="form-availability" @submit.prevent="processFormPatientLookup">
-        <h1> Search for a Patient </h1>
-        <div class="form-group">
-          <label for="patient_id">Patient Last Name</label>
-          <input type="text" class="form-control" v-model="patient_name" id="patient_name">
-          <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
-        </div>
-      </form>
+      <div class="nurse-forms">
+        <form id="form-availability" @submit.prevent="processFormPatientLookup">
+          <h1> Search for a Patient </h1>
+          <div class="form-group">
+            <label for="patient_id">Patient Last Name</label>
+            <input type="text" class="form-control" v-model="patient_name" id="patient_name">
+            <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
+          </div>
+        </form>
+      </div><div class="nurse-forms">
+        <form id="form-doctor" @submit.prevent="processFormDoctorLookup">
+          <h1> Search for a Doctor (Optional) </h1>
+          <div class="form-group">
+            <label for="doctor_id">Doctor Last Name</label>
+            <input type="text" class="form-control" v-model="doctor_name" id="doctor_name">
+            <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
+          </div>
+        </form>
+      </div>
 
       <table id="view">
         <th>Health Card</th>
@@ -29,15 +40,6 @@
           </td>
         </tr>
       </table>
-
-      <form id="form-doctor" @submit.prevent="processFormDoctorLookup">
-        <h1> Search for a Doctor (Optional) </h1>
-        <div class="form-group">
-          <label for="doctor_id">Doctor Last Name</label>
-          <input type="text" class="form-control" v-model="doctor_name" id="doctor_name">
-          <button value="submit" type="submit" class="btn btn-default submit">Submit</button>
-        </div>
-      </form>
 
       <table id="view">
         <th>Physician Permit</th>
