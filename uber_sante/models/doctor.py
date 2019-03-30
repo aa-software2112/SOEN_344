@@ -1,6 +1,6 @@
 class Doctor:
 
-    def __init__(self, doctor_id, f_name, l_name, ppn, specialty, city, password):
+    def __init__(self, doctor_id, f_name, l_name, ppn, specialty, city, password, clinic_id):
         self.id = doctor_id
         self.physician_permit_nb = ppn
         self.first_name = f_name
@@ -8,6 +8,7 @@ class Doctor:
         self.specialty = specialty
         self.city = city
         self.password = password
+        self.clinic_id = clinic_id
 
     
     def __dict__(self):
@@ -19,4 +20,5 @@ class Doctor:
             'specialty': self.specialty,
             'city': self.city,
             'password': self.password,
+            'clinic_id': self.clinic_id
         }

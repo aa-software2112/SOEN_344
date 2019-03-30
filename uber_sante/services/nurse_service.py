@@ -29,7 +29,7 @@ class NurseService:
                              WHERE id = ?'''
             params = (nurse_id,)
             result = self.db.read_one(select_stmt, params)
-            nurse = Nurse(result['id'], result['access_id'], result['first_name'], result['last_name'])
+            nurse = Nurse(result['id'], result['access_id'], result['first_name'], result['last_name'], result['clinic_id'])
 
             set_to_cache(nurse_key, nurse)
 

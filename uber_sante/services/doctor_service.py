@@ -36,7 +36,8 @@ class DoctorService:
                             result['physician_permit_nb'],
                             result['specialty'],
                             result['city'],
-                            result['password'])
+                            result['password'],
+                            result['clinic_id'])
 
         set_to_cache(doctor_key, doctor)
 
@@ -105,7 +106,8 @@ class DoctorService:
                         result['physician_permit_nb'],
                         result['specialty'],
                         result['city'],
-                        result['password'])
+                        result['password'],
+                        result['clinic_id'])
 
         return doctor
 
@@ -131,6 +133,7 @@ class DoctorService:
                     result['physician_permit_nb'],
                     result['specialty'],
                     result['city'],
-                    result['password']))
+                    result['password'],
+                    result['clinic_id']))
         
         return list_of_doctors
