@@ -24,7 +24,7 @@ class Patient:
         self.email = email
         self.cart = Cart()
         self.login_messages = []
-        self.clinic_id
+        self.clinic_id = clinic_id
 
     def update(self, availabilities):
         t = TimeInterpreter()
