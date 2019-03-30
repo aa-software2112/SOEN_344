@@ -1,58 +1,69 @@
 /* eslint-disable */
 <template>
-  <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
       <div class="logo">
       </div>
-      <div class="navbar-header">
-        <a class="navbar-brand" href="/">Home</a>
-      </div>
 
-      <div class="container justify-content-end navbar-right">
+      <ul>
+        <li>
+          <a class="navbar-brand" href="/">Home</a>
+        </li>
+      </ul>
 
-        <div class="row justify-content-end">
-            <!-- Any logged user -->
-            <div v-if="isLogged">
-                <a class="navbar-brand" href="#" v-on:click="logout">Logout</a>
-            </div>
-            
-            <!-- Any non-logged user -->
-            <div v-if="notLoggedOrNoCookiesSet">
-                <a class="navbar-brand" href="/registerPatient">Register</a>
-                <a class="navbar-brand" href="/login">Login</a>
-            </div>
-            
-            <!-- A logged in Patient -->
-            <div v-if="loggedPatient">
-                <a class="navbar-brand" href="/bookingsViewer">My Bookings</a>
-                <a class="navbar-brand" href="/cart">Cart</a>
-                <a class="navbar-brand" href="/schedule">Schedule Appointment</a>
-            </div>
-                
-            <!-- A logged in Admin -->
-            <div v-if="isLoggedAdmin">
-                <a class="navbar-brand" href="/adminRegistrationMenu">Registration Menu</a>
-            </div>
-            
-            <!-- A logged in Doctor -->
-            <div v-if="isLoggedDoctor">
-                <a class="navbar-brand" href="/createAvailability">Create Availability</a>
-                <a class="navbar-brand" href="/viewAvailability">Manage Availability</a>
-            </div>
-            
-            <!-- A logged in Nurse -->
-            <div v-if="isLoggedNurse">
-                <a class="navbar-brand" href="/schedule">Schedule Appointment</a>
-                <a class="navbar-brand" href="/nurse/viewBooking">Booking System</a>
-            </div>
 
-            <!-- Unknown -->
-            <!--<a class="navbar-brand" href="/appointment">Appointment</a>-->
+      <ul class="row justify-content-end navbar-right">
+
+        <!-- Any non-logged user -->
+        <div v-if="notLoggedOrNoCookiesSet">
+          <li>
+            <a class="navbar-brand" href="/registerPatient">Register</a>
+          </li>
+          <li>
+            <a class="navbar-brand" href="/login">Login</a>
+          </li>
         </div>
-      </div>
+
+        <!-- A logged in Patient -->
+        <div v-if="loggedPatient">
+          <li>
+            <a class="navbar-brand" href="/bookingsViewer">My Bookings</a>
+          </li>
+          <li>
+            <a class="navbar-brand" href="/cart">Cart</a>
+          </li>
+          <li>
+            <a class="navbar-brand" href="/schedule">Schedule Appointment</a>
+          </li>
+        </div>
+
+        <!-- A logged in Admin -->
+        <li v-if="isLoggedAdmin">
+          <a class="navbar-brand" href="/adminRegistrationMenu">Registration Menu</a>
+        </li>
+
+        <!-- A logged in Doctor -->
+        <li v-if="isLoggedDoctor">
+          <a class="navbar-brand" href="/createAvailability">Create Availability</a>
+          <a class="navbar-brand" href="/viewAvailability">Manage Availability</a>
+        </li>
+
+        <!-- A logged in Nurse -->
+        <li v-if="isLoggedNurse">
+          <a class="navbar-brand" href="/schedule">Schedule Appointment</a>
+          <a class="navbar-brand" href="/nurse/viewBooking">Booking System</a>
+        </li>
+
+        <!-- Any logged user -->
+        <li v-if="isLogged">
+          <a class="navbar-brand logout" href="#" v-on:click="logout">Logout</a>
+        </li>
+
+        <!-- Unknown -->
+        <!--<a class="navbar-brand" href="/appointment">Appointment</a>-->
+      </ul>
 
     </nav>
-  </div>
 </template>
 
 
@@ -121,27 +132,5 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-  #app {
-    margin: 0;
-  }
-
-  .navbar-brand {
-    color: #f2f2f2 !important;
-    text-align: center;
-    padding: 14px 14px;
-    text-decoration: none;
-  }
-
-  .navbar {
-    background-color: #333 !important;
-    overflow: hidden;
-    border-radius: 5px;
-
-  }
-
-  .navbar-right {
-    position: absolute;
-    right: 0px;
-  }
 
 </style>

@@ -22,7 +22,7 @@ class AvailabilityService:
     def __init__(self):
         self.db = DBUtil.get_instance()
 
-    def get_availabilities(self, schedule_request):
+    def get_availabilities(self, schedule_request, clinic_id):
         """
         Queries the Availability table according to the schedule_request object
         which specifies to query for the month or for a specific day only,
@@ -44,8 +44,9 @@ class AvailabilityService:
                             AND month = ?
                             AND day = ?
                             AND free = 1
-                            AND (? = "ALL" OR booking_type = ?)'''
-            params = (year, month, day, appointment_request_type, appointment_request_type)
+                            AND (? = "ALL" OR booking_type = ?) 
+                            AND clinic_id = ?'''
+            params = (year, month, day, appointment_request_type, appointment_request_type, clinic_id)
 
         elif schedule_request.is_monthly_request():
 
@@ -54,8 +55,9 @@ class AvailabilityService:
                           WHERE year = ?
                           AND month = ?
                           AND free = 1
-                          AND (? = "ALL" OR booking_type = ?)'''
-            params = (year, month, appointment_request_type, appointment_request_type)
+                          AND (? = "ALL" OR booking_type = ?) 
+                          AND clinic_id = ?'''
+            params = (year, month, appointment_request_type, appointment_request_type, clinic_id)
 
         results = self.db.read_all(select_stmt, params)
 

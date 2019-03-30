@@ -6,7 +6,6 @@ html, body {
 #app {
   margin: 0;
   background-color: #2c3e50 !important;
-
 }
 
 #app-container, #app {
@@ -20,9 +19,7 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-  border-radius: 5px;
-
+  margin-top: 20px;
 }
 
 #main-content-area {
@@ -36,7 +33,6 @@ html, body {
   font-weight: 900;
   background-color: #333;
 }
-
 
 .logo {
   background-image: url('../UberSante.png');
@@ -53,14 +49,12 @@ html, body {
     rgba(255, 255, 255, 1)
   ), url('../homepage_image.jpg');
   background-size: cover;
-  padding: 40px;
   width: 100%;
 }
 
 .error-message {
   color: red;
-  text-shadow:
-  -0.3px -0.3px 0 black,
+  text-shadow: -0.3px -0.3px 0 black,
   0.3px -0.3px 0 black,
   -0.3px 0.3px 0 black,
   0.3px 0.3px 0 black;
@@ -113,7 +107,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 8px;
 }
 
-#view tr:nth-child(even) , .table-view tr:nth-child(even)  {
+#view tr:nth-child(even), .table-view tr:nth-child(even) {
   background-color: rgba(255, 255, 255, 0.85);
 }
 
@@ -125,7 +119,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #ddd;
 }
 
-#view th, .table-view th{
+#view th, .table-view th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
@@ -146,12 +140,11 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 5px;
   margin-bottom: 10px;
   color: lightgray;
-    text-shadow:
-    -1px -1px 0 #333333,
-    1px -1px 0 #333333,
-    -1px 1px 0 #333333,
-    1px 1px 0 #333333;
-    font-size: 12px;
+  text-shadow: -1px -1px 0 #333333,
+  1px -1px 0 #333333,
+  -1px 1px 0 #333333,
+  1px 1px 0 #333333;
+  font-size: 12px;
 }
 
 form {
@@ -221,74 +214,121 @@ form button:hover {
 }
 
 .update-header {
-    background-color: #333;
+  background-color: #333;
 
 
 }
 
 .modal-title {
 
-    font-family: Arial;
-    letter-spacing: 0px;
+  font-family: Arial;
+  letter-spacing: 0px;
 
 }
 
 .modal-body {
-
-    //background:rgb(0,0,0,0);
-    padding: 0;
+/ / background: rgb(0, 0, 0, 0);
+  padding: 0;
 }
 
 .modal-content {
-    //background:rgb(0,0,0,0);
-    border:none;
+/ / background: rgb(0, 0, 0, 0);
+  border: none;
 
 }
 
 .modal-body form {
-    width: 500px;
-    background: rgb(155, 155, 155);
-    max-width: 650px;
+  width: 500px;
+  background: rgb(155, 155, 155);
+  max-width: 650px;
 
 }
 
 .modal-dialog {
-
-    max-width: 720px;
-
+  max-width: 720px;
 }
 
-#update-booking-modal #view{
-    width: 650px;
+#update-booking-modal #view {
+  width: 650px;
 }
 
 .update-avail-title {
-    padding-left: 25px;
-    font-size: 24px;
-    background-color: rgb(155,155,155);
-    color: white;
+  padding-left: 25px;
+  font-size: 24px;
+  background-color: rgb(155, 155, 155);
+  color: white;
 
 }
 
 .update-avail-container {
-    padding-top: 15px;
-    padding-left: 30px;
+  padding-top: 15px;
+  padding-left: 30px;
 
 
 }
 
 #update-schedule-container {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    height: 400px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 400px;
 }
 
 .mbutton {
-    margin-left: 15px;
+  margin-left: 15px;
 }
 
 .refresh-div {
-    margin-top: 20px;
-    margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 
+}
+
+.logout {
+  margin-left: 10px;
+  border-left-color: #26619C;
+  border-left-style: solid;
+}
+
+#app {
+  margin: 0;
+}
+
+.navbar-brand {
+  color: #f2f2f2 !important;
+  text-align: center;
+  padding: 14px 14px;
+  text-decoration: none;
+}
+
+.navbar {
+  background-color: #333 !important;
+  padding: 0px 16px
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+.navbar li {
+  float: left;
+}
+
+.navbar li a {
+  display: block;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+.navbar li a:hover {
+  background-color: #111;
+}
+
+.navbar-right {
+  position: absolute;
+  right: 0px;
 }
