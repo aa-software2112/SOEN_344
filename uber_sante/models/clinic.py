@@ -9,3 +9,15 @@ class Clinic:
         self.nb_nurses = nb_nurses
         self.open_time = open_time      #in seconds from start of day
         self.close_time = close_time    #in seconds from start of day
+
+    def __dict__(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'location': self.location,
+            'nb_rooms': self.nb_rooms,
+            'nb_doctors': self.nb_doctors,
+            'nb_nurses': self.nb_nurses,
+            'open_time': self.open_time,
+            'close_time': self.close_time
+        }

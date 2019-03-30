@@ -135,7 +135,7 @@ class PatientService:
 
             set_to_cache(patient_id, patient)
 
-    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password):
+    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password, clinic_id):
 
         # Check if health card already exists in db
         select_stmt = '''SELECT
@@ -165,9 +165,10 @@ class PatientService:
                                 email,
                                 first_name,
                                 last_name,
-                                password)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
+                                password, 
+                                clinic_id)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password, clinic_id)
 
             self.db.write_one(insert_stmt, params)
 
@@ -176,7 +177,7 @@ class PatientService:
 
     def update_patient(self, patient_id, date_of_birth, gender, phone_nb, home_address, first_name,last_name, password):
 
-        insert_stmt = '''UPDATE Patient
+        update_stmt = '''UPDATE Patient
                         SET date_of_birth = ?,
                             gender = ?,
                             phone_nb = ?,
@@ -188,7 +189,7 @@ class PatientService:
                         '''
         params = (date_of_birth, gender, phone_nb, home_address, first_name, last_name, password, patient_id)
 
-        self.db.write_one(insert_stmt, params)
+        self.db.write_one(update_stmt, params)
 
         return CreatePatientStatus.SUCCESS
 

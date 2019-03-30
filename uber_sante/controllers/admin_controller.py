@@ -34,6 +34,7 @@ def register_doctor():
             specialty = request.get_json().get("specialty")
             city = request.get_json().get("city")
             password = request.get_json().get("password")
+            clinic_id = request.get_json().get("clinic_id")
 
             ret_val = doctor_service.create_doctor(
                 physician_permit_nb,
@@ -41,12 +42,14 @@ def register_doctor():
                 last_name,
                 specialty,
                 city,
-                password)
+                password,
+                clinic_id
+            )
 
             if ret_val == CreateDoctorStatus.PHYSICIAN_NUMBER_ALREADY_EXISTS:
                 return js.create_json(data=None, message="Physician Number Already Exists", return_code=js.ResponseReturnCode.CODE_400)
 
-            return js.create_json(data=None, message="Successfully created Doctor",return_code=js.ResponseReturnCode.CODE_200)
+            return js.create_json(data=None, message="Successfully created Doctor",return_code=js.ResponseReturnCode.CODE_201)
 
         else:
             return js.create_json(data=None, message="Not logged in as admin, cannot register a Doctor",return_code=js.ResponseReturnCode.CODE_400)
@@ -61,23 +64,26 @@ def register_nurse():
     if request.method == 'PUT':
 
         # Check if logged in as admin
-        if cookie_helper.user_is_logged(request,
-                                       as_user_type=cookie_helper.UserTypes.ADMIN):
+        if cookie_helper.user_is_logged(request, as_user_type=cookie_helper.UserTypes.ADMIN):
 
             physician_permit_nb = request.get_json().get("access_id")
             first_name = request.get_json().get("first_name")
             last_name = request.get_json().get("last_name")
             password = request.get_json().get("password")
+            clinic_id = request.get_json().get("clinic_id")
 
-            ret_val = nurse_service.create_nurse(physician_permit_nb,
-                                                first_name,
-                                                last_name,
-                                                password)
+            ret_val = nurse_service.create_nurse(
+                physician_permit_nb,
+                first_name,
+                last_name,
+                password,
+                clinic_id
+            )
 
             if ret_val == CreateNurseStatus.ACCESS_ID_ALREADY_EXISTS:
                 return js.create_json(data=None, message="Access ID Already Exists", return_code=js.ResponseReturnCode.CODE_400)
 
-            return js.create_json(data=None, message="Successfully created Nurse", return_code=js.ResponseReturnCode.CODE_200)
+            return js.create_json(data=None, message="Successfully created Nurse", return_code=js.ResponseReturnCode.CODE_201)
 
         else:
             return js.create_json(data=None, message="Not logged in as admin, cannot register a Nurse", return_code=js.ResponseReturnCode.CODE_400)

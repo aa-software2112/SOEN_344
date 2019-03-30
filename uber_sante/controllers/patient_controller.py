@@ -78,6 +78,7 @@ def patient():
         first_name = request.get_json().get('first_name')
         last_name = request.get_json().get('last_name')
         password = request.get_json().get('password')
+        clinic_id = request.get_json().get('clinic_id')
 
         if health_card_nb is None:
             return js.create_json(data=None, message="No health card number provided", return_code=js.ResponseReturnCode.CODE_400)
@@ -97,6 +98,8 @@ def patient():
             return js.create_json(data=None, message="No last name provided", return_code=js.ResponseReturnCode.CODE_400)
         if password is None:
             return js.create_json(data=None, message="No password provided", return_code=js.ResponseReturnCode.CODE_400)
+        if clinic_id is None:
+            return js.create_json(data=None, message="No clinic id provided", return_code=js.ResponseReturnCode.CODE_400)
 
         result = patient_service.create_patient(
             health_card_nb,
@@ -107,7 +110,8 @@ def patient():
             email,
             first_name,
             last_name,
-            password
+            password,
+            clinic_id
         )
 
         if result == CreatePatientStatus.HEALTH_CARD_ALREADY_EXISTS:
