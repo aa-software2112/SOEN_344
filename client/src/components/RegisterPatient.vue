@@ -11,8 +11,9 @@
 
           <div class="form-group">
             <label for="health_card_nb">Health Card Number</label>
-            <input minlength="12" maxlength="12" type="text" class="form-control" v-model="health_card_nb"
+            <input minlength="14" maxlength="14" type="text" class="form-control" v-model="health_card_nb"
                    id="health_card_nb">
+            <p class="help-text">Ex: WLUSS 2019 1996</p>
           </div>
           <div class="form-group">
             <label for="first_name">First Name</label>
