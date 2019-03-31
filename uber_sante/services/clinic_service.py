@@ -53,7 +53,7 @@ class ClinicService:
         else:
             return None
 
-        params = (id)
+        params = (id,)
 
         clinic = self.db.read_all(select_stmt, params)
         clinic_id = clinic[0]['clinic_id']
