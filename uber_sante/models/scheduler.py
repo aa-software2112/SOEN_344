@@ -145,7 +145,7 @@ class Scheduler:
         self.availability_service = AvailabilityService()
 
 
-    def get_schedule(self, schedule_request, av=None):
+    def get_schedule(self, schedule_request, clinic_id, av=None):
         """
         This method takes a schedule request, given by a ScheduleRequest object, and creates a
         Daily or Monthly schedule from it.
@@ -161,7 +161,7 @@ class Scheduler:
         avail = None
 
         if av == None:
-            avail = self.availability_service.get_availabilities(schedule_request)
+            avail = self.availability_service.get_availabilities(schedule_request, clinic_id)
         else:
             avail = av
 

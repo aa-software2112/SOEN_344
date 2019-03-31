@@ -83,7 +83,8 @@ CREATE TABLE IF NOT EXISTS Clinic
   nb_doctors    INTEGER NOT NULL,
   nb_nurses     INTEGER NOT NULL,
   open_time     INTEGER NOT NULL,
-  close_time    INTEGER NOT NULL
+  close_time    INTEGER NOT NULL,
+  phone         TEXT NOT NULL
 );
 
 /* Fake tuple insertion using Mockaroo */
@@ -342,9 +343,9 @@ insert into Booking (id, availability_id, doctor_id, patient_id) values (2, 2, 2
 insert into Booking (id, availability_id, doctor_id, patient_id) values (3, 3, 3, 41);
 
 /* Clinic */
-insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time)
-values(1, 'Westmount', 'Montreal', 4, 3, 1, 32400, 61200);
-insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time)
-values(2, 'Centre-ville', 'Granby',  4, 8, 1, 32400, 61200);
-insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time)
-values(3, 'Sud-Ouest', 'Montreal', 4, 9, 1, 32400, 61200);
+insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
+values(1, 'Westmount Medical Center', '45 Sherbrooke St W, Westmount, H3Z 1G1', 4, 3, 1, 32400, 61200, '450 645-1127');
+insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
+values(2, 'Granby Clinic', '1050 Blv Bouchard N, Granby, J2H 0Y6',  4, 8, 1, 32400, 61200, '438 233-5677');
+insert into Clinic (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
+values(3, 'Saint-Jerome Family Clinic', '600 Av, Saint-Jerome, J7Z 5W2', 4, 9, 1, 32400, 61200, '450 638-2019');

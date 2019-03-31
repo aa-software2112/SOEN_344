@@ -12,7 +12,7 @@ class MakeAnnualStatus(Enum):
 
 class Patient:
 
-    def __init__(self, patient_id, f_name, l_name, health_card_nb, date_of_birth, gender, phone_nb, address, email):
+    def __init__(self, patient_id, f_name, l_name, health_card_nb, date_of_birth, gender, phone_nb, address, email, clinic_id):
         self.id = patient_id
         self.first_name = f_name
         self.last_name = l_name
@@ -24,6 +24,7 @@ class Patient:
         self.email = email
         self.cart = Cart()
         self.login_messages = []
+        self.clinic_id = clinic_id
 
     def update(self, availabilities):
         t = TimeInterpreter()
@@ -77,6 +78,9 @@ class Patient:
     def get_cart(self):
         return self.cart
 
+    def get_clinic_id(self):
+        return self.clinic_id
+
     def __dict__(self):
         return {
             'id': self.id,
@@ -88,6 +92,7 @@ class Patient:
             'phone_nb': self.phone_nb,
             'home_address': self.home_address,
             'email': self.email,
+            'clinic_id': self.clinic_id,
             'cart': self.cart.__dict__
         }
 
