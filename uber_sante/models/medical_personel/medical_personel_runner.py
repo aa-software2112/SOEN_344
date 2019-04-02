@@ -4,7 +4,7 @@ from uber_sante.models.medical_personel.medical_nurse import MedicalNurse
 
 class MedicalPersonelStatus(Enum):
     SUCCESS = 1
-    MISSING_PARAMETERS = -1
+    MISSING_PARAMETERS = 0
 
 class MedicalPersonelRunner:
     
@@ -15,11 +15,14 @@ class MedicalPersonelRunner:
 
         medical_personel = None
 
-        if self.verify_doctor():
+        is_doc = self.verify_doctor()
+        is_nurse = self.verify_nurse()
+
+        if is_doc == MedicalPersonelStatus.SUCCESS:
             medical_personel = MedicalDoctor(self.request_obj)
             medical_personel.execute()
 
-        elif self.verify_nurse():
+        elif is_nurse == MedicalPersonelStatus.SUCCESS:
             medical_personel = MedicalNurse(self.request_obj)
             medical_personel.execute()
 
@@ -54,7 +57,7 @@ class MedicalPersonelRunner:
         return MedicalPersonelStatus.SUCCESS
 
     def verify_nurse(self):
-
+        
         access_id = self.request_obj.get("access_id")
         first_name = self.request_obj.get("first_name")
         last_name = self.request_obj.get("last_name")

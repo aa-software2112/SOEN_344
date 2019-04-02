@@ -9,7 +9,7 @@ from uber_sante.utils import json_helper as js
 from uber_sante.services.admin_service import AdminService
 from uber_sante.services.nurse_service import CreateNurseStatus, NurseService
 from uber_sante.services.doctor_service import DoctorService, CreateDoctorStatus
-from uber_sante.models.medical_personel.medical_personel_runner import MedicalPersonelRunner
+from uber_sante.models.medical_personel.medical_personel_runner import MedicalPersonelRunner, MedicalPersonelStatus
 
 admin_service = AdminService()
 doctor_service = DoctorService()
@@ -25,73 +25,19 @@ def register_medical_personel():
         
             request_object = request.get_json()
 
+            medical_personel_runner = MedicalPersonelRunner(request_object)
+            result = medical_personel_runner.create_medical_personel()
+            
+            if result == MedicalPersonelStatus.MISSING_PARAMETERS:
+                return js.create_json(data=None, message="Missing Parameters", return_code=js.ResponseReturnCode.CODE_400)
 
+            if result == CreateDoctorStatus.PHYSICIAN_NUMBER_ALREADY_EXISTS:
+                return js.create_json(data=None, message="Physician Number Already Exists", return_code=js.ResponseReturnCode.CODE_400)
 
+            if result == CreateNurseStatus.ACCESS_ID_ALREADY_EXISTS:
+                return js.create_json(data=None, message="Access ID Already Exists", return_code=js.ResponseReturnCode.CODE_400)
+
+            return js.create_json(data=None, message="Successfully created Medical Personel",return_code=js.ResponseReturnCode.CODE_201)
 
         else:
             return js.create_json(data=None, message="Not logged in as admin, cannot register medical personel",return_code=js.ResponseReturnCode.CODE_400)
-            
-
-@controllers.route('/admin/register/doctor', methods=['PUT'])
-def register_doctor():
-
-    if request.method == 'PUT':
-
-        # Check if logged in as admin
-        if cookie_helper.user_is_logged(request, as_user_type=cookie_helper.UserTypes.ADMIN):
-
-            physician_permit_nb = request.get_json().get("physician_permit_nb")
-            first_name = request.get_json().get("first_name")
-            last_name = request.get_json().get("last_name")
-            specialty = request.get_json().get("specialty")
-            city = request.get_json().get("city")
-            password = request.get_json().get("password")
-            clinic_id = request.get_json().get("clinic_id")
-
-            ret_val = doctor_service.create_doctor(
-                physician_permit_nb,
-                first_name,
-                last_name,
-                specialty,
-                city,
-                password,
-                clinic_id
-            )
-
-            if ret_val == CreateDoctorStatus.PHYSICIAN_NUMBER_ALREADY_EXISTS:
-                return js.create_json(data=None, message="Physician Number Already Exists", return_code=js.ResponseReturnCode.CODE_400)
-
-            return js.create_json(data=None, message="Successfully created Doctor",return_code=js.ResponseReturnCode.CODE_201)
-
-        else:
-            return js.create_json(data=None, message="Not logged in as admin, cannot register a Doctor",return_code=js.ResponseReturnCode.CODE_400)
-
-@controllers.route('/admin/register/nurse', methods=['PUT'])
-def register_nurse():
-    if request.method == 'PUT':
-
-        # Check if logged in as admin
-        if cookie_helper.user_is_logged(request, as_user_type=cookie_helper.UserTypes.ADMIN):
-
-            access_id = request.get_json().get("access_id")
-            first_name = request.get_json().get("first_name")
-            last_name = request.get_json().get("last_name")
-            password = request.get_json().get("password")
-            clinic_id = request.get_json().get("clinic_id")
-
-            ret_val = nurse_service.create_nurse(
-                access_id,
-                first_name,
-                last_name,
-                password,
-                clinic_id
-            )
-
-            if ret_val == CreateNurseStatus.ACCESS_ID_ALREADY_EXISTS:
-                return js.create_json(data=None, message="Access ID Already Exists", return_code=js.ResponseReturnCode.CODE_400)
-
-            return js.create_json(data=None, message="Successfully created Nurse", return_code=js.ResponseReturnCode.CODE_201)
-
-        else:
-            return js.create_json(data=None, message="Not logged in as admin, cannot register a Nurse", return_code=js.ResponseReturnCode.CODE_400)
-
