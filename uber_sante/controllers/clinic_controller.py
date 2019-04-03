@@ -30,6 +30,7 @@ def clinic():
         nb_nurses = request.get_json().get('nb_nurses')
         open_time = request.get_json().get('open_time')
         close_time = request.get_json().get('close_time')
+        phone = request.get_json().get('phone')
 
         if name is None:
             return js.create_json(data=None, message="No clinic name provided", return_code=js.ResponseReturnCode.CODE_400)
@@ -45,8 +46,15 @@ def clinic():
             return js.create_json(data=None, message="No open time for clinic provided", return_code=js.ResponseReturnCode.CODE_400)
         if close_time is None:
             return js.create_json(data=None, message="No close time for clinic provided", return_code=js.ResponseReturnCode.CODE_400)
+        if phone is None:
+            return js.create_json(data=None, message="No phone number for clinic provided", return_code=js.ResponseReturnCode.CODE_400)
 
-        result = clinic_service
+        result = clinic_service.register_clinic(name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
+
+        if result is None:
+            return js.create_json(data=None, message="Could not register clinic", return_code=js.ResponseReturnCode.CODE_500)
+
+        return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_201)
 
 
 @controllers.route('/clinic/<string:user_type>/<string:id>', methods=['GET'])

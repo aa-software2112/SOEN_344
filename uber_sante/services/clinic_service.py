@@ -66,20 +66,37 @@ class ClinicService:
         return result
 
 
-def modify_clinic(self, id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone):
-    update_stmt = '''UPDATE Clinic
-                        SET
-                            name = ?,
-                            location = ?,
-                            nb_rooms = ?,
-                            nb_doctors = ?,
-                            nb_nurses = ?,
-                            open_time = ?,
-                            close_time = ?,
-                            phone = ?,
-                        WHERE id = ?'''
-    params = (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
+    def register_clinic(self, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone):
+        update_stmt = '''INSERT INTO Clinic(
+                                name,
+                                location,
+                                nb_rooms,
+                                nb_doctors,
+                                nb_nurses,
+                                open_time,
+                                close_time,
+                                phone)
+                            VALUES(?, ?, ?, ?, ?, ?, ?, ?)'''
+        params = (name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
 
-    self.db.write_one(update_stmt, params)
+        self.db.write_one(update_stmt, params)
 
-    return ClinicStatus.SUCCESS
+        return ClinicStatus.SUCCESS
+
+    def modify_clinic(self, id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone):
+        update_stmt = '''UPDATE Clinic
+                            SET
+                                name = ?,
+                                location = ?,
+                                nb_rooms = ?,
+                                nb_doctors = ?,
+                                nb_nurses = ?,
+                                open_time = ?,
+                                close_time = ?,
+                                phone = ?,
+                            WHERE id = ?'''
+        params = (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
+
+        self.db.write_one(update_stmt, params)
+
+        return ClinicStatus.SUCCESS
