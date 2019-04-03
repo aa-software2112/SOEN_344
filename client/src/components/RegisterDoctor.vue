@@ -99,7 +99,7 @@
       },
 
       submitForm() {
-        axios.put('http://127.0.0.1:5000/admin/register/doctor',
+        axios.put('http://127.0.0.1:5000/admin/register',
           {
             physician_permit_nb: this.physician_permit_nb,
             first_name: this.first_name,

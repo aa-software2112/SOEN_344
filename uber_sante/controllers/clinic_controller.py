@@ -33,23 +33,17 @@ def clinic():
         phone = request.get_json().get('phone')
 
         if name is None:
-            return js.create_json(data=None, message="No clinic name provided",
-                                  return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="No clinic name provided", return_code=js.ResponseReturnCode.CODE_400)
         if location is None:
-            return js.create_json(data=None, message="No clinic location provided",
-                                  return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="No clinic location provided", return_code=js.ResponseReturnCode.CODE_400)
         if nb_rooms is None:
-            return js.create_json(data=None, message="Number of rooms for clinic not provided",
-                                  return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="Number of rooms for clinic not provided", return_code=js.ResponseReturnCode.CODE_400)
         if nb_doctors is None:
-            return js.create_json(data=None, message="Number of doctors for clinic not provided",
-                                  return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="Number of doctors for clinic not provided", return_code=js.ResponseReturnCode.CODE_400)
         if nb_nurses is None:
-            return js.create_json(data=None, message="Number of nurses for clininc not provided",
-                                  return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="Number of nurses for clininc not provided", return_code=js.ResponseReturnCode.CODE_400)
         if open_time is None:
-            return js.create_json(data=None, message="No open time for clinic provided",
-                                  return_code=js.ResponseReturnCode.CODE_400)
+            return js.create_json(data=None, message="No open time for clinic provided", return_code=js.ResponseReturnCode.CODE_400)
         if close_time is None:
             return js.create_json(data=None, message="No close time for clinic provided", return_code=js.ResponseReturnCode.CODE_400)
         if phone is None:
@@ -72,5 +66,4 @@ def current_clinic(user_type, id):
         if result is not None:
             return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
-        return js.create_json(data=None, message="Could not fetch current clinic.",
-                              return_code=js.ResponseReturnCode.CODE_400)
+        return js.create_json(data=None, message="Could not fetch current clinic.", return_code=js.ResponseReturnCode.CODE_400)

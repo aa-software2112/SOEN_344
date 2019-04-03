@@ -85,7 +85,7 @@
       },
 
       submitForm() {
-        axios.put('http://127.0.0.1:5000/admin/register/nurse',
+        axios.put('http://127.0.0.1:5000/admin/register',
           {
             access_id: this.access_id,
             first_name: this.first_name,
