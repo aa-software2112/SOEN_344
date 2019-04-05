@@ -72,7 +72,7 @@
                 <h1>Bookings</h1>
                 </br>
                 <table id="view">
-                    <th>Date(dd/mm/yyyy)</th>
+                    <th>Date <span class="hint">(DD/MM/YYYY)</span></th>
                     <th>Time</th>
                     <th>Doctor</th>
                     <th>Room</th>

@@ -1,22 +1,26 @@
 /* eslint-disable */
 <template>
-  <div id="app" class="homepage">
+  <div id="app">
+    <div class="homepage-image"></div>
 
-    <navbar></navbar>
-    <router-view/>
+    <div class="homepage">
+      <navbar></navbar>
+      <router-view/>
+    </div>
+
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/Navbar';
+  import Navbar from '@/components/Navbar';
 
-export default {
-  name: "App",
-  
-  components: {
-    'navbar': Navbar
-  },
-};
+  export default {
+    name: "App",
+
+    components: {
+      'navbar': Navbar
+    },
+  };
 </script>
 
 <style>

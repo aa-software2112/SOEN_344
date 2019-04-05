@@ -1,7 +1,9 @@
-from uber_sante.utils.dbutil import DBUtil
 from enum import Enum
-from uber_sante.utils.cache import get_from_cache, set_to_cache
+
 from uber_sante.models.nurse import Nurse
+
+from uber_sante.utils.dbutil import DBUtil
+from uber_sante.utils.cache import get_from_cache, set_to_cache
 
 class CreateNurseStatus(Enum):
     ACCESS_ID_ALREADY_EXISTS = 1
@@ -23,16 +25,21 @@ class NurseService:
             return
 
         else:
-            select_stmt = "SELECT * FROM Nurse WHERE id = ?"
+            select_stmt = '''SELECT * FROM Nurse
+                             WHERE id = ?'''
             params = (nurse_id,)
             result = self.db.read_one(select_stmt, params)
-            nurse = Nurse(result['id'], result['access_id'], result['first_name'], result['last_name'])
+            nurse = Nurse(result['id'], result['access_id'], result['first_name'], result['last_name'], result['clinic_id'])
 
             set_to_cache(nurse_key, nurse)
 
     def validate_login_info(self, access_id, password):
 
-        select_stmt = 'SELECT id, password FROM Nurse WHERE access_id = ?'
+        select_stmt = '''SELECT 
+                            id, 
+                            password 
+                        FROM Nurse 
+                        WHERE access_id = ?'''
         params = (access_id,)
 
         result = self.db.read_one(select_stmt, params)
@@ -45,18 +52,26 @@ class NurseService:
 
         return result['id']
 
-    def create_nurse(self, access_id, first_name, last_name, password):
+    def create_nurse(self, access_id, first_name, last_name, password, clinic_id):
 
         # Check if physician permit number already exists
-        select_stmt = 'SELECT id FROM Nurse WHERE access_id = ?'
+        select_stmt = '''SELECT
+                            id
+                        FROM Nurse
+                        WHERE access_id = ?'''
         params = (access_id,)
 
         if self.db.read_one(select_stmt, params) is not None:
             return CreateNurseStatus.ACCESS_ID_ALREADY_EXISTS
 
-        insert_stmt = 'INSERT INTO Nurse(access_id, first_name, last_name, password)' \
-                      'VALUES (?, ?, ?, ?)'
-        params = (access_id, first_name, last_name, password)
+        insert_stmt = '''INSERT INTO Nurse(
+                            access_id,
+                            first_name,
+                            last_name,
+                            password,
+                            clinic_id)
+                      VALUES (?, ?, ?, ?, ?)'''
+        params = (access_id, first_name, last_name, password, clinic_id)
 
         self.db.write_one(insert_stmt, params)
 

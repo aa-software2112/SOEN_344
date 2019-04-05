@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import *
 from flask import Flask, request, jsonify, make_response
 
@@ -47,13 +48,9 @@ def patient():
         elif patient_info is not None:
             # Returns a list of patient objects
             result = patient_service.get_patient_by_last_name(patient_info)
-            print(result)
             if result is -3:
                 # Returns a single patient object
                 result = patient_service.get_patient_by_health_card_nb(patient_info)
-                print(result)
-
-
         else:
             result = patient_service.get_patient(patient_id)
 
@@ -81,6 +78,7 @@ def patient():
         first_name = request.get_json().get('first_name')
         last_name = request.get_json().get('last_name')
         password = request.get_json().get('password')
+        clinic_id = request.get_json().get('clinic_id')
 
         if health_card_nb is None:
             return js.create_json(data=None, message="No health card number provided", return_code=js.ResponseReturnCode.CODE_400)
@@ -100,6 +98,8 @@ def patient():
             return js.create_json(data=None, message="No last name provided", return_code=js.ResponseReturnCode.CODE_400)
         if password is None:
             return js.create_json(data=None, message="No password provided", return_code=js.ResponseReturnCode.CODE_400)
+        if clinic_id is None:
+            return js.create_json(data=None, message="No clinic id provided", return_code=js.ResponseReturnCode.CODE_400)
 
         result = patient_service.create_patient(
             health_card_nb,
@@ -110,7 +110,8 @@ def patient():
             email,
             first_name,
             last_name,
-            password
+            password,
+            clinic_id
         )
 
         if result == CreatePatientStatus.HEALTH_CARD_ALREADY_EXISTS:
@@ -179,6 +180,12 @@ def schedule():
 
         request_type = request.get_json().get('request_type')
         appointment_request_type = request.get_json().get('appointment_request_type')
+        patient_id = request.get_json().get('patient_id')
+
+        patient_service.test_and_set_patient_into_cache(patient_id)
+        patient = get_from_cache(patient_id)
+
+        clinic_id = patient.clinic_id
 
         date = datetime.strptime(request.get_json().get('date'), '%Y-%m-%d').date()
         year = int(date.year)
@@ -189,13 +196,13 @@ def schedule():
 
         if request_type == RequestEnum.MONTHLY_REQUEST.value:
             sr_monthly = sched_register.get_request(proto_str).set_date(Date(year, month))
-            monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly)
+            monthly_schedule = Scheduler.get_instance().get_schedule(sr_monthly, clinic_id)
 
             return js.create_json(data=monthly_schedule, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
         if request_type == RequestEnum.DAILY_REQUEST.value:
             sr_daily = sched_register.get_request(proto_str).set_date(Date(year, month, day))
-            daily_schedule = Scheduler.get_instance().get_schedule(sr_daily)
+            daily_schedule = Scheduler.get_instance().get_schedule(sr_daily, clinic_id)
 
             return js.create_json(data=daily_schedule, message=None, return_code=js.ResponseReturnCode.CODE_200)
 
@@ -211,12 +218,16 @@ def annual_appointment():
         patient = get_from_cache(patient_id)
         availability = availability_service.get_availability(availability_id)
 
+
+        if patient_service.has_annual_booking(patient_id):
+            return js.create_json(data=None, message="You have an annual booking!", return_code=js.ResponseReturnCode.CODE_400)
+
         result = patient.make_annual_appointment(availability)
 
         if result == MakeAnnualStatus.SUCCESS:
             return js.create_json(data=None, message="Successfully added annual appointment", return_code=js.ResponseReturnCode.CODE_200)
 
-        elif result == MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT:
+        if result == MakeAnnualStatus.HAS_ANNUAL_APPOINTMENT:
             return js.create_json(data=None, message="You already have an annual appointment in your cart!", return_code=js.ResponseReturnCode.CODE_400)
 
 
@@ -303,6 +314,7 @@ def cart():
         return js.create_json(data=data_to_send, message="List of appointments with patient id",
                               return_code=js.ResponseReturnCode.CODE_200)
 
+
 @controllers.route('/my-update', methods=['GET'])
 def my_update():
     """ endpoint that returns the info concerning the canceled booking(s)
@@ -314,13 +326,14 @@ def my_update():
     # get patient from cache
     patient = get_from_cache(patient_id)
 
-    messages = patient.get_login_messages()
+    messages = deepcopy(patient.get_login_messages())
 
     if len(messages) > 0:
         patient.login_messages.clear()
         return js.create_json(data=messages, message="canceled bookings notification",
-                              return_code=js.ResponseReturnCode.CODE_200)
+                              return_code=js.ResponseReturnCode.CODE_200, as_tuple=False)
     else:
-        return js.create_json(data=None, message="nothing to notify", return_code=js.ResponseReturnCode.CODE_200)
+        return js.create_json(data=None, message="nothing to notify", return_code=js.ResponseReturnCode.CODE_200,
+                              as_tuple=False)
 
 

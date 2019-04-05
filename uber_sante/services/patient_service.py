@@ -5,7 +5,6 @@ from uber_sante.utils.cache import get_from_cache, set_to_cache
 
 from uber_sante.models.patient import Patient
 
-
 class CreatePatientStatus(Enum):
     SUCCESS = 1
     HEALTH_CARD_ALREADY_EXISTS = -1
@@ -41,7 +40,7 @@ class PatientService:
             result['email'])
 
         return patient
-    
+
     def get_patient_by_last_name(self, last_name):
         """Query the db for a patient by the patient's last name and return the created patient object"""
         last_name_formatted = '%' + last_name + '%'
@@ -67,7 +66,7 @@ class PatientService:
                     result['phone_nb'],
                     result['home_address'],
                     result['email']))
-        
+
         return list_of_patient
 
     def get_patient_by_health_card_nb(self, health_card_nb):
@@ -132,11 +131,12 @@ class PatientService:
                 result['gender'],
                 result['phone_nb'],
                 result['home_address'],
-                result['email'])
+                result['email'],
+                result['clinic_id'])
 
             set_to_cache(patient_id, patient)
 
-    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password):
+    def create_patient(self, health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name,last_name, password, clinic_id):
 
         # Check if health card already exists in db
         select_stmt = '''SELECT
@@ -166,9 +166,10 @@ class PatientService:
                                 email,
                                 first_name,
                                 last_name,
-                                password)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password)
+                                password, 
+                                clinic_id)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+            params = (health_card_nb, date_of_birth, gender, phone_nb, home_address, email, first_name, last_name, password, clinic_id)
 
             self.db.write_one(insert_stmt, params)
 
@@ -177,7 +178,7 @@ class PatientService:
 
     def update_patient(self, patient_id, date_of_birth, gender, phone_nb, home_address, first_name,last_name, password):
 
-        insert_stmt = '''UPDATE Patient
+        update_stmt = '''UPDATE Patient
                         SET date_of_birth = ?,
                             gender = ?,
                             phone_nb = ?,
@@ -188,7 +189,22 @@ class PatientService:
                         WHERE id = ?
                         '''
         params = (date_of_birth, gender, phone_nb, home_address, first_name, last_name, password, patient_id)
-        
-        self.db.write_one(insert_stmt, params)
+
+        self.db.write_one(update_stmt, params)
 
         return CreatePatientStatus.SUCCESS
+
+    def has_annual_booking(self, patient_id):
+
+        select_stmt = '''SELECT * FROM Availability INNER JOIN Booking on Availability.id = Booking.availability_id 
+        WHERE patient_id = ? AND Availability.booking_type = "ANNUAL"'''
+
+        params = (patient_id, )
+
+        result = self.db.read_one(select_stmt, params)
+
+        if result is None:
+            return False
+
+        else:
+            return True

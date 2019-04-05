@@ -4,7 +4,7 @@ from uber_sante.utils.time_interpreter import TimeInterpreter
 
 class Availability:
 
-    def __init__(self, availability_id, doctor_id, start, room, free, year, month, day, booking_type):
+    def __init__(self, availability_id, doctor_id, start, room, free, year, month, day, booking_type, clinic_id):
         # Note, the id comes from the Availability Table
         self.id = availability_id
         self.doctor_id = doctor_id
@@ -16,6 +16,7 @@ class Availability:
         self.year = year
         # either AppointmentRequestType.WALKIN or AppointmentRequestType.ANNUAL
         self.booking_type = booking_type
+        self.clinic_id = clinic_id
 
     def get_id(self):
         return self.id
@@ -35,6 +36,9 @@ class Availability:
     def get_booking_type(self):
         return self.booking_type
 
+    def get_clinic_id(self):
+        return self.clinic_id
+
     def __str__(self):
         return "start {} day {} month {} year {}".format(
             TimeInterpreter.get_start_time_string(self.start),
@@ -52,7 +56,8 @@ class Availability:
             'month': self.month,
             'day': self.day,
             'year': self.year,
-            'booking_type': self.booking_type
+            'booking_type': self.booking_type,
+            'clinic_id': self.clinic_id
         }
 
 if __name__ == "__main__":

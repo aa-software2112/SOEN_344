@@ -1,9 +1,10 @@
-from enum import Enum
 import uber_sante
-from uber_sante.utils.dbutil import DBUtil
-from uber_sante.utils.time_interpreter import TimeInterpreter
+from enum import Enum
 
 from uber_sante.models.availability import Availability
+
+from uber_sante.utils.dbutil import DBUtil
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 convert_time = TimeInterpreter()
 
@@ -12,7 +13,7 @@ class AvailabilityStatus(Enum):
     SUCCESS = 1
     NO_AVAILABILITIES = 2
     NO_ROOMS_AT_THIS_TIME = 3
-    AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME = 4 # doctor has already booked an availability at this time slot
+    AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME = 4  # doctor has already booked an availability at this time slot
     ALL_ROOMS_OPEN = 5
 
 
@@ -21,7 +22,7 @@ class AvailabilityService:
     def __init__(self):
         self.db = DBUtil.get_instance()
 
-    def get_availabilities(self, schedule_request):
+    def get_availabilities(self, schedule_request, clinic_id):
         """
         Queries the Availability table according to the schedule_request object
         which specifies to query for the month or for a specific day only,
@@ -43,8 +44,9 @@ class AvailabilityService:
                             AND month = ?
                             AND day = ?
                             AND free = 1
-                            AND (? = "ALL" OR booking_type = ?)'''
-            params = (year, month, day, appointment_request_type, appointment_request_type)
+                            AND (? = "ALL" OR booking_type = ?) 
+                            AND clinic_id = ?'''
+            params = (year, month, day, appointment_request_type, appointment_request_type, clinic_id)
 
         elif schedule_request.is_monthly_request():
 
@@ -53,8 +55,9 @@ class AvailabilityService:
                           WHERE year = ?
                           AND month = ?
                           AND free = 1
-                          AND (? = "ALL" OR booking_type = ?)'''
-            params = (year, month, appointment_request_type, appointment_request_type)
+                          AND (? = "ALL" OR booking_type = ?) 
+                          AND clinic_id = ?'''
+            params = (year, month, appointment_request_type, appointment_request_type, clinic_id)
 
         results = self.db.read_all(select_stmt, params)
 
@@ -71,7 +74,8 @@ class AvailabilityService:
                     result['year'],
                     result['month'],
                     result['day'],
-                    result['booking_type']))
+                    result['booking_type'],
+                    result['clinic_id']))
 
         return list_of_availabilities
 
@@ -96,8 +100,8 @@ class AvailabilityService:
             result['year'],
             result['month'],
             result['day'],
-            uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
-    
+            uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']),
+            result['clinic_id'])
 
     def get_all_availabilities(self):
 
@@ -121,13 +125,13 @@ class AvailabilityService:
                     result['year'],
                     result['month'],
                     result['day'],
-                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type'])))
-        
+                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']),
+                    result['clinic_id']))
+
         return list_of_availabilities
 
-
     def get_available_rooms(self, start, year, month, day):
-        
+
         start_time = convert_time.get_time_to_second(start)
 
         select_stmt = '''SELECT * FROM Availability
@@ -176,7 +180,8 @@ class AvailabilityService:
                     result['year'],
                     result['month'],
                     result['day'],
-                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type'])))
+                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']),
+                    result['clinic_id']))
 
         return list_of_availabilities
 
@@ -220,13 +225,16 @@ class AvailabilityService:
                 result['year'],
                 result['month'],
                 result['day'],
-                uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']))
+                uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']),
+                result['clinic_id'])
 
-    def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type, availability_id=-1):
-        
-        if self.check_doctor_time_slot(doctor_id, start, year, month, day) == AvailabilityStatus.AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME:
+    def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type,
+                                             availability_id=-1):
+
+        if self.check_doctor_time_slot(doctor_id, start, year, month,
+                                       day) == AvailabilityStatus.AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME:
             return AvailabilityStatus.AVAILABILITY_ALREADY_BOOKED_AT_THIS_TIME
-        
+
         start_time = convert_time.get_time_to_second(start)
         select_stmt = None
 
@@ -262,7 +270,8 @@ class AvailabilityService:
         self.db.write_one(insert_stmt, insert_params)
         return insert_params
 
-    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type, availability_id=-1):
+    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type,
+                                             availability_id=-1):
 
         # check the start time, as well as the next 2 slots in the hour
         start_time = convert_time.get_time_to_second(start)
@@ -330,7 +339,7 @@ class AvailabilityService:
 
         else:
             return AvailabilityStatus.NO_ROOMS_AT_THIS_TIME
-    
+
     def check_doctor_time_slot(self, doctor_id, start, year, month, day):
         """Checks if the doctor is about to book 2 availabilities at the same time slot in different rooms"""
         start_time = convert_time.get_time_to_second(start)
