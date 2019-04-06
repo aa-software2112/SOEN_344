@@ -44,10 +44,14 @@
       </div>
 
       <!-- A logged in Admin -->
-      <li v-if="isLoggedAdmin">
-        <a class="navbar-brand" href="/adminRegistrationMenu">Registration Menu</a>
-      </li>
-
+      <div v-if="isLoggedAdmin">
+        <li>
+          <a class="navbar-brand" href="/adminRegistrationMenu">Registration Menu</a>
+        </li>
+        <li v-if="isLoggedAdmin">
+          <a class="navbar-brand" href="/adminManageClinics">Manage Clinics</a>
+        </li>
+      </div>
       <!-- A logged in Doctor -->
       <div v-if="isLoggedDoctor">
         <li>
