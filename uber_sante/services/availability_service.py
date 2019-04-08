@@ -228,7 +228,7 @@ class AvailabilityService:
                 uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']),
                 result['clinic_id'])
 
-    def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type,
+    def check_and_create_availability_walkin(self, doctor_id, start, room, free, year, month, day, booking_type, clinic_id,
                                              availability_id=-1):
 
         if self.check_doctor_time_slot(doctor_id, start, year, month,
@@ -263,14 +263,15 @@ class AvailabilityService:
                             year,
                             month,
                             day,
-                            booking_type)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
-        insert_params = (doctor_id, start_time, room, free, year, month, day, booking_type)
+                            booking_type, 
+                            clinic_id)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+        insert_params = (doctor_id, start_time, room, free, year, month, day, booking_type, clinic_id)
 
         self.db.write_one(insert_stmt, insert_params)
         return insert_params
 
-    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type,
+    def check_and_create_availability_annual(self, doctor_id, start, room, free, year, month, day, booking_type, clinic_id,
                                              availability_id=-1):
 
         # check the start time, as well as the next 2 slots in the hour
@@ -306,9 +307,10 @@ class AvailabilityService:
                             year,
                             month,
                             day,
-                            booking_type)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
-        insert_params = (doctor_id, start_time, room, free, year, month, day, booking_type)
+                            booking_type,
+                            clinic_id)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+        insert_params = (doctor_id, start_time, room, free, year, month, day, booking_type, clinic_id)
 
         self.db.write_one(insert_stmt, insert_params)
         return insert_params

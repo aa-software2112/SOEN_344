@@ -15,9 +15,8 @@
         </div>
         <div class="form-group">
           <label for="start">Appointment Time</label>
-          <input v-if="booking_type === 'WALKIN'" type="time" value="09:00" min="9:00" max="16:00" step="1200"
-                 v-model="start" required>
-          <input v-else type="time" value="09:00" min="9:00" max="16:00" step="3600" v-model="start" required>
+          <input v-if="booking_type === 'WALKIN'" type="time" value="09:00" min="09:00:00" max="16:00:00" step="1200" v-model="start" required>
+          <input v-else type="time" value="09:00" min="09:00:00" max="16:00:00" step="3600" v-model="start" required>
           <br>
           <span class="help-text">Appointment times are from 9:00am to 4:00pm</span>
         </div>
