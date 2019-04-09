@@ -14,10 +14,10 @@
             </div>
             <div class="button-holder">
               <button v-on:click="showTableDoctors(clinic.id)">View Doctors</button>
-              <button v-on:click="showTableNurses">View Nurses</button>
+              <button v-on:click="showTableNurses(clinic.id)">View Nurses</button>
               <button v-on:click="showTableAvailabilities">View Availabilities</button>
             </div>
-            <table class="show-table" v-if="displayDoctortable">
+            <table class="show-table" v-if="displayDoctorTable">
               <th>Last Name</th>
               <th>First Name</th>
               <th>Specialty</th>
@@ -27,6 +27,16 @@
                 <td>{{item['first_name']}}</td>
                 <td>{{item['specialty']}}</td>
                 <td>{{item['physician_permit_nb']}}</td>
+              </tr>
+            </table>
+            <table class="show-table" v-if="displayNurseTable">
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>Access ID</th>
+              <tr class="container patient-item" v-for="(item) in results_nurse.data">
+                <td>{{item['last_name']}}</td>
+                <td>{{item['first_name']}}</td>
+                <td>{{item['access_id']}}</td>
               </tr>
             </table>
           </form>
@@ -65,10 +75,11 @@
         clinics: [],
         current_clinic: null,
         nurses: [],
-        displayDoctortable: false,
+        displayDoctorTable: false,
         displayNurseTable: false,
         displayAvailTable: false,
         results_doctor: '',
+        results_nurse: '',
       };
     },
 
@@ -114,12 +125,12 @@
         })
       },
       showTableDoctors: function (clinic_id) {
-        if(this.displayDoctortable){
-          this.displayDoctortable = false;
-          console.log(this.displayDoctortable)
+        this.displayNurseTable = false;
+        this.displayAvailTable = false;
+        if(this.displayDoctorTable){
+          this.displayDoctorTable = false;
         } else {
-          this.displayDoctortable = true;
-          console.log(this.displayDoctortable)
+          this.displayDoctorTable = true;
         }
         var self = this;
         self.submit = 'True';
@@ -135,11 +146,36 @@
             alert(error);
           });
       },
-      showTableNurses: function () {
-
+      showTableNurses: function (clinic_id) {
+        this.displayDoctorTable = false;
+        this.displayAvailTable = false;
+        if(this.displayNurseTable){
+          this.displayNurseTable = false;
+        } else {
+          this.displayNurseTable = true;
+        }
+        var self = this;
+        self.submit = 'True';
+        axios.get('http://127.0.0.1:5000/nurse', {
+          params: {
+            clinic_id: clinic_id
+          }
+        })
+          .then(response => {
+            self.results_nurse = response.data
+          })
+          .catch(function (error) {
+            alert(error);
+          });
       },
       showTableAvailabilities: function () {
-
+        this.displayDoctorTable = false;
+        this.displayNurseTable = false;
+        if(this.displayAvailTable){
+          this.displayAvailTable = false;
+        } else {
+          this.displayAvailTable = true;
+        }
       }
     },
 

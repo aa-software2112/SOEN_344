@@ -57,3 +57,21 @@ def walkin_appointment_nurse():
                 return js.create_json(data=None, message="Unable to create annual booking", return_code=js.ResponseReturnCode.CODE_400)
         else:
             return js.create_json(data=None, message="Unable to create annual booking", return_code=js.ResponseReturnCode.CODE_400)
+
+@controllers.route('/nurse', methods=['GET'])
+def nurse():
+    # params: clinic_id (required)
+    # return: nurse object
+    if request.method == 'GET':
+        clinic_id = request.args.get('clinic_id')
+
+        if clinic_id is not None:
+            print(clinic_id)
+            result = nurse_service.get_nurse_by_clinic(clinic_id)
+        else:
+            return js.create_json(data=None, message='No clinic param specified', return_code=js.ResponseReturnCode.CODE_400)
+        
+        if result is None:
+            return js.create_json(data=None, message='Could not retrieve nurse', return_code=js.ResponseReturnCode.CODE_500)
+
+        return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_200)
