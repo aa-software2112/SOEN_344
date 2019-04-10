@@ -88,8 +88,39 @@
         </div>
         <form v-on:submit.prevent>
           <div class="button-holder">
-            <button>Add Clinic</button>
+            <button v-b-modal="'modal-newclinic'">Add Clinic</button>
           </div>
+            <!-- Modal Component -->
+              <b-modal :id="'modal-newclinic'" hide-footer centered title="Edit Clinic Details">
+                <form id="form-availability" class="form" @submit.prevent="create()">
+                  <h3 class="error-message">{{message}}</h3>
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" v-model="name">
+                  </div>
+                  <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" v-model="location">
+                  </div>
+                  <div class="form-group">
+                    <label for="opening">Opening Time</label>
+                    <input type="time" min="9:00" max="16:00" step="3600" v-model="opening">
+                    <br>
+                    <span class="help-text">Hours are 9am to 4pm</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="opening">Closing Time</label>
+                    <input type="time" min="9:00" max="16:00" step="3600" v-model="closing">
+                    <br>
+                    <span class="help-text">Hours are 9am to 4pm</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Telephone</label>
+                    <input type="tel" class="input" name="telephone" v-model="telephone">
+                  </div>
+                  <button type="submit" class="btn btn-default submit">Create</button>
+                </form>
+              </b-modal>
         </form>
 
       </div>
@@ -236,6 +267,25 @@
         axios.put('http://127.0.0.1:5000/clinic', {
           clinic_id: clinic_id,
           location: this.location,
+          open_time: this.opening,
+          close_time: this.closing,
+          phone: this.telephone,
+        })
+          .then(function (response) {
+            alert(response.data.message);
+          })
+          .catch(error => {
+            console.log(error)
+            this.message = error.response.data.error.message;
+          })
+      },
+      create: function() {
+          axios.put('http://127.0.0.1:5000/clinic', {
+          name: this.name,
+          location: this.location,
+          nb_rooms: 0,
+          nb_doctors: 0,
+          nb_nurses: 0,
           open_time: this.opening,
           close_time: this.closing,
           phone: this.telephone,

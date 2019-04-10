@@ -9,7 +9,7 @@ convert_time = TimeInterpreter()
 
 
 class ClinicStatus(Enum):
-    SUCESS = 1
+    SUCCESS = 1
     CLINIC_DOES_NOT_EXIST = -1
 
 
@@ -145,8 +145,8 @@ class ClinicService:
                                 close_time,
                                 phone)
                             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-        params = (id, name, location, nb_rooms, nb_doctors, nb_nurses, convert_time.get_time_to_second(open_time), convert_time.get_time_to_second(close_time), phone)
+        params = (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
 
         self.db.write_one(insert_stmt, params)
 
-        return 1
+        return ClinicStatus.SUCCESS

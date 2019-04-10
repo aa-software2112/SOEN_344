@@ -7,8 +7,10 @@ from uber_sante.utils import json_helper as js
 from uber_sante.utils.cache import get_from_cache
 
 from uber_sante.services.clinic_service import ClinicService
+from uber_sante.utils.time_interpreter import TimeInterpreter
 
 clinic_service = ClinicService()
+convert_time = TimeInterpreter()
 
 
 @controllers.route('/clinic', methods=['GET', 'PUT', 'DELETE'])
@@ -28,8 +30,8 @@ def clinic():
         nb_rooms = request.get_json().get('nb_rooms')
         nb_doctors = request.get_json().get('nb_doctors')
         nb_nurses = request.get_json().get('nb_nurses')
-        open_time = request.get_json().get('open_time')
-        close_time = request.get_json().get('close_time')
+        open_time = convert_time.get_time_to_second(request.get_json().get('open_time'))
+        close_time = convert_time.get_time_to_second(request.get_json().get('close_time'))
         phone = request.get_json().get('phone')
         clinic_id = request.get_json().get('clinic_id') #semi-required - indicated UPDATE
 
@@ -49,7 +51,7 @@ def clinic():
             if result is None:
                 return js.create_json(data=None, message="Could not update clinic", return_code=js.ResponseReturnCode.CODE_500)
 
-            return js.create_json(data=result, message="Successfully updated clinic", return_code=js.ResponseReturnCode.CODE_201)
+            return js.create_json(data=None, message="Successfully updated clinic", return_code=js.ResponseReturnCode.CODE_201)
         
         if name is None:
             return js.create_json(data=None, message="No clinic name provided", return_code=js.ResponseReturnCode.CODE_400)
@@ -65,7 +67,7 @@ def clinic():
         if result is None:
             return js.create_json(data=None, message="Could not register clinic", return_code=js.ResponseReturnCode.CODE_500)
 
-        return js.create_json(data=result, message=None, return_code=js.ResponseReturnCode.CODE_201)
+        return js.create_json(data=None, message="Successfully created clinic", return_code=js.ResponseReturnCode.CODE_201)
 
 
 @controllers.route('/clinic/<string:user_type>/<string:id>', methods=['GET'])
