@@ -86,8 +86,6 @@ class NurseService:
         params = (clinic_id, )
         results = self.db.read_all(select_stmt, params)
 
-        print(results)
-
         if len(results) == 0:
             return 4
         

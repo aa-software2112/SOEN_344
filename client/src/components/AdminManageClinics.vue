@@ -15,7 +15,7 @@
             <div class="button-holder">
               <button v-on:click="showTableDoctors(clinic.id)">View Doctors</button>
               <button v-on:click="showTableNurses(clinic.id)">View Nurses</button>
-              <button v-on:click="showTableAvailabilities">View Availabilities</button>
+              <button v-on:click="showTableAvailabilities(clinic.id)">View Availabilities</button>
             </div>
             <table class="show-table" v-if="displayDoctorTable">
               <th>Last Name</th>
@@ -39,15 +39,25 @@
                 <td>{{item['access_id']}}</td>
               </tr>
             </table>
+            <table class="show-table" v-if="displayAvailTable">
+              <th>Doctor ID</th>
+              <th>Start</th>
+              <th>Room</th>
+              <th>Year</th>
+              <th>Month</th>
+              <th>Day</th>
+              <th>Booking Type</th>
+              <tr class="container patient-item" v-for="(item) in results_availability.data">
+                <td>{{item['doctor_id']}}</td>
+                <td>{{item['start']}}</td>
+                <td>{{item['room']}}</td>
+                <td>{{item['year']}}</td>
+                <td>{{item['month']}}</td>
+                <td>{{item['day']}}</td>
+                <td>{{item['booking_type']}}</td>
+              </tr>
+            </table>
           </form>
-          <div class="display-table" v-if="displayNurseTable">
-            <tr></tr>
-            <tr></tr>
-          </div>
-          <div class="display-table" v-if="displayAvailTable">
-            <tr></tr>
-            <tr></tr>
-          </div>
         </div>
         <form>
           <div class="button-holder">
@@ -80,6 +90,7 @@
         displayAvailTable: false,
         results_doctor: '',
         results_nurse: '',
+        results_availability: '',
       };
     },
 
@@ -168,7 +179,7 @@
             alert(error);
           });
       },
-      showTableAvailabilities: function () {
+      showTableAvailabilities: function (clinic_id) {
         this.displayDoctorTable = false;
         this.displayNurseTable = false;
         if(this.displayAvailTable){
@@ -176,6 +187,19 @@
         } else {
           this.displayAvailTable = true;
         }
+        var self = this;
+        self.submit = 'True';
+        axios.get('http://127.0.0.1:5000/availability', {
+          params: {
+            clinic_id: clinic_id
+          }
+        })
+          .then(response => {
+            self.results_availability = response.data
+          })
+          .catch(function (error) {
+            alert(error);
+          });
       }
     },
 

@@ -28,8 +28,9 @@ def availability():
 
         availability_id = request.args.get('availability_id')
         doctor_id = request.args.get('doctor_id')
+        clinic_id = request.args.get('clinic_id')
 
-        if doctor_id is None and availability_id is None:
+        if doctor_id is None and availability_id is None and clinic_id is None:
             result = availability_service.get_all_availabilities()
 
             if result == AvailabilityStatus.NO_AVAILABILITIES:
@@ -41,9 +42,10 @@ def availability():
 
         if doctor_id is not None:
             result = availability_service.get_availability_by_doctor_id(doctor_id)
-        else:
+        elif availability_id is not None:
             result = availability_service.get_availability(availability_id)
-
+        else:
+            result = availability_service.get_availability_by_clinic_id(clinic_id)
         if result is None:
             return js.create_json(data=None, message="Could not retrieve availabilities", return_code=js.ResponseReturnCode.CODE_500)
         if result == AvailabilityStatus.NO_AVAILABILITIES:
