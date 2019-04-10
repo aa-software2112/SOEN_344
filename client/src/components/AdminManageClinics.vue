@@ -6,12 +6,15 @@
         <div class=" clinic-info" value v-for="clinic in clinics" :value="clinic.id">
           <form v-on:submit.prevent>
             <h3> {{ clinic.name }} </h3>
-            <div>
+            <details>
               <p> Location: {{clinic.location }} </p>
               <p> Opens at: {{clinic.open_time}} </p>
               <p> Closes at: {{clinic.close_time}} </p>
               <p> Telephone: {{clinic.phone}} </p>
-            </div>
+              <div class="button-holder">
+              <button>Edit Details</button>
+              </div>
+            </details>
             <div class="button-holder">
               <button v-on:click="showTableDoctors(clinic.id)">View Doctors</button>
               <button v-on:click="showTableNurses(clinic.id)">View Nurses</button>
@@ -229,6 +232,30 @@
     display: inline-flex;
     justify-content: space-evenly;
   }
-
+  details {
+    font-family: "Playfair Display";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 10px 0 15px 10px;
+        font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  details[open] {
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/opacity/see-through */
+    z-index: 2;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  details p {
+    margin: 1px;
+    font-family: "Playfair Display";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button {
+    font-family: Arial;
+  }
 
 </style>
