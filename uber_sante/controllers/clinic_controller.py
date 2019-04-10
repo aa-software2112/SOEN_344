@@ -31,23 +31,34 @@ def clinic():
         open_time = request.get_json().get('open_time')
         close_time = request.get_json().get('close_time')
         phone = request.get_json().get('phone')
+        clinic_id = request.get_json().get('clinic_id') #semi-required - indicated UPDATE
 
-        if name is None:
-            return js.create_json(data=None, message="No clinic name provided", return_code=js.ResponseReturnCode.CODE_400)
         if location is None:
             return js.create_json(data=None, message="No clinic location provided", return_code=js.ResponseReturnCode.CODE_400)
-        if nb_rooms is None:
-            return js.create_json(data=None, message="Number of rooms for clinic not provided", return_code=js.ResponseReturnCode.CODE_400)
-        if nb_doctors is None:
-            return js.create_json(data=None, message="Number of doctors for clinic not provided", return_code=js.ResponseReturnCode.CODE_400)
-        if nb_nurses is None:
-            return js.create_json(data=None, message="Number of nurses for clininc not provided", return_code=js.ResponseReturnCode.CODE_400)
         if open_time is None:
             return js.create_json(data=None, message="No open time for clinic provided", return_code=js.ResponseReturnCode.CODE_400)
         if close_time is None:
             return js.create_json(data=None, message="No close time for clinic provided", return_code=js.ResponseReturnCode.CODE_400)
         if phone is None:
             return js.create_json(data=None, message="No phone number for clinic provided", return_code=js.ResponseReturnCode.CODE_400)
+        
+        #update clinic use case
+        if clinic_id is not None:
+            result = clinic_service.modify_clinic_limited(clinic_id, location, open_time, close_time, phone)
+            
+            if result is None:
+                return js.create_json(data=None, message="Could not update clinic", return_code=js.ResponseReturnCode.CODE_500)
+
+            return js.create_json(data=result, message="Successfully updated clinic", return_code=js.ResponseReturnCode.CODE_201)
+        
+        if name is None:
+            return js.create_json(data=None, message="No clinic name provided", return_code=js.ResponseReturnCode.CODE_400)
+        if nb_rooms is None:
+            return js.create_json(data=None, message="Number of rooms for clinic not provided", return_code=js.ResponseReturnCode.CODE_400)
+        if nb_doctors is None:
+            return js.create_json(data=None, message="Number of doctors for clinic not provided", return_code=js.ResponseReturnCode.CODE_400)
+        if nb_nurses is None:
+            return js.create_json(data=None, message="Number of nurses for clininc not provided", return_code=js.ResponseReturnCode.CODE_400)
 
         result = clinic_service.register_clinic(name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
 
