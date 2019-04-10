@@ -34,7 +34,7 @@ def patient():
     if request.method == 'GET':
         # params: patient_id (int, semi-required), last_name (text, semi-required)
         # return: patient object
-        patient_id = request.args.get('patient_id') # Get patient by id only
+        patient_id = int(request.args.get('patient_id')) # Get patient by id only
         patient_last_name = request.args.get('last_name') # Get patient by last name only
         patient_info = request.args.get('patient_info') # Get patient by either last name or health card NB
 
@@ -180,7 +180,7 @@ def schedule():
 
         request_type = request.get_json().get('request_type')
         appointment_request_type = request.get_json().get('appointment_request_type')
-        patient_id = request.get_json().get('patient_id')
+        patient_id = int(request.get_json().get('patient_id'))
 
         patient_service.test_and_set_patient_into_cache(patient_id)
         patient = get_from_cache(patient_id)
@@ -212,7 +212,7 @@ def annual_appointment():
 
     if request.method == 'PUT':
         availability_id = int(request.get_json().get('availability_id'))
-        patient_id = request.get_json().get('patient_id')
+        patient_id = int(request.get_json().get('patient_id'))
 
         patient_service.test_and_set_patient_into_cache(patient_id)
         patient = get_from_cache(patient_id)
@@ -237,7 +237,7 @@ def walkin_appointment():
     if request.method == 'PUT':
 
         availability_id = int(request.get_json().get('availability_id'))
-        patient_id = request.get_json().get('patient_id')
+        patient_id = int(request.get_json().get('patient_id'))
 
         patient_service.test_and_set_patient_into_cache(patient_id)
         patient = get_from_cache(patient_id)
@@ -265,7 +265,7 @@ def appointment():
         if not cookie_helper.user_is_logged(request):
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
-        patient_id = request.args.get('patient_id')
+        patient_id = int(request.args.get('patient_id'))
         availability_id = int(request.args.get('availability_id'))
 
         if availability_id is None:

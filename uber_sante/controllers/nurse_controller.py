@@ -22,7 +22,7 @@ def annual_appointment_nurse():
 
     if request.method == 'PUT':
         availability_id = int(request.get_json().get('availability_id'))
-        patient_id = request.get_json().get('patient_id')
+        patient_id = int(request.get_json().get('patient_id'))
 
         patient_service.test_and_set_patient_into_cache(patient_id)
         patient = get_from_cache(patient_id)
@@ -42,7 +42,7 @@ def walkin_appointment_nurse():
     if request.method == 'PUT':
 
         availability_id = int(request.get_json().get('availability_id'))
-        patient_id = request.get_json().get('patient_id')
+        patient_id = int(request.get_json().get('patient_id'))
 
         patient_service.test_and_set_patient_into_cache(patient_id)
         patient = get_from_cache(patient_id)
