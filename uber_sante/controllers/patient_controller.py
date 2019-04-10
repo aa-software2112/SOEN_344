@@ -292,7 +292,7 @@ def cart():
             return js.create_json(data=None, message="User is not logged", return_code=js.ResponseReturnCode.CODE_400)
 
         # getting patient_id from cookie
-        patient_id = request.cookies.get(CookieKeys.ID.value)
+        patient_id = int(request.cookies.get(CookieKeys.ID.value))
         # get patient from cache
         patient = get_from_cache(patient_id)
 
