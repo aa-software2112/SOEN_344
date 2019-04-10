@@ -27,6 +27,7 @@
             
             <div v-if="schedules != ''"id="update-schedule-container" class="container justify-content-center">
                 <table class="table-view" id="mini-sched-table">
+                    <th>Date</th>
                     <th>Time</th>
                     <th>Doctor</th>
                     <th>Room</th>
@@ -34,7 +35,7 @@
                     <template v-for="(avail_dict, day_key) in schedules">
                         
                         <tr v-on:click="selectForUpdating" v-if="avail.free == 1" class="container" v-for="(avail, doctor_id) in avail_dict" :id="avail.id">
-                         
+                          <td> {{avail.year + "/" + avail.month + "/" + avail.day}} </td>
                           <td> {{avail.start}} </td>
                           <td> {{getDoctor(avail) ? avail.doctor_name: avail.doctor_name}} </td>
                           <td> {{avail.room}} </td>
@@ -219,7 +220,8 @@ export default {
         {
             date: this.date,
             request_type: "MONTHLY",
-            appointment_request_type: "ALL"
+            appointment_request_type: "ALL",
+            patient_id: this.$cookies.get('id')
         })
         .then(response => {
             this.schedules = response.data.data
@@ -234,10 +236,10 @@ export default {
     selectForUpdating(e)
     {
         var children = e.target.parentElement.children
-        Vue.set(this.update_to_availability, "start", children[0].innerText)
-        Vue.set(this.update_to_availability, "doctor_name", children[1].innerText)
-        Vue.set(this.update_to_availability, "room", children[2].innerText)
-        Vue.set(this.update_to_availability, "booking_type", children[3].innerText)
+        Vue.set(this.update_to_availability, "start", children[1].innerText)
+        Vue.set(this.update_to_availability, "doctor_name", children[2].innerText)
+        Vue.set(this.update_to_availability, "room", children[3].innerText)
+        Vue.set(this.update_to_availability, "booking_type", children[4].innerText)
         Vue.set(this.update_to_availability, "availability_id", e.target.parentElement.id)
     
     },

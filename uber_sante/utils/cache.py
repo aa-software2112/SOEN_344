@@ -4,6 +4,10 @@ def reset_cache():
     cache.clear()
 
 def get_from_cache(key):
+
+    if key is None:
+        return None
+
     rv = cache.get(key)
     return rv
 
