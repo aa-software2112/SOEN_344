@@ -20,7 +20,7 @@ class Cart:
         return self.appointments
 
     def remove_appointment(self, availability_id):
-        self.cart_state.remove_appointment(availability_id)
+        return self.cart_state.remove_appointment(availability_id)
 
     def contains_annual_appointment(self):
         return type(self.cart_state) == CartWithAnnualState
