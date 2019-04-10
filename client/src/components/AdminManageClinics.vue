@@ -17,7 +17,7 @@
               <button v-on:click="showTableNurses(clinic.id)">View Nurses</button>
               <button v-on:click="showTableAvailabilities(clinic.id)">View Availabilities</button>
             </div>
-            <table class="show-table" v-if="displayDoctorTable">
+            <table id="view" class="show-table" v-if="displayDoctorTable & clinic.id == clinic_id">
               <th>Last Name</th>
               <th>First Name</th>
               <th>Specialty</th>
@@ -29,7 +29,7 @@
                 <td>{{item['physician_permit_nb']}}</td>
               </tr>
             </table>
-            <table class="show-table" v-if="displayNurseTable">
+            <table id="view" class="show-table" v-if="displayNurseTable & clinic.id == clinic_id">
               <th>Last Name</th>
               <th>First Name</th>
               <th>Access ID</th>
@@ -39,27 +39,23 @@
                 <td>{{item['access_id']}}</td>
               </tr>
             </table>
-            <table class="show-table" v-if="displayAvailTable">
+            <table id="view" class="show-table" v-if="displayAvailTable & clinic.id == clinic_id">
               <th>Doctor ID</th>
               <th>Start</th>
               <th>Room</th>
-              <th>Year</th>
-              <th>Month</th>
-              <th>Day</th>
+              <th>Date</th>
               <th>Booking Type</th>
               <tr class="container patient-item" v-for="(item) in results_availability.data">
                 <td>{{item['doctor_id']}}</td>
                 <td>{{item['start']}}</td>
                 <td>{{item['room']}}</td>
-                <td>{{item['year']}}</td>
-                <td>{{item['month']}}</td>
-                <td>{{item['day']}}</td>
+                <td>{{item['day']}}/{{item['month']}}/{{item['year']}}</td>
                 <td>{{item['booking_type']}}</td>
               </tr>
             </table>
           </form>
         </div>
-        <form>
+        <form v-on:submit.prevent>
           <div class="button-holder">
             <button>Add Clinic</button>
           </div>
@@ -91,6 +87,7 @@
         results_doctor: '',
         results_nurse: '',
         results_availability: '',
+        clinic_id: '',
       };
     },
 
@@ -136,6 +133,7 @@
         })
       },
       showTableDoctors: function (clinic_id) {
+        this.clinic_id = clinic_id;
         this.displayNurseTable = false;
         this.displayAvailTable = false;
         if(this.displayDoctorTable){
@@ -158,6 +156,7 @@
           });
       },
       showTableNurses: function (clinic_id) {
+        this.clinic_id = clinic_id;
         this.displayDoctorTable = false;
         this.displayAvailTable = false;
         if(this.displayNurseTable){
@@ -180,6 +179,7 @@
           });
       },
       showTableAvailabilities: function (clinic_id) {
+        this.clinic_id = clinic_id;
         this.displayDoctorTable = false;
         this.displayNurseTable = false;
         if(this.displayAvailTable){
