@@ -17,10 +17,12 @@ from uber_sante.models.scheduler import ScheduleRequestRegister, Scheduler, Requ
 from uber_sante.services.patient_service import PatientService
 from uber_sante.services.patient_service import CreatePatientStatus
 from uber_sante.services.availability_service import AvailabilityService
+from uber_sante.services.clinic_service import ClinicService
 
 patient_service = PatientService()
 availability_service = AvailabilityService()
 sched_register = ScheduleRequestRegister()
+clinic_service = ClinicService()
 
 @controllers.route('/viewmycookie', methods=['GET'])
 def view_cookie():
@@ -38,6 +40,13 @@ def patient():
         patient_last_name = request.args.get('last_name') # Get patient by last name only
         patient_info = request.args.get('patient_info') # Get patient by either last name or health card NB
 
+        clinic_id = None
+
+        if cookie_helper.user_is_logged(request, UserTypes.NURSE):
+            clinic_list = clinic_service.get_current_clinic("nurse", int(request.cookies.get(CookieKeys.ID.value)))
+            clinic_id = int(clinic_list[0]["id"])
+
+
         if patient_id is None and patient_last_name is None and patient_info is None:
             return js.create_json(data=None, message="No patient params specified", return_code=js.ResponseReturnCode.CODE_400)
 
@@ -47,10 +56,10 @@ def patient():
             result = patient_service.get_patient_by_last_name(patient_last_name)
         elif patient_info is not None:
             # Returns a list of patient objects
-            result = patient_service.get_patient_by_last_name(patient_info)
+            result = patient_service.get_patient_by_last_name(patient_info, clinic_id)
             if result is -3:
                 # Returns a single patient object
-                result = patient_service.get_patient_by_health_card_nb(patient_info)
+                result = patient_service.get_patient_by_health_card_nb(patient_info, clinic_id)
         else:
             result = patient_service.get_patient(int(patient_id))
 
