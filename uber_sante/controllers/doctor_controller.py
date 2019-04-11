@@ -22,20 +22,22 @@ def doctor():
         # return: doctor object
         doctor_id = request.args.get('id')
         doctor_last_name = request.args.get('last_name')
-
-        clinic_id = None
+        clinic_id = request.args.get('clinic_id')
+        clinic_id_from_nurse = None
 
         if cookie_helper.user_is_logged(request, UserTypes.NURSE):
             clinic_list = clinic_service.get_current_clinic("nurse", int(request.cookies.get(CookieKeys.ID.value)))
-            clinic_id = int(clinic_list[0]["id"])
-
-        if doctor_id is None and doctor_last_name is None:
+            clinic_id_from_nurse = int(clinic_list[0]["id"])
+          
+        if doctor_id is None and doctor_last_name is None and clinic_id is None:
             return js.create_json(data=None, message='No doctor params specified', return_code=js.ResponseReturnCode.CODE_400)
 
         result = None
 
         if doctor_last_name is not None:
-            result = doctor_service.get_doctor_by_last_name(doctor_last_name, clinic_id)
+            result = doctor_service.get_doctor_by_last_name(doctor_last_name, clinic_id_from_nurse)
+        elif clinic_id is not None:
+            result = doctor_service.get_doctor_by_clinic(clinic_id)
         else:
             result = doctor_service.get_doctor(doctor_id)
 

@@ -76,3 +76,26 @@ class NurseService:
         self.db.write_one(insert_stmt, params)
 
         return CreateNurseStatus.SUCCESS
+    
+    def get_nurse_by_clinic(self, clinic_id):
+
+        """Query the db for a nurse by the associated clinic id and return the created nurse object"""
+        select_stmt = """SELECT * FROM Nurse
+                        WHERE clinic_id IS ?"""
+        params = (clinic_id, )
+        results = self.db.read_all(select_stmt, params)
+
+        if len(results) == 0:
+            return 4
+        
+        list_of_nurses = []
+
+        for result in results:
+            list_of_nurses.append(
+                Nurse(result['id'],
+                    result['access_id'],
+                    result['first_name'],
+                    result['last_name'],
+                    result['password']))
+        
+        return list_of_nurses

@@ -141,3 +141,28 @@ class DoctorService:
                     result['clinic_id']))
         
         return list_of_doctors
+
+    def get_doctor_by_clinic(self, clinic_id):
+        """Query the db for a doctor by the associated clinic id and return the created doctor object"""
+        select_stmt = """SELECT * FROM Doctor
+                        WHERE clinic_id IS ?"""
+        params = (clinic_id, )
+        results = self.db.read_all(select_stmt, params)
+
+        if len(results) == 0:
+            return 4
+        
+        list_of_doctors = []
+
+        for result in results:
+            list_of_doctors.append(
+                Doctor(result['id'],
+                    result['first_name'],
+                    result['last_name'],
+                    result['physician_permit_nb'],
+                    result['specialty'],
+                    result['city'],
+                    result['password'],
+                    result['clinic_id']))
+        
+        return list_of_doctors
