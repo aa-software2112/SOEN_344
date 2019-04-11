@@ -14,6 +14,7 @@ import NurseLogin from '@/components/NurseLogin';
 import DoctorLogin from '@/components/DoctorLogin';
 import AdminLogin from '@/components/AdminLogin';
 import AdminRegistrationMenu from '@/components/AdminRegistrationMenu';
+import AdminManageClinics from '@/components/AdminManageClinics';
 import ViewAvailability from '@/components/ViewAvailability';
 import NurseViewBooking from '@/components/NurseViewBooking';
 import BookingsViewer from '@/components/BookingsViewer';
@@ -98,6 +99,11 @@ export default new Router({
       path: '/adminRegistrationMenu',
       name: 'AdminRegistrationMenu',
       component: AdminRegistrationMenu
+    },
+    {
+      path: '/adminManageClinics',
+      name: 'AdminManageClinics',
+      component: AdminManageClinics
     },
     {
       path: '/viewAvailability',

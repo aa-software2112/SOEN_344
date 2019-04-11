@@ -9,7 +9,7 @@ convert_time = TimeInterpreter()
 
 
 class ClinicStatus(Enum):
-    SUCESS = 1
+    SUCCESS = 1
     CLINIC_DOES_NOT_EXIST = -1
 
 
@@ -100,3 +100,56 @@ class ClinicService:
         self.db.write_one(update_stmt, params)
 
         return ClinicStatus.SUCCESS
+    
+    def modify_clinic_limited(self, id, location, open_time, close_time, phone):
+
+        select_stmt = '''SELECT * FROM Clinic WHERE id = ?'''
+        params = (id,)
+
+        results = self.db.read_all(select_stmt, params)
+
+        list_of_clinics = []
+
+        for result in results:
+            list_of_clinics.append(
+                Clinic(
+                    result['id'],
+                    result['name'],
+                    result['location'],
+                    result['nb_rooms'],
+                    result['nb_doctors'],
+                    result['nb_nurses'],
+                    convert_time.get_start_time_string(result['open_time']),
+                    convert_time.get_start_time_string(result['close_time']),
+                    result['phone']))
+
+        if (len(list_of_clinics) > 0):
+            name = list_of_clinics[0].name
+            nb_rooms = list_of_clinics[0].nb_rooms
+            nb_doctors = list_of_clinics[0].nb_doctors
+            nb_nurses = list_of_clinics[0].nb_nurses
+
+            delete_stmt = '''DELETE FROM Clinic
+                            WHERE id = ?'''
+            params = (id,)
+
+            self.db.write_one(delete_stmt, params)
+
+            insert_stmt = '''INSERT INTO Clinic(
+                                    id,
+                                    name,
+                                    location,
+                                    nb_rooms,
+                                    nb_doctors,
+                                    nb_nurses,
+                                    open_time,
+                                    close_time,
+                                    phone)
+                                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+            params = (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
+
+            self.db.write_one(insert_stmt, params)
+
+            return ClinicStatus.SUCCESS
+        else:
+            return ClinicStatus.CLINIC_DOES_NOT_EXIST

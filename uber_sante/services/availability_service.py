@@ -185,6 +185,36 @@ class AvailabilityService:
 
         return list_of_availabilities
 
+    def get_availability_by_clinic_id(self, clinic_id):
+        """ Queries the Availability db by availability_id and returns an Availability object """
+
+        select_stmt = '''SELECT * FROM Availability
+                        WHERE clinic_id = ?'''
+        params = (clinic_id,)
+
+        results = self.db.read_all(select_stmt, params)
+
+        if len(results) == 0:
+            return AvailabilityStatus.NO_AVAILABILITIES
+
+        list_of_availabilities = []
+
+        for result in results:
+            list_of_availabilities.append(
+                Availability(
+                    result['id'],
+                    result['doctor_id'],
+                    convert_time.get_start_time_string(result['start']),
+                    result['room'],
+                    result['free'],
+                    result['year'],
+                    result['month'],
+                    result['day'],
+                    uber_sante.models.scheduler.AppointmentRequestType(result['booking_type']),
+                    result['clinic_id']))
+
+        return list_of_availabilities
+
     def free_availability(self, availability_id):
 
         update_stmt = '''UPDATE Availability
