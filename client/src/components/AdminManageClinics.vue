@@ -11,6 +11,7 @@
               <p> Opens at: {{clinic.open_time}} </p>
               <p> Closes at: {{clinic.close_time}} </p>
               <p> Telephone: {{clinic.phone}} </p>
+              <p> Rooms: {{clinic.nb_rooms}}</p>
             </div>
             <div class="button-holder">
               <button v-on:click="showTableDoctors(clinic.id)">View Doctors</button>
