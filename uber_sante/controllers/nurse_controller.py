@@ -25,7 +25,7 @@ def annual_appointment_nurse():
         patient_id = request.get_json().get('patient_id')
 
         patient_service.test_and_set_patient_into_cache(patient_id)
-        patient = get_from_cache(patient_id)
+        patient = get_from_cache(int(patient_id))
         availability = availability_service.validate_availability_and_reserve(availability_id)
         if availability is not None:    
             result = booking_service.write_booking(Appointment(patient_id, availability))
@@ -47,7 +47,7 @@ def walkin_appointment_nurse():
         patient_id = request.get_json().get('patient_id')
 
         patient_service.test_and_set_patient_into_cache(patient_id)
-        patient = get_from_cache(patient_id)
+        patient = get_from_cache(int(patient_id))
         availability = availability_service.validate_availability_and_reserve(availability_id)
         if availability is not None:    
             result = booking_service.write_booking(Appointment(patient_id, availability))
@@ -66,7 +66,6 @@ def nurse():
         clinic_id = request.args.get('clinic_id')
 
         if clinic_id is not None:
-            print(clinic_id)
             result = nurse_service.get_nurse_by_clinic(clinic_id)
         else:
             return js.create_json(data=None, message='No clinic param specified', return_code=js.ResponseReturnCode.CODE_400)

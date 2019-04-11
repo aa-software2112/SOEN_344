@@ -48,7 +48,7 @@
         <li>
           <a class="navbar-brand" href="/adminRegistrationMenu">Registration Menu</a>
         </li>
-        <li v-if="isLoggedAdmin">
+        <li>
           <a class="navbar-brand" href="/adminManageClinics">Manage Clinics</a>
         </li>
       </div>

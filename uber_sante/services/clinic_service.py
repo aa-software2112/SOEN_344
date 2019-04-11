@@ -123,30 +123,33 @@ class ClinicService:
                     convert_time.get_start_time_string(result['close_time']),
                     result['phone']))
 
-        name = list_of_clinics[0].name
-        nb_rooms = list_of_clinics[0].nb_rooms
-        nb_doctors = list_of_clinics[0].nb_doctors
-        nb_nurses = list_of_clinics[0].nb_nurses
+        if (len(list_of_clinics) > 0):
+            name = list_of_clinics[0].name
+            nb_rooms = list_of_clinics[0].nb_rooms
+            nb_doctors = list_of_clinics[0].nb_doctors
+            nb_nurses = list_of_clinics[0].nb_nurses
 
-        delete_stmt = '''DELETE FROM Clinic
-                        WHERE id = ?'''
-        params = (id,)
+            delete_stmt = '''DELETE FROM Clinic
+                            WHERE id = ?'''
+            params = (id,)
 
-        self.db.write_one(delete_stmt, params)
+            self.db.write_one(delete_stmt, params)
 
-        insert_stmt = '''INSERT INTO Clinic(
-                                id,
-                                name,
-                                location,
-                                nb_rooms,
-                                nb_doctors,
-                                nb_nurses,
-                                open_time,
-                                close_time,
-                                phone)
-                            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-        params = (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
+            insert_stmt = '''INSERT INTO Clinic(
+                                    id,
+                                    name,
+                                    location,
+                                    nb_rooms,
+                                    nb_doctors,
+                                    nb_nurses,
+                                    open_time,
+                                    close_time,
+                                    phone)
+                                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+            params = (id, name, location, nb_rooms, nb_doctors, nb_nurses, open_time, close_time, phone)
 
-        self.db.write_one(insert_stmt, params)
+            self.db.write_one(insert_stmt, params)
 
-        return ClinicStatus.SUCCESS
+            return ClinicStatus.SUCCESS
+        else:
+            return ClinicStatus.CLINIC_DOES_NOT_EXIST

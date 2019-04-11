@@ -51,8 +51,6 @@ def login_admin():
 
         admin_id = admin_service.validate_login_info(email, password)
 
-        print(admin_id)
-
         if admin_id == -1:
             return js.create_json(data=None, message="Incorrect Admin Login information", return_code=js.ResponseReturnCode.CODE_400)
 
