@@ -12,6 +12,7 @@
               <p> Opens at: {{clinic.open_time}} </p>
               <p> Closes at: {{clinic.close_time}} </p>
               <p> Telephone: {{clinic.phone}} </p>
+              <p> Rooms: {{clinic.nb_rooms}}</p>
               <div class="button-holder">
               <button v-b-modal="'modal' + clinic.id">Edit Details</button>
               </div>
