@@ -30,9 +30,9 @@
               <h3 class="error-message">{{message}}</h3>
               <div class="form-group">
                 <label for="start">Appointment Time</label>
-                <input v-if="item['booking_type'] === 'WALKIN'" type="time" min="9:00" max="16:00" step="1200"
+                <input v-if="item['booking_type'] === 'WALKIN'" type="time" min="09:00:00" max="16:00:00" step="1200"
                        v-model="start">
-                <input v-else type="time" min="9:00" max="16:00" step="3600" v-model="start">
+                <input v-else type="time" min="09:00:00" max="16:00:00" step="3600" v-model="start">
                 <br>
                 <span class="help-text">Hours are 9am to 4pm</span>
               </div>

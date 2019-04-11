@@ -7,6 +7,7 @@ from uber_sante.utils.room_formatter import FormatRoom
 
 from uber_sante.models.scheduler import AppointmentRequestType
 
+from uber_sante.services.doctor_service import DoctorService
 from uber_sante.services.booking_service import BookingService
 from uber_sante.services.availability_service import AvailabilityService, AvailabilityStatus
 
@@ -14,6 +15,7 @@ from uber_sante.services.availability_service import AvailabilityService, Availa
 from uber_sante.miscellaneous.observer import *
 
 format_room = FormatRoom()
+doctor_service = DoctorService()
 
 booking_service = BookingService()
 availability_service = AvailabilityService()
@@ -84,11 +86,14 @@ def availability():
 
         result = None
 
+        doctor_service.test_and_set_doctor_into_cache(doctor_id)
+        clinic_id = get_from_cache("doctor"+doctor_id).clinic_id
+
         if booking_type == AppointmentRequestType.WALKIN:
-            result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type)
+            result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type, clinic_id)
 
         if booking_type == AppointmentRequestType.ANNUAL:
-            result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type)
+            result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type, clinic_id)
 
         if result == AvailabilityStatus.NO_ROOMS_AT_THIS_TIME:
             return js.create_json(data=None, message="No rooms available at this time slot", return_code=js.ResponseReturnCode.CODE_400)
@@ -163,15 +168,18 @@ def modify_availability(availability_id):
         if day is None or not day:
             day = str(current_availability.day)
 
+        doctor_service.test_and_set_doctor_into_cache(doctor_id)
+        clinic_id = get_from_cache("doctor"+doctor_id).clinic_id
+
         if availability_service.room_is_available_at_this_time(start, room, year, month, day, doctor_id) == AvailabilityStatus.NO_ROOMS_AT_THIS_TIME:
             return js.create_json(data=None, message="Room not available at this time.", return_code=js.ResponseReturnCode.CODE_400)
 
         else:
             # Make a new availability
             if booking_type == AppointmentRequestType.WALKIN:
-                result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type, availability_id)
+                result = availability_service.check_and_create_availability_walkin(doctor_id, start, room, '1', year, month, day, booking_type, clinic_id, availability_id)
             if booking_type == AppointmentRequestType.ANNUAL:
-                result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type, availability_id)
+                result = availability_service.check_and_create_availability_annual(doctor_id, start, room, '1', year, month, day, booking_type, clinic_id, availability_id)
 
             if result == AvailabilityStatus.NO_ROOMS_AT_THIS_TIME:
                 return js.create_json(data=None, message="No rooms available at this time slot", return_code=js.ResponseReturnCode.CODE_400)
