@@ -162,9 +162,15 @@ class BookingService:
         return f_key
 
     def get_patient_id_from_availability_id(self, availability_id):
-        stmt = '''SELECT patient_id FROM Booking WHERE availability_id = ?'''
-
+        stmt = '''SELECT 
+                    patient_id
+                FROM Booking 
+                WHERE availability_id = ?'''
         params = (availability_id,)
 
         result = self.db.read_one(stmt, params)
-        return result['patient_id']
+
+        if result != None:
+            return result['patient_id']
+
+        return None

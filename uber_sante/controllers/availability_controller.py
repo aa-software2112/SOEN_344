@@ -121,7 +121,7 @@ def availability():
         result = None
 
         patient_id = booking_service.get_patient_id_from_availability_id(availability_id)
-
+        
         if is_free:
             result = availability_service.cancel_availability(availability_id)
         else:
@@ -129,7 +129,7 @@ def availability():
 
             if bookingResult:
                 res = availability_service.cancel_availability(availability_id)
-                if res:
+                if res and patient_id != None:
                     #observer pattern hook
                     patient_id = int(patient_id)
                     notifier.attach({patient_id: availability_result})
