@@ -112,6 +112,8 @@ class PatientService:
         If the patient object is stored in cache already, don't do anything.
         Otherwise create a new patient object and store it in cache.
         """
+        if patient_id == None:
+            return
 
         if get_from_cache(patient_id) is not None:
             return
