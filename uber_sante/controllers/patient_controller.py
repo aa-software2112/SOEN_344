@@ -53,7 +53,7 @@ def patient():
         result = None
 
         if patient_last_name is not None:
-            result = patient_service.get_patient_by_last_name(patient_last_name)
+            result = patient_service.get_patient_by_last_name(patient_last_name, clinic_id)
         elif patient_info is not None:
             # Returns a list of patient objects
             result = patient_service.get_patient_by_last_name(patient_info, clinic_id)
