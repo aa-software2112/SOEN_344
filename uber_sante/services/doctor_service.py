@@ -112,7 +112,7 @@ class DoctorService:
         return doctor
 
 
-    def get_doctor_by_last_name(self, last_name):
+    def get_doctor_by_last_name(self, last_name, clinic_id = None):
         """Query the db for a doctor by the doctor's last name and return the created doctor object"""
         last_name_formatted = '%' + last_name + '%'
         select_stmt = """SELECT * FROM Doctor
@@ -126,6 +126,10 @@ class DoctorService:
         list_of_doctors = []
 
         for result in results:
+
+            if clinic_id is not None and not (int(result['clinic_id']) == clinic_id):
+                continue
+
             list_of_doctors.append(
                 Doctor(result['id'],
                     result['first_name'],
