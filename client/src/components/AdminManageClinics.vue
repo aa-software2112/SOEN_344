@@ -273,7 +273,8 @@
           phone: this.telephone,
         })
           .then(function (response) {
-            alert(response.data.message);
+            location.reload();
+            console.log(response.data.message);
           })
           .catch(error => {
             console.log(error)
@@ -292,7 +293,8 @@
           phone: this.telephone,
         })
           .then(function (response) {
-            alert(response.data.message);
+            location.reload();
+            console.log(response.data.message);
           })
           .catch(error => {
             console.log(error)
