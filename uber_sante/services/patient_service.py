@@ -65,7 +65,8 @@ class PatientService:
                     result['gender'],
                     result['phone_nb'],
                     result['home_address'],
-                    result['email']))
+                    result['email'],
+                    result['clinic_id']))
 
         return list_of_patient
 

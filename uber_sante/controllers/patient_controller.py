@@ -34,7 +34,7 @@ def patient():
     if request.method == 'GET':
         # params: patient_id (int, semi-required), last_name (text, semi-required)
         # return: patient object
-        patient_id = int(request.args.get('patient_id')) # Get patient by id only
+        patient_id = (request.args.get('patient_id')) # Get patient by id only
         patient_last_name = request.args.get('last_name') # Get patient by last name only
         patient_info = request.args.get('patient_info') # Get patient by either last name or health card NB
 
@@ -52,7 +52,7 @@ def patient():
                 # Returns a single patient object
                 result = patient_service.get_patient_by_health_card_nb(patient_info)
         else:
-            result = patient_service.get_patient(patient_id)
+            result = patient_service.get_patient(int(patient_id))
 
         if result is None:
             return js.create_json(data=None, message="Could not retrieve patient", return_code=js.ResponseReturnCode.CODE_500)
