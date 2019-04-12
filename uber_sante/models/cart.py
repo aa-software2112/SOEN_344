@@ -31,6 +31,11 @@ class Cart:
     def get_state(self):
         return self.cart_state
 
+    def __dict__(self):
+        return {
+            'appointments': self.appointments
+        }
+
 
 class CartState(ABC):
 

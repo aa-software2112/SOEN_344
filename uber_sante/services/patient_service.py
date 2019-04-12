@@ -41,7 +41,7 @@ class PatientService:
 
         return patient
 
-    def get_patient_by_last_name(self, last_name):
+    def get_patient_by_last_name(self, last_name, clinic_id = None):
         """Query the db for a patient by the patient's last name and return the created patient object"""
         last_name_formatted = '%' + last_name + '%'
         select_stmt = """SELECT * FROM Patient
@@ -55,6 +55,9 @@ class PatientService:
         list_of_patient = []
 
         for result in results:
+            if (clinic_id is not None) and not (int(result['clinic_id']) == clinic_id):
+                continue
+
             list_of_patient.append(
                 Patient(
                     result['id'],
@@ -65,11 +68,12 @@ class PatientService:
                     result['gender'],
                     result['phone_nb'],
                     result['home_address'],
-                    result['email']))
+                    result['email'],
+                    result['clinic_id']))
 
         return list_of_patient
 
-    def get_patient_by_health_card_nb(self, health_card_nb):
+    def get_patient_by_health_card_nb(self, health_card_nb, clinic_id = None):
         """Query the db for a patient by the patient's health card nb and return the created patient object"""
 
         select_stmt = '''SELECT *
@@ -79,6 +83,9 @@ class PatientService:
         result = self.db.read_one(select_stmt, params)
 
         if len(result) == 0:
+            return -3
+
+        if clinic_id is not None and not (int(result['clinic_id']) == clinic_id):
             return -3
 
         self.test_and_set_patient_into_cache(result['id'])
