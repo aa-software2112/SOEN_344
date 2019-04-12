@@ -93,7 +93,7 @@ class Patient:
             'home_address': self.home_address,
             'email': self.email,
             'clinic_id': self.clinic_id,
-            'cart': self.cart.__dict__
+            'cart': self.cart.__dict__()
         }
 
 
